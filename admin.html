@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin - Livraria Online</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{background:#f1f5f9;color:#1e293b}
+
+/* LOGIN */
+.login-page{background:linear-gradient(135deg,#1a365d,#2d3748);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{background:#fff;border-radius:16px;padding:40px;max-width:400px;width:100%;box-shadow:0 20px 40px rgba(0,0,0,.3);text-align:center}
+.login-card .icon{font-size:3rem;margin-bottom:16px}
+.login-card h1{color:#1a365d;font-size:1.5rem;margin-bottom:8px}
+.login-card p{color:#666;font-size:.9rem;margin-bottom:28px}
+.login-card input{width:100%;padding:14px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:1rem;margin-bottom:16px}
+.login-card input:focus{outline:none;border-color:#2c5282}
+.login-card button{width:100%;padding:16px;background:linear-gradient(135deg,#1a365d,#2c5282);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer}
+.login-card button:hover{opacity:.9}
+.login-card .erro{color:#e53e3e;font-size:.85rem;margin-top:12px;display:none}
+.login-card .erro.show{display:block}
+
+/* DASHBOARD */
+.dashboard{display:none}
+.sidebar{width:250px;background:#1a365d;color:#fff;position:fixed;height:100vh;overflow-y:auto;z-index:100}
+.sidebar h2{padding:20px;font-size:1.1rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar nav{padding:16px 0}
+.sidebar a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:rgba(255,255,255,.8);text-decoration:none;font-size:.9rem;cursor:pointer;margin:2px 8px;border-radius:8px}
+.sidebar a:hover,.sidebar a.active{background:#2c5282;color:#fff}
+.sidebar .foot{padding:16px;border-top:1px solid rgba(255,255,255,.1);position:absolute;bottom:0;width:100%}
+.sidebar .foot button{background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:.85rem}
+.sidebar .foot button:hover{color:#fff}
+.main{margin-left:250px;padding:32px;min-height:100vh}
+.page-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.page-head h1{font-size:1.6rem}
+.page-head p{color:#64748b;font-size:.9rem}
+.btn-prim{background:#1a365d;color:#fff;padding:10px 20px;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn-prim:hover{background:#2c5282}
+.btn-sec{background:#e2e8f0;color:#333;padding:10px 20px;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn-sec:hover{background:#cbd5e1}
+.btn-red{background:#fee2e2;color:#991b1b;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-size:.8rem}
+.btn-red:hover{background:#fecaca}
+.btn-grn{background:#dcfce7;color:#166534;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-size:.8rem}
+.btn-grn:hover{background:#bbf7d0}
+
+/* Cards */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;align-items:center;gap:16px}
+.stat-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.stat-blue{background:#dbeafe;color:#2563eb}
+.stat-green{background:#dcfce7;color:#16a34a}
+.stat-yellow{background:#fef3c7;color:#d97706}
+.stat-red{background:#fee2e2;color:#dc2626}
+.stat-info h3{font-size:1.6rem;font-weight:800}
+.stat-info p{color:#64748b;font-size:.85rem}
+
+.card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.1);margin-bottom:24px}
+.card-head{padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}
+.card-head h2{font-size:1.05rem}
+.card-body{padding:20px}
+
+/* Tabelas */
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{text-align:left;padding:12px 16px;color:#64748b;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #e2e8f0;font-weight:600}
+td{padding:12px 16px;border-bottom:1px solid #f1f5f9}
+tr:hover td{background:#f8fafc}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600}
+.badge-pdf{background:#e0f2fe;color:#0369a1}
+.badge-fis{background:#f0fdf4;color:#166534}
+.badge-ok{background:#dcfce7;color:#166534}
+.badge-usado{background:#fee2e2;color:#991b1b}
+.badge-dest{background:#fef3c7;color:#92400e}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:550px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 25px rgba(0,0,0,.1)}
+.modal-head{padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}
+.modal-head h3{font-size:1.1rem}
+.modal-head button{background:none;border:none;font-size:1.4rem;color:#64748b;cursor:pointer}
+.modal-body{padding:20px}
+.modal-foot{padding:16px 20px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:12px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-weight:600;font-size:.85rem;margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:.9rem;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2c5282}
+.form-group textarea{min-height:80px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;border-bottom:2px solid #e2e8f0;margin-bottom:24px}
+.tab{padding:12px 20px;background:none;border:none;color:#64748b;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;font-size:.9rem}
+.tab:hover{color:#1e293b}
+.tab.active{color:#1a365d;border-bottom-color:#1a365b}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Toast */
+.toast-fix{position:fixed;top:20px;right:20px;z-index:9999}
+.toast{padding:14px 20px;border-radius:8px;color:#fff;font-weight:500;margin-bottom:8px;animation:toastIn .3s;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.toast-ok{background:#22c55e}
+.toast-er{background:#ef4444}
+.toast-info{background:#3b82f6}
+@keyframes toastIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Códigos gerados */
+.code-box{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px;font-family:monospace;font-size:.9rem;margin:12px 0;word-break:break-all}
+.code-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-top:12px}
+.code-item{background:#f1f5f9;padding:10px 14px;border-radius:6px;font-family:monospace;font-size:.85rem;display:flex;justify-content:space-between;align-items:center}
+
+/* Mobile */
+@media(max-width:768px){.sidebar{transform:translateX(-100%);transition:transform .3s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.page-head{flex-direction:column;gap:12px;align-items:flex-start}.form-row{grid-template-columns:1fr}.stats{grid-template-columns:1fr}}
+.mob-btn{display:none;position:fixed;top:16px;left:16px;z-index:101;background:#1a365d;color:#fff;border:none;width:40px;height:40px;border-radius:8px;cursor:pointer;font-size:1.2rem}
+@media(max-width:768px){.mob-btn{display:block}}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-page" id="loginPage">
+<div class="login-card">
+<div class="icon">🔐</div>
+<h1>Área Administrativa</h1>
+<p>Faça login para gerenciar sua livraria</p>
+<form id="loginForm">
+<input type="text" id="user" placeholder="Usuário" required autocomplete="username">
+<input type="password" id="pass" placeholder="Senha" required autocomplete="current-password">
+<button type="submit">Entrar</button>
+<div class="erro" id="loginErro">Usuário ou senha incorretos</div>
+</form>
+<a href="index.html" style="display:inline-block;margin-top:20px;color:#64748b;text-decoration:none;font-size:.9rem">← Voltar para a loja</a>
+</div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+<button class="mob-btn" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+<aside class="sidebar">
+<h2>📚 Livraria Online</h2>
+<nav>
+<a class="active" onclick="showTab('dash')">📊 Dashboard</a>
+<a onclick="showTab('prod')">📦 Produtos</a>
+<a onclick="showTab('cod')">🔑 Códigos</a>
+<a onclick="showTab('hist')">📥 Downloads</a>
+</nav>
+<div class="foot">
+<button onclick="logout()">🚪 Sair</button>
+</div>
+</aside>
+
+<main class="main">
+
+<!-- DASHBOARD TAB -->
+<div class="tab-content active" id="tab-dash">
+<div class="page-head">
+<div>
+<h1>Dashboard</h1>
+<p>Visão geral da sua livraria</p>
+</div>
+</div>
+<div class="stats">
+<div class="stat-card">
+<div class="stat-icon stat-blue">📦</div>
+<div class="stat-info"><h3 id="stTotal">-</h3><p>Produtos</p></div>
+</div>
+<div class="stat-card">
+<div class="stat-icon stat-green">📄</div>
+<div class="stat-info"><h3 id="stPdf">-</h3><p>Livros PDF</p></div>
+</div>
+<div class="stat-card">
+<div class="stat-icon stat-yellow">🔑</div>
+<div class="stat-info"><h3 id="stAtivos">-</h3><p>Códigos Ativos</p></div>
+</div>
+<div class="stat-card">
+<div class="stat-icon stat-red">📥</div>
+<div class="stat-info"><h3 id="stDown">-</h3><p>Downloads</p></div>
+</div>
+</div>
+<div class="card">
+<div class="card-head"><h2>📥 Downloads Recentes</h2></div>
+<div class="card-body">
+<table>
+<thead><tr><th>Data</th><th>Código</th><th>Produto</th><th>Telefone</th></tr></thead>
+<tbody id="tbRecente"><tr><td colspan="4" style="text-align:center;color:#64748b">Nenhum download</td></tr></tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- PRODUTOS TAB -->
+<div class="tab-content" id="tab-prod">
+<div class="page-head">
+<div><h1>Produtos</h1><p>Gerencie seu catálogo</p></div>
+<button class="btn-prim" onclick="openProdModal()">+ Novo Produto</button>
+</div>
+<div class="card">
+<div class="card-body">
+<table>
+<thead><tr><th>ID</th><th>Nome</th><th>Tipo</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
+<tbody id="tbProd"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- CÓDIGOS TAB -->
+<div class="tab-content" id="tab-cod">
+<div class="page-head">
+<div><h1>Códigos de Acesso</h1><p>Gere e gerencie códigos</p></div>
+<button class="btn-prim" onclick="openCodeModal()">+ Gerar Códigos</button>
+</div>
+<div class="card">
+<div class="card-head"><h2>Estatísticas</h2></div>
+<div class="card-body" id="codeStats"></div>
+</div>
+<div class="card">
+<div class="card-head"><h2>Códigos Gerados</h2></div>
+<div class="card-body">
+<table>
+<thead><tr><th>Código</th><th>Produto</th><th>Telefone</th><th>Status</th><th>Criado</th><th>Usado</th></tr></thead>
+<tbody id="tbCod"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- HISTÓRICO TAB -->
+<div class="tab-content" id="tab-hist">
+<div class="page-head">
+<div><h1>Histórico de Downloads</h1><p>Todos os downloads realizados</p></div>
+</div>
+<div class="card">
+<div class="card-body">
+<table>
+<thead><tr><th>Data</th><th>Código</th><th>Produto</th><th>Telefone</th></tr></thead>
+<tbody id="tbHist"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+</main>
+</div>
+
+<!-- MODAL: Produto -->
+<div class="modal-bg" id="modalProd">
+<div class="modal">
+<div class="modal-head"><h3 id="mpTitle">Novo Produto</h3><button onclick="closeModal('modalProd')">&times;</button></div>
+<form id="formProd">
+<div class="modal-body">
+<input type="hidden" id="pId">
+<div class="form-row">
+<div class="form-group"><label>Nome</label><input id="pNome" required></div>
+<div class="form-group"><label>Categoria</label><input id="pCat" required></div>
+</div>
+<div class="form-group"><label>Descrição</label><textarea id="pDesc" required></textarea></div>
+<div class="form-row">
+<div class="form-group"><label>Preço</label><input type="number" id="pPreco" step="0.01" min="0" required></div>
+<div class="form-group"><label>Preço Promocional</label><input type="number" id="pPromo" step="0.01" min="0"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Tipo</label><select id="pTipo" onchange="toggleTipo()" required><option value="PDF">PDF</option><option value="FISICO">Físico</option></select></div>
+<div class="form-group"><label>Imagem URL</label><input id="pImg" placeholder="https://..." required></div>
+</div>
+<div class="form-group" id="wrapPdf"><label>URL do PDF</label><input id="pPdf" placeholder="https://..."></div>
+<div class="form-row" id="wrapFis">
+<div class="form-group"><label>Estoque</label><input type="number" id="pEst" min="0" value="0"></div>
+<div class="form-group"><label>Peso (g)</label><input type="number" id="pPeso" min="0" value="0"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label><input type="checkbox" id="pDest"> Destaque</label></div>
+<div class="form-group"><label><input type="checkbox" id="pAtivo" checked> Ativo</label></div>
+</div>
+</div>
+<div class="modal-foot">
+<button type="button" class="btn-sec" onclick="closeModal('modalProd')">Cancelar</button>
+<button type="submit" class="btn-prim">💾 Salvar</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- MODAL: Gerar Códigos -->
+<div class="modal-bg" id="modalCode">
+<div class="modal">
+<div class="modal-head"><h3>🔑 Gerar Códigos</h3><button onclick="closeModal('modalCode')">&times;</button></div>
+<form id="formCode">
+<div class="modal-body">
+<div class="form-group"><label>Produto (PDF)</label><select id="cProd" required></select></div>
+<div class="form-group"><label>Telefone do Comprador</label><input id="cTel" placeholder="5511999999999" required></div>
+<div class="form-group"><label>Quantidade</label><input type="number" id="cQtd" min="1" max="50" value="1" required></div>
+</div>
+<div class="modal-foot">
+<button type="button" class="btn-sec" onclick="closeModal('modalCode')">Cancelar</button>
+<button type="submit" class="btn-prim">✨ Gerar</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- MODAL: Códigos Gerados -->
+<div class="modal-bg" id="modalCodesOk">
+<div class="modal">
+<div class="modal-head"><h3>✅ Códigos Gerados!</h3><button onclick="closeModal('modalCodesOk')">&times;</button></div>
+<div class="modal-body">
+<p>Envie estes códigos ao comprador via WhatsApp:</p>
+<div class="code-list" id="codesOkList"></div>
+</div>
+<div class="modal-foot">
+<button type="button" class="btn-prim" onclick="copyCodes()">📋 Copiar Todos</button>
+<button type="button" class="btn-sec" onclick="closeModal('modalCodesOk')">Fechar</button>
+</div>
+</div>
+</div>
+
+<div class="toast-fix" id="toastBox"></div>
+
+<script src="dados.js"></script>
+<script>
+// ============== LOGIN ==============
+if(localStorage.getItem('liv_admin')==='1')showDash();
+
+document.getElementById('loginForm').addEventListener('submit',function(e){
+e.preventDefault();
+const u=document.getElementById('user').value;
+const p=document.getElementById('pass').value;
+if(u===ADMIN_CREDENTIALS.username&&p===ADMIN_CREDENTIALS.password){
+localStorage.setItem('liv_admin','1');
+showDash();
+}else{
+document.getElementById('loginErro').classList.add('show');
+}
+});
+
+function showDash(){
+document.getElementById('loginPage').style.display='none';
+document.getElementById('dashboard').style.display='block';
+loadDash();
+loadProdTable();
+loadCodeTable();
+loadHistTable();
+}
+
+function logout(){
+localStorage.removeItem('liv_admin');
+location.reload();
+}
+
+// ============== TABS ==============
+function showTab(t){
+document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('.sidebar a').forEach(x=>x.classList.remove('active'));
+document.getElementById('tab-'+t).classList.add('active');
+event.target.classList.add('active');
+if(t==='dash')loadDash();
+if(t==='prod')loadProdTable();
+if(t==='cod')loadCodeTable();
+if(t==='hist')loadHistTable();
+}
+
+// ============== UTIL ==============
+function fmt(v){return'R$ '+v.toFixed(2).replace('.',',')}
+function fmtD(d){if(!d)return'-';return new Date(d).toLocaleString('pt-BR')}
+function toast(m,t='info'){
+const b=document.getElementById('toastBox');
+const d=document.createElement('div');
+d.className='toast toast-'+(t=='ok'?'ok':t=='er'?'er':'info');
+d.textContent=m;
+b.appendChild(d);
+setTimeout(()=>d.remove(),3500);
+}
+
+// ============== DASHBOARD ==============
+function loadDash(){
+document.getElementById('stTotal').textContent=PRODUTOS.length;
+document.getElementById('stPdf').textContent=PRODUTOS.filter(p=>p.tipo==='PDF').length;
+document.getElementById('stAtivos').textContent=CODIGOS.filter(c=>!c.usado).length;
+document.getElementById('stDown').textContent=HISTORICO.length;
+
+const tb=document.getElementById('tbRecente');
+if(HISTORICO.length===0){tb.innerHTML='<tr><td colspan="4" style="text-align:center;color:#64748b">Nenhum download</td></tr>';return}
+const recente=[...HISTORICO].reverse().slice(0,10);
+tb.innerHTML=recente.map(h=>`<tr><td>${fmtD(h.data)}</td><td><code>${h.codigo}</code></td><td>${h.produto}</td><td>${h.telefone}</td></tr>`).join('');
+}
+
+// ============== PRODUTOS ==============
+function loadProdTable(){
+const tb=document.getElementById('tbProd');
+tb.innerHTML=PRODUTOS.map(p=>`<tr>
+<td>#${p.id}</td>
+<td><strong>${p.nome}</strong></td>
+<td><span class="badge ${p.tipo=='PDF'?'badge-pdf':'badge-fis'}">${p.tipo}</span></td>
+<td>${fmt(p.precoPromo||p.preco)}</td>
+<td>${p.destaque?'<span class="badge badge-dest">⭐</span>':''}${p.ativo!==false?'':'<span class="badge badge-usado">Inativo</span>'}</td>
+<td>
+<button class="btn-grn" onclick="editProd(${p.id})">✏️</button>
+<button class="btn-red" onclick="delProd(${p.id})">🗑️</button>
+</td>
+</tr>`).join('');
+}
+
+function openProdModal(p=null){
+document.getElementById('formProd').reset();
+document.getElementById('pId').value='';
+document.getElementById('mpTitle').textContent='Novo Produto';
+if(p){
+document.getElementById('pId').value=p.id;
+document.getElementById('pNome').value=p.nome;
+document.getElementById('pCat').value=p.categoria;
+document.getElementById('pDesc').value=p.descricao;
+document.getElementById('pPreco').value=p.preco;
+document.getElementById('pPromo').value=p.precoPromo||'';
+document.getElementById('pTipo').value=p.tipo;
+document.getElementById('pImg').value=p.imagem;
+document.getElementById('pPdf').value=p.pdfUrl||'';
+document.getElementById('pEst').value=p.estoque||0;
+document.getElementById('pPeso').value=p.pesoGramas||0;
+document.getElementById('pDest').checked=p.destaque||false;
+document.getElementById('pAtivo').checked=p.ativo!==false;
+document.getElementById('mpTitle').textContent='Editar Produto';
+}
+toggleTipo();
+openModal('modalProd');
+}
+
+function editProd(id){openProdModal(PRODUTOS.find(p=>p.id===id))}
+
+function delProd(id){
+if(!confirm('Excluir este produto?'))return;
+const i=PRODUTOS.findIndex(p=>p.id===id);
+if(i>-1){PRODUTOS.splice(i,1);toast('Produto excluído!','ok');loadProdTable();loadDash();}
+}
+
+function toggleTipo(){
+const t=document.getElementById('pTipo').value;
+document.getElementById('wrapPdf').style.display=t==='PDF'?'block':'none';
+document.getElementById('wrapFis').style.display=t==='FISICO'?'grid':'none';
+}
+
+document.getElementById('formProd').addEventListener('submit',function(e){
+e.preventDefault();
+const id=parseInt(document.getElementById('pId').value)||0;
+const novo={
+id:id||Date.now(),
+nome:document.getElementById('pNome').value,
+categoria:document.getElementById('pCat').value,
+descricao:document.getElementById('pDesc').value,
+preco:parseFloat(document.getElementById('pPreco').value),
+precoPromo:parseFloat(document.getElementById('pPromo').value)||null,
+tipo:document.getElementById('pTipo').value,
+imagem:document.getElementById('pImg').value,
+pdfUrl:document.getElementById('pPdf').value||null,
+estoque:parseInt(document.getElementById('pEst').value)||0,
+pesoGramas:parseInt(document.getElementById('pPeso').value)||0,
+destaque:document.getElementById('pDest').checked,
+ativo:document.getElementById('pAtivo').checked
+};
+if(id){
+const i=PRODUTOS.findIndex(p=>p.id===id);
+if(i>-1)PRODUTOS[i]=novo;
+}else{
+PRODUTOS.push(novo);
+}
+toast(id?'Produto atualizado!':'Produto criado!','ok');
+closeModal('modalProd');
+loadProdTable();loadDash();
+});
+
+// ============== CÓDIGOS ==============
+function loadCodeTable(){
+const atv=CODIGOS.filter(c=>!c.usado).length;
+const usd=CODIGOS.filter(c=>c.usado).length;
+document.getElementById('codeStats').innerHTML=`<div class="stats" style="margin:0">
+<div class="stat-card" style="padding:14px"><div class="stat-info"><h3>${CODIGOS.length}</h3><p>Total</p></div></div>
+<div class="stat-card" style="padding:14px"><div class="stat-info"><h3>${atv}</h3><p>Disponíveis</p></div></div>
+<div class="stat-card" style="padding:14px"><div class="stat-info"><h3>${usd}</h3><p>Usados</p></div></div>
+</div>`;
+
+const tb=document.getElementById('tbCod');
+if(CODIGOS.length===0){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:#64748b">Nenhum código</td></tr>';return}
+const ord=[...CODIGOS].reverse();
+tb.innerHTML=ord.map(c=>{
+const prod=PRODUTOS.find(p=>p.id===c.produtoId);
+return`<tr>
+<td><code style="background:#f1f5f9;padding:3px 8px;border-radius:4px">${c.codigo}</code></td>
+<td>${prod?prod.nome:'?'}</td>
+<td>${c.telefone}</td>
+<td><span class="badge ${c.usado?'badge-usado':'badge-ok'}">${c.usado?'Usado':'Disponível'}</span></td>
+<td>${fmtD(c.dataCriacao)}</td>
+<td>${c.dataUso?fmtD(c.dataUso):'-'}</td>
+</tr>`;
+}).join('');
+}
+
+function openCodeModal(){
+const sel=document.getElementById('cProd');
+sel.innerHTML='<option value="">Selecione...</option>'+
+PRODUTOS.filter(p=>p.tipo==='PDF').map(p=>`<option value="${p.id}">${p.nome} - ${fmt(p.preco)}</option>`).join('');
+document.getElementById('formCode').reset();
+openModal('modalCode');
+}
+
+document.getElementById('formCode').addEventListener('submit',function(e){
+e.preventDefault();
+const prodId=parseInt(document.getElementById('cProd').value);
+const tel=document.getElementById('cTel').value.replace(/\D/g,'');
+const qtd=parseInt(document.getElementById('cQtd').value);
+
+if(!prodId||!tel||qtd<1){toast('Preencha todos os campos','er');return}
+
+const gerados=[];
+for(let i=0;i<qtd;i++){
+let cod;
+do{cod=gerarCodigoUnico()}while(CODIGOS.some(c=>c.codigo===cod));
+const obj={codigo:cod,telefone:tel,produtoId:prodId,usado:false,dataCriacao:new Date().toISOString(),dataUso:null};
+CODIGOS.push(obj);
+gerados.push(obj);
+}
+salvarCodigos();
+
+// Mostra códigos
+const list=document.getElementById('codesOkList');
+list.innerHTML=gerados.map(c=>`<div class="code-item"><span>${c.codigo}</span><button style="background:none;border:none;cursor:pointer" onclick="navigator.clipboard.writeText('${c.codigo}');toast('Copiado!','ok')">📋</button></div>`).join('');
+closeModal('modalCode');
+openModal('modalCodesOk');
+loadCodeTable();loadDash();
+});
+
+function copyCodes(){
+const codes=CODIGOS.slice(-parseInt(document.getElementById('cQtd').value||1)).map(c=>c.codigo);
+navigator.clipboard.writeText(codes.join('\n'));
+toast('Todos copiados!','ok');
+}
+
+// ============== HISTÓRICO ==============
+function loadHistTable(){
+const tb=document.getElementById('tbHist');
+if(HISTORICO.length===0){tb.innerHTML='<tr><td colspan="4" style="text-align:center;color:#64748b">Nenhum download</td></tr>';return}
+const ord=[...HISTORICO].reverse();
+tb.innerHTML=ord.map(h=>`<tr><td>${fmtD(h.data)}</td><td><code>${h.codigo}</code></td><td>${h.produto}</td><td>${h.telefone}</td></tr>`).join('');
+}
+
+// ============== MODAL ==============
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
+</script>
+
+</body>
+</html>
