@@ -120,6 +120,12 @@
             box-shadow: 0 8px 25px rgba(201, 168, 76, 0.6);
         }
 
+        .btn-entrar:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         /* Video Section */
         .video-section {
             padding: 20px;
@@ -290,7 +296,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -319,6 +325,31 @@
             color: #c9a84c;
             font-size: 1.1rem;
         }
+
+        .loading-overlay .error-msg {
+            color: #ff6b6b;
+            margin-top: 15px;
+            font-size: 0.95rem;
+            max-width: 350px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .loading-overlay .btn-retry {
+            margin-top: 20px;
+            background: #c9a84c;
+            color: #0d4a2e;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+        }
+
+        .loading-overlay .btn-retry.show {
+            display: block;
+        }
     </style>
 <base target="_blank">
 </head>
@@ -327,7 +358,9 @@
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        <p>A carregar a sala de vídeo aula...</p>
+        <p id="loadingText">A carregar a sala de vídeo aula...</p>
+        <p class="error-msg" id="errorMsg"></p>
+        <button class="btn-retry" id="btnRetry" onclick="entrarSala()">Tentar Novamente</button>
     </div>
 
     <!-- Header -->
@@ -354,7 +387,7 @@
         <div class="sala-info">
             🎥 Sala: <span>IM.VideoAula</span>
         </div>
-        <button class="btn-entrar" onclick="entrarSala()">📹 Entrar na Sala de Aula</button>
+        <button class="btn-entrar" id="btnEntrar" onclick="entrarSala()">📹 Entrar na Sala de Aula</button>
     </section>
 
     <!-- Video Section -->
@@ -402,17 +435,14 @@
 
     <!-- Admins Section -->
     <section class="admins-section" id="admins-section">
-        <h3>👑 Administradores da Sala</h3>
+        <h3>👑 Sala Moderada</h3>
         <div class="admin-tags">
             <div class="admin-tag">
                 <span class="crown">👑</span>
-                <span>Abdullah123</span>
-            </div>
-            <div class="admin-tag">
-                <span class="crown">👑</span>
-                <span>Abdulfatah123</span>
+                <span>Administradores Oficiais</span>
             </div>
         </div>
+        <p style="margin-top: 15px; color: #aaa; font-size: 0.9rem;">Os administradores identificam-se na sala com distintivo de moderador.</p>
     </section>
 
     <!-- Footer -->
@@ -423,17 +453,52 @@
 
     <script>
         let api = null;
+        let timeoutId = null;
+
+        function mostrarErro(mensagem) {
+            document.getElementById('loadingText').style.display = 'none';
+            document.querySelector('.spinner').style.display = 'none';
+            document.getElementById('errorMsg').textContent = mensagem;
+            document.getElementById('btnRetry').classList.add('show');
+            document.getElementById('btnEntrar').disabled = false;
+        }
+
+        function resetLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+            document.getElementById('loadingText').style.display = 'block';
+            document.querySelector('.spinner').style.display = 'block';
+            document.getElementById('errorMsg').textContent = '';
+            document.getElementById('btnRetry').classList.remove('show');
+            document.getElementById('btnEntrar').disabled = false;
+        }
 
         function entrarSala() {
-            const loading = document.getElementById('loadingOverlay');
-            loading.classList.add('active');
+            // Se já existe uma API, limpar primeiro
+            if (api) {
+                try {
+                    api.dispose();
+                } catch(e) {}
+                api = null;
+            }
+
+            // Limpar container
+            const meetDiv = document.getElementById('meet');
+            meetDiv.innerHTML = '';
+
+            document.getElementById('btnEntrar').disabled = true;
+            document.getElementById('loadingOverlay').classList.add('active');
+
+            // Timeout de segurança: se em 20 segundos não entrar, mostra erro
+            timeoutId = setTimeout(() => {
+                mostrarErro('O Jitsi Meet não respondeu a tempo. Verifique a sua ligação à internet ou tente recarregar a página.');
+            }, 20000);
 
             const domain = "meet.jit.si";
             const options = {
                 roomName: "IM.VideoAula",
                 width: "100%",
                 height: "100%",
-                parentNode: document.querySelector('#meet'),
+                parentNode: meetDiv,
                 configOverwrite: {
                     startWithAudioMuted: true,
                     startWithVideoMuted: false,
@@ -458,22 +523,35 @@
             };
 
             try {
+                // Verificar se a API do Jitsi está disponível
+                if (typeof JitsiMeetExternalAPI === 'undefined') {
+                    clearTimeout(timeoutId);
+                    mostrarErro('O Jitsi Meet não foi carregado. Verifique a sua ligação à internet e recarregue a página.');
+                    return;
+                }
+
                 api = new JitsiMeetExternalAPI(domain, options);
 
                 api.addEventListener('videoConferenceJoined', () => {
-                    loading.classList.remove('active');
+                    clearTimeout(timeoutId);
+                    resetLoading();
                     document.getElementById('video-section').scrollIntoView({ behavior: 'smooth' });
                 });
 
                 api.addEventListener('passwordRequired', () => {
-                    loading.classList.remove('active');
+                    clearTimeout(timeoutId);
+                    resetLoading();
                     alert('Esta sala pode exigir uma palavra-passe. Contacte os administradores.');
                 });
 
+                api.addEventListener('conferenceLeft', () => {
+                    resetLoading();
+                });
+
             } catch (error) {
-                loading.classList.remove('active');
+                clearTimeout(timeoutId);
                 console.error("Erro ao carregar Jitsi:", error);
-                alert('Erro ao carregar a sala. Por favor, recarregue a página e tente novamente.');
+                mostrarErro('Erro ao carregar a sala: ' + error.message + '. Recarregue a página e tente novamente.');
             }
         }
 
