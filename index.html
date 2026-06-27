@@ -36,6 +36,7 @@ body { font-family: 'Poppins', sans-serif; }
 .recording-indicator::before { content: ''; width: 8px; height: 8px; background: white; border-radius: 50%; animation: blink 1s infinite; }
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 .connection-status { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+.professor-active { background: linear-gradient(135deg, #059669, #10b981); }
 </style>
 <base target="_blank">
 </head>
@@ -52,7 +53,6 @@ body { font-family: 'Poppins', sans-serif; }
 <div class="flex gap-3">
 <button onclick="showPage('home')" class="px-4 py-2 rounded-lg hover:bg-white/10 transition">Início</button>
 <button onclick="showPage('como-funciona')" class="px-4 py-2 rounded-lg hover:bg-white/10 transition">Como Funciona</button>
-<button onclick="showPage('economia')" class="px-4 py-2 rounded-lg hover:bg-white/10 transition">💾 Economia</button>
 <button onclick="showLoginModal()" class="px-4 py-2 bg-emerald-500 rounded-lg hover:bg-emerald-600 transition font-medium">Entrar na Aula</button>
 </div>
 </div>
@@ -61,15 +61,10 @@ body { font-family: 'Poppins', sans-serif; }
 <div id="hero-section" class="max-w-7xl mx-auto px-6 py-20 text-center">
 <div class="inline-block px-4 py-1 bg-emerald-500/20 rounded-full text-emerald-300 text-sm font-medium mb-6">🎓 Plataforma de Ensino Online</div>
 <h2 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">Madrassa I.M<br><span class="text-emerald-400">Vídeo Aula</span></h2>
-<p class="text-xl text-gray-300 max-w-2xl mx-auto mb-10">Aulas online com <strong>economia de dados</strong>. Professor transmite, alunos só recebem.</p>
+<p class="text-xl text-gray-300 max-w-2xl mx-auto mb-10">Uma única sala. Professor transmite, alunos recebem. Simples e direto.</p>
 <div class="flex flex-wrap justify-center gap-4">
 <button onclick="showLoginModal()" class="px-8 py-4 bg-emerald-500 rounded-xl text-lg font-semibold hover:bg-emerald-600 transition pulse">🚀 Entrar na Aula Agora</button>
 <button onclick="showPage('como-funciona')" class="px-8 py-4 glass rounded-xl text-lg font-semibold hover:bg-white/20 transition">📖 Como Funciona</button>
-</div>
-<div class="mt-8 flex flex-wrap justify-center gap-3">
-<span class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 rounded-full text-emerald-300 text-sm">🔒 Sala Privada</span>
-<span class="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 rounded-full text-green-300 text-sm">💾 Economia de Dados</span>
-<span class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 rounded-full text-blue-300 text-sm">📡 Modo Broadcast</span>
 </div>
 </div>
 
@@ -78,63 +73,19 @@ body { font-family: 'Poppins', sans-serif; }
 <div class="space-y-6">
 <div class="glass rounded-2xl p-6 flex gap-4 items-start">
 <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center font-bold shrink-0">1</div>
-<div><h3 class="text-xl font-bold text-emerald-400">Professor Entra e Transmite</h3><p class="text-gray-300">O professor liga câmara e microfone. Todos os alunos veem e ouvem.</p></div>
+<div><h3 class="text-xl font-bold text-emerald-400">Professor Entra</h3><p class="text-gray-300">O professor clica em "Sou Professor", introduz PIN e liga a câmara. A aula começa!</p></div>
 </div>
 <div class="glass rounded-2xl p-6 flex gap-4 items-start">
 <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center font-bold shrink-0">2</div>
-<div><h3 class="text-xl font-bold text-emerald-400">Alunos Entram (Só Recebem)</h3><p class="text-gray-300">Alunos veem e ouvem o professor. Câmara desligada por padrão.</p></div>
+<div><h3 class="text-xl font-bold text-emerald-400">Aluno Entra Diretamente</h3><p class="text-gray-300">O aluno clica em "Sou Aluno", escreve o nome e entra. Vê o professor imediatamente!</p></div>
 </div>
 <div class="glass rounded-2xl p-6 flex gap-4 items-start">
 <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center font-bold shrink-0">3</div>
-<div><h3 class="text-xl font-bold text-emerald-400">Aluno Quer Falar?</h3><p class="text-gray-300">Aluno clica em "🙋 Levantar Mão". Professor dá permissão.</p></div>
-</div>
-<div class="glass rounded-2xl p-6 flex gap-4 items-start">
-<div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center font-bold shrink-0">4</div>
-<div><h3 class="text-xl font-bold text-emerald-400">Gravação Local</h3><p class="text-gray-300">Professor pode gravar a aula e fazer download.</p></div>
+<div><h3 class="text-xl font-bold text-emerald-400">Participa na Aula</h3><p class="text-gray-300">Usa o chat, levanta a mão para falar. Professor controla tudo.</p></div>
 </div>
 </div>
 <div class="text-center mt-10">
 <button onclick="showLoginModal()" class="px-8 py-4 bg-emerald-500 rounded-xl text-lg font-semibold hover:bg-emerald-600 transition">🚀 Quero Experimentar</button>
-</div>
-</div>
-
-<div id="economia-section" class="hidden max-w-5xl mx-auto px-6 py-16">
-<h2 class="text-4xl font-bold text-center mb-4">💾 Economia de Dados</h2>
-<p class="text-gray-300 text-center mb-10">Comparação de consumo de dados (megas)</p>
-<div class="glass rounded-2xl p-8 mb-8">
-<h3 class="text-2xl font-bold text-emerald-400 mb-6 text-center">📊 Consumo por Hora (Professor)</h3>
-<div class="space-y-4">
-<div class="flex items-center gap-4">
-<div class="w-32 text-sm text-gray-300">WebRTC P2P<br>(antigo)</div>
-<div class="flex-1 bg-gray-700 rounded-full h-8 overflow-hidden">
-<div class="bg-red-500 h-full rounded-full flex items-center justify-end pr-2" style="width: 100%"><span class="text-xs font-bold">~18 GB</span></div>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<div class="w-32 text-sm text-gray-300">Zoom/Meet</div>
-<div class="flex-1 bg-gray-700 rounded-full h-8 overflow-hidden">
-<div class="bg-yellow-500 h-full rounded-full flex items-center justify-end pr-2" style="width: 20%"><span class="text-xs font-bold">~3.6 GB</span></div>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<div class="w-32 text-sm text-gray-300 font-bold text-emerald-400">Madrassa I.M<br>(Broadcast)</div>
-<div class="flex-1 bg-gray-700 rounded-full h-8 overflow-hidden">
-<div class="bg-emerald-500 h-full rounded-full flex items-center justify-end pr-2" style="width: 10%"><span class="text-xs font-bold">~1.8 GB</span></div>
-</div>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<div class="glass rounded-2xl p-6">
-<div class="text-3xl mb-3">📡</div>
-<h3 class="text-lg font-bold text-emerald-400">Modo Broadcast</h3>
-<p class="text-gray-300 text-sm mt-2">Professor envia 1 stream. Todos recebem o mesmo.</p>
-</div>
-<div class="glass rounded-2xl p-6">
-<div class="text-3xl mb-3">🔇</div>
-<h3 class="text-lg font-bold text-emerald-400">Alunos Sem Câmara</h3>
-<p class="text-gray-300 text-sm mt-2">Por padrão, alunos só recebem. Não enviam vídeo.</p>
-</div>
 </div>
 </div>
 </div>
@@ -150,7 +101,6 @@ body { font-family: 'Poppins', sans-serif; }
 </div>
 </div>
 <div class="flex items-center gap-3">
-<span id="data-saver-badge" class="hidden px-2 py-1 bg-emerald-500/20 rounded text-emerald-300 text-xs">💾 Economia</span>
 <span id="participant-count" class="text-sm text-gray-300">👥 1</span>
 <button onclick="toggleChat()" class="px-3 py-1 bg-white/10 rounded-lg hover:bg-white/20 transition text-sm">💬 Chat</button>
 <button onclick="sairDaSala()" class="px-3 py-1 bg-red-500 rounded-lg hover:bg-red-600 transition text-sm">🚪 Sair</button>
@@ -235,33 +185,38 @@ onkeypress="if(event.key==='Enter') enviarChatMobile()">
 <div class="space-y-4">
 <button onclick="entrarComoAluno()" class="w-full px-6 py-4 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition flex items-center gap-3">
 <span class="text-2xl">👨‍🎓</span>
-<div class="text-left"><div class="font-bold">Sou Aluno</div><div class="text-sm text-emerald-100">Ver aula (economia de dados)</div></div>
+<div class="text-left"><div class="font-bold">Sou Aluno</div><div class="text-sm text-emerald-100">Ver aula ao vivo</div></div>
 </button>
 <button onclick="mostrarLoginAdmin()" class="w-full px-6 py-4 bg-blue-500/80 rounded-xl hover:bg-blue-500 transition flex items-center gap-3">
 <span class="text-2xl">👨‍🏫</span>
-<div class="text-left"><div class="font-bold">Sou Professor/Admin</div><div class="text-sm text-blue-100">Transmitir aula</div></div>
+<div class="text-left"><div class="font-bold">Sou Professor/Admin</div><div class="text-sm text-blue-100">Transmitir aula (PIN necessário)</div></div>
 </button>
 </div>
 <button onclick="fecharModal('modal-login')" class="w-full mt-4 px-4 py-2 text-gray-400 hover:text-white transition">Cancelar</button>
 </div>
 </div>
 
-<div id="modal-nome" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+<!-- Modal Aluno - Só Nome -->
+<div id="modal-aluno" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
 <div class="glass rounded-2xl p-8 max-w-md w-full">
-<h3 class="text-2xl font-bold text-center mb-2">👨‍🎓 Bem-vindo!</h3>
-<p class="text-gray-300 text-center mb-6">Como te chamas?</p>
+<h3 class="text-2xl font-bold text-center mb-2">👨‍🎓 Entrar na Aula</h3>
+<p class="text-gray-300 text-center mb-2">A sala é única e automática</p>
+<div class="inline-block px-3 py-1 bg-emerald-500/20 rounded-full text-emerald-300 text-xs mb-4">🟢 Conecta diretamente ao professor</div>
 <div class="space-y-4">
 <input type="text" id="input-nome-aluno" placeholder="Escreve o teu nome" 
 class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-center focus:outline-none focus:border-emerald-400">
-<button onclick="confirmarEntradaAluno()" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">Entrar na Aula</button>
+<button onclick="confirmarEntradaAluno()" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">🚀 Entrar na Aula</button>
 </div>
+<p class="text-xs text-gray-500 text-center mt-4">Não precisas de procurar sala. Conectamos-te automaticamente!</p>
 </div>
 </div>
 
+<!-- Modal Professor - PIN -->
 <div id="modal-admin" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
 <div class="glass rounded-2xl p-8 max-w-md w-full">
-<h3 class="text-2xl font-bold text-center mb-2">🔐 Acesso Administrativo</h3>
-<div class="space-y-4 mt-6">
+<h3 class="text-2xl font-bold text-center mb-2">🔐 Acesso de Professor</h3>
+<p class="text-gray-300 text-center mb-4">Introduz as tuas credenciais</p>
+<div class="space-y-4">
 <select id="select-admin" class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-emerald-400">
 <option value="" class="text-gray-800">Selecionar administrador...</option>
 <option value="Abdullah" class="text-gray-800">Abdullah</option>
@@ -269,75 +224,28 @@ class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white
 </select>
 <input type="password" id="input-pin" maxlength="6" placeholder="PIN (6 dígitos)" 
 class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-center text-2xl tracking-widest focus:outline-none focus:border-emerald-400">
-<button onclick="verificarAdmin()" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">Entrar</button>
+<button onclick="verificarAdmin()" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">Entrar como Professor</button>
 </div>
 <p id="msg-erro-admin" class="text-red-400 text-center mt-3 hidden">PIN incorreto. Tenta novamente.</p>
 <button onclick="fecharModal('modal-admin'); showModal('modal-login')" class="w-full mt-4 px-4 py-2 text-gray-400 hover:text-white transition">← Voltar</button>
 </div>
 </div>
 
-<div id="modal-criar-sala" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+<!-- Modal Professor - Nome -->
+<div id="modal-prof-nome" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
 <div class="glass rounded-2xl p-8 max-w-md w-full">
-<h3 class="text-2xl font-bold text-center mb-2">🎓 Criar Sala de Aula</h3>
-<p class="text-gray-300 text-center mb-2">Modo Broadcast - Economia de Dados</p>
-<div class="inline-block px-3 py-1 bg-emerald-500/20 rounded-full text-emerald-300 text-xs mb-4">💾 Professor gasta dados de 1 pessoa só</div>
+<h3 class="text-2xl font-bold text-center mb-2">👨‍🏫 Iniciar Aula</h3>
+<p class="text-gray-300 text-center mb-2">Bem-vindo, Professor!</p>
+<div class="inline-block px-3 py-1 bg-emerald-500/20 rounded-full text-emerald-300 text-xs mb-4">📡 Vais transmitir para todos os alunos</div>
 <div class="space-y-4">
-<div>
-<label class="block text-sm text-gray-300 mb-1">Nome da Sala</label>
-<input type="text" id="input-nome-sala" value="madrassa-im-aula" 
-class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-emerald-400">
-</div>
-<div>
-<label class="block text-sm text-gray-300 mb-1">Password da Sala (opcional)</label>
-<input type="text" id="input-password-sala" placeholder="Deixa vazio para sem password" 
-class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-emerald-400">
-</div>
-<div>
-<label class="block text-sm text-gray-300 mb-1">O teu nome</label>
 <input type="text" id="input-nome-prof" value="Professor" 
-class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-emerald-400">
-</div>
-<div class="p-3 bg-emerald-500/10 rounded-xl">
-<p class="text-sm text-emerald-300">✅ Alunos entrarão em modo "só receber"</p>
-<p class="text-sm text-emerald-300">✅ Alunos só ligam câmara com permissão</p>
-<p class="text-sm text-emerald-300">✅ Economia de até 90% nos dados dos alunos</p>
-</div>
-<button onclick="criarSala()" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">🚀 Criar e Entrar na Sala</button>
+class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-center focus:outline-none focus:border-emerald-400">
+<button onclick="iniciarAulaProfessor()" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">🎥 Iniciar Transmissão</button>
 </div>
 </div>
 </div>
 
-<div id="modal-entrar-sala" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-<div class="glass rounded-2xl p-8 max-w-md w-full">
-<h3 class="text-2xl font-bold text-center mb-2">🎓 Entrar na Sala</h3>
-<div class="inline-block px-3 py-1 bg-green-500/20 rounded-full text-green-300 text-xs mb-4">💾 Modo Economia - Só recebes dados</div>
-<div class="space-y-4 mt-2">
-<div>
-<label class="block text-sm text-gray-300 mb-1">Nome da Sala</label>
-<input type="text" id="input-sala-aluno" placeholder="Nome da sala (ex: madrassa-im-aula)" 
-class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-emerald-400">
-</div>
-<div>
-<label class="block text-sm text-gray-300 mb-1">Password (se houver)</label>
-<input type="text" id="input-pass-aluno" placeholder="Password da sala" 
-class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-emerald-400">
-</div>
-<div>
-<label class="block text-sm text-gray-300 mb-1">O teu nome</label>
-<input type="text" id="input-nome-aluno-sala" placeholder="Escreve o teu nome" 
-class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-emerald-400">
-</div>
-<div class="p-3 bg-green-500/10 rounded-xl">
-<p class="text-sm text-green-300">💾 A tua câmara fica DESLIGADA por padrão</p>
-<p class="text-sm text-green-300">💾 Só recebes o vídeo do professor</p>
-<p class="text-sm text-green-300">💾 Podes levantar a mão para falar</p>
-</div>
-<button onclick="entrarSalaAluno()" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">🚀 Entrar na Sala</button>
-</div>
-<button onclick="fecharModal('modal-entrar-sala'); showModal('modal-login')" class="w-full mt-4 px-4 py-2 text-gray-400 hover:text-white transition">← Voltar</button>
-</div>
-</div>
-
+<!-- Modal Gravação Salva -->
 <div id="modal-gravacao" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
 <div class="glass rounded-2xl p-8 max-w-md w-full text-center">
 <div class="text-5xl mb-4">🎬</div>
@@ -350,18 +258,19 @@ class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white
 </div>
 </div>
 
+<!-- Modal Mão Levantada -->
 <div id="modal-mao" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
 <div class="glass rounded-2xl p-8 max-w-md w-full text-center">
 <div class="text-5xl mb-4">🙋</div>
 <h3 class="text-2xl font-bold mb-2">Mão Levantada!</h3>
-<p class="text-gray-300 mb-4">O professor foi notificado. Aguarda permissão para ligar a câmara.</p>
-<p class="text-sm text-gray-400">Enquanto isso, podes usar o microfone e o chat.</p>
-<button onclick="fecharModal('modal-mao')" class="w-full mt-4 px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">Entendido</button>
+<p class="text-gray-300 mb-4">O professor foi notificado.</p>
+<button onclick="fecharModal('modal-mao')" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">Entendido</button>
 </div>
 </div>
 
 <!-- ============ SCRIPTS ============ -->
 <script>
+// ========== FIREBASE ==========
 const firebaseConfig = {
 apiKey: "AIzaSyD2rNS7HSJyek3OCrRquudFgqQSWXZJYrY",
 authDomain: "madrassa-online-b851c.firebaseapp.com",
@@ -374,219 +283,224 @@ measurementId: "G-RV9GD4S22T"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
 const ADMINISTRADORES = { "Abdullah": "123456", "Abdulfatah": "123456" };
 
-let meuNome = "", nomeSala = "", passwordSala = "", souProfessor = false;
-let localStream = null, peers = {};
-let minhaId = Math.random().toString(36).substring(2, 10);
-let salaRef = null, micOn = true, camOn = false;
-let mediaRecorder = null, recordedChunks = [], isRecording = false;
-let maoLevantada = false;
-let professorId = null;
+// ========== CONFIGURAÇÃO FIXA ==========
+const NOME_SALA = "madrassa-im-aula-unica";
+const SALA_REF = db.ref('salas/' + NOME_SALA);
 
+// ========== ESTADO GLOBAL ==========
+let meuNome = "";
+let souProfessor = false;
+let localStream = null;
+let peerConnection = null;
+let minhaId = Math.random().toString(36).substring(2, 10);
+let micOn = true;
+let camOn = false;
+let mediaRecorder = null;
+let recordedChunks = [];
+let isRecording = false;
+let maoLevantada = false;
+
+// ========== NAVEGAÇÃO ==========
 function showPage(page) {
 document.getElementById('hero-section').classList.add('hidden');
 document.getElementById('como-funciona-section').classList.add('hidden');
-document.getElementById('economia-section').classList.add('hidden');
 if (page === 'home') document.getElementById('hero-section').classList.remove('hidden');
 if (page === 'como-funciona') document.getElementById('como-funciona-section').classList.remove('hidden');
-if (page === 'economia') document.getElementById('economia-section').classList.remove('hidden');
 window.scrollTo(0,0);
 }
 
 function showModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
 function fecharModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
 
+// ========== LOGIN ==========
 function showLoginModal() { showModal('modal-login'); }
-function entrarComoAluno() { fecharModal('modal-login'); showModal('modal-entrar-sala'); }
-function mostrarLoginAdmin() { fecharModal('modal-login'); showModal('modal-admin'); }
+
+function entrarComoAluno() {
+fecharModal('modal-login');
+showModal('modal-aluno');
+}
+
+function mostrarLoginAdmin() {
+fecharModal('modal-login');
+showModal('modal-admin');
+}
 
 function verificarAdmin() {
 const nome = document.getElementById('select-admin').value;
 const pin = document.getElementById('input-pin').value;
 if (ADMINISTRADORES[nome] && ADMINISTRADORES[nome] === pin) {
 fecharModal('modal-admin');
-showModal('modal-criar-sala');
 document.getElementById('input-nome-prof').value = nome;
-souProfessor = true;
+showModal('modal-prof-nome');
 } else {
 document.getElementById('msg-erro-admin').classList.remove('hidden');
 document.getElementById('input-pin').value = '';
 }
 }
 
+// ========== ALUNO ENTRA DIRETAMENTE ==========
 function confirmarEntradaAluno() {
 const nome = document.getElementById('input-nome-aluno').value.trim();
 if (!nome) { alert("Escreve o teu nome!"); return; }
 meuNome = nome;
-fecharModal('modal-nome');
-iniciarSala("madrassa-im-aula", "", nome, false);
+souProfessor = false;
+fecharModal('modal-aluno');
+entrarSalaComoAluno();
 }
 
-function criarSala() {
-const sala = document.getElementById('input-nome-sala').value.trim();
-const pass = document.getElementById('input-password-sala').value.trim();
-const nome = document.getElementById('input-nome-prof').value.trim();
-if (!sala) { alert("Escreve um nome para a sala!"); return; }
-if (!nome) { alert("Escreve o teu nome!"); return; }
-meuNome = nome;
-fecharModal('modal-criar-sala');
-iniciarSala(sala, pass, nome, true);
-}
-
-function entrarSalaAluno() {
-const sala = document.getElementById('input-sala-aluno').value.trim();
-const pass = document.getElementById('input-pass-aluno').value.trim();
-const nome = document.getElementById('input-nome-aluno-sala').value.trim();
-if (!sala) { alert("Escreve o nome da sala!"); return; }
-if (!nome) { alert("Escreve o teu nome!"); return; }
-meuNome = nome;
-fecharModal('modal-entrar-sala');
-iniciarSala(sala, pass, nome, false);
-}
-
-// ========== INICIAR SALA ==========
-async function iniciarSala(sala, pass, nome, professor) {
-nomeSala = sala; passwordSala = pass; souProfessor = professor;
+async function entrarSalaComoAluno() {
 document.getElementById('page-home').classList.add('hidden');
 document.getElementById('page-sala').classList.remove('hidden');
-
-if (souProfessor) {
-document.getElementById('prof-name').textContent = nome;
-document.getElementById('btn-cam').classList.remove('hidden');
-document.getElementById('btn-record').classList.remove('hidden');
-document.getElementById('data-saver-badge').classList.remove('hidden');
-camOn = true;
-
-try {
-localStream = await navigator.mediaDevices.getUserMedia({ 
-video: { width: { ideal: 640 }, height: { ideal: 480 } }, 
-audio: true 
-});
-// Esconder spinner, mostrar vídeo
-document.getElementById('connection-spinner').classList.add('hidden');
-document.getElementById('profVideo').srcObject = localStream;
-} catch (err) {
-alert("Não foi possível aceder à câmara/microfone.");
-sairDaSala(); return;
-}
-} else {
-// ALUNO
 document.getElementById('prof-name').textContent = "Professor";
 document.getElementById('btn-cam').classList.add('hidden');
 document.getElementById('btn-record').classList.add('hidden');
-document.getElementById('data-saver-badge').classList.remove('hidden');
-camOn = false; micOn = true;
 
+// Aluno só precisa de microfone
 try {
 localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 } catch (err) {
 console.log("Microfone não disponível");
 }
-}
 
-updateMicButton(); updateCamButton();
+updateMicButton();
 
-salaRef = db.ref('salas/' + nomeSala);
-const snapshot = await salaRef.child('info').once('value');
-const info = snapshot.val();
-if (info && info.password && info.password !== pass) {
-alert("Password incorreta!"); sairDaSala(); return;
-}
-
-if (souProfessor) {
-await salaRef.child('info').set({ 
-password: passwordSala, 
-professor: meuNome, 
-professorId: minhaId,
-createdAt: Date.now() 
+// Registrar na sala
+await SALA_REF.child('participants/' + minhaId).set({
+nome: meuNome,
+isProfessor: false,
+joinedAt: Date.now(),
+micOn: micOn
 });
+SALA_REF.child('participants/' + minhaId).onDisconnect().remove();
+
+// Verificar se professor está ativo
+const profSnap = await SALA_REF.child('professor').once('value');
+if (profSnap.exists() && profSnap.val().active) {
+console.log("Professor já ativo! Conectando...");
+conectarComoAluno(profSnap.val().id);
+} else {
+console.log("Professor ainda não ativo. Aguardando...");
+document.getElementById('status-text').textContent = "Professor ainda não iniciou a aula...";
 }
 
-await salaRef.child('participants/' + minhaId).set({
-nome: meuNome, 
-isProfessor: souProfessor, 
-joinedAt: Date.now(), 
-micOn: micOn, 
-camOn: camOn
-});
-salaRef.child('participants/' + minhaId).onDisconnect().remove();
-
-// ========== CONECTAR COM TODOS OS PARTICIPANTES ==========
-// Professor: conecta com todos os alunos existentes
-// Aluno: conecta com o professor
-salaRef.child('participants').on('child_added', (snapshot) => {
-const peerId = snapshot.key;
-const data = snapshot.val();
-if (peerId === minhaId) return;
-
-if (souProfessor && !data.isProfessor) {
-// Professor conecta com aluno (envia vídeo)
-console.log("Professor conectando com aluno:", peerId);
-conectarComoProfessor(peerId, data.nome);
-} else if (!souProfessor && data.isProfessor) {
-// Aluno conecta com professor (recebe vídeo)
-console.log("Aluno conectando com professor:", peerId);
-professorId = peerId;
-conectarComoAluno(peerId, data.nome);
-}
-atualizarContador();
-});
-
-salaRef.child('participants').on('child_removed', (snapshot) => {
-const peerId = snapshot.key;
-if (peers[peerId]) { 
-peers[peerId].close(); 
-delete peers[peerId]; 
-}
-if (peerId === professorId) {
-// Professor saiu
-if (!souProfessor) {
-document.getElementById('connection-spinner').classList.remove('hidden');
-document.getElementById('status-text').textContent = "Professor saiu da sala";
-document.getElementById('profVideo').srcObject = null;
+// Ouvir quando professor ficar ativo
+SALA_REF.child('professor').on('value', (snapshot) => {
+const prof = snapshot.val();
+if (prof && prof.active && prof.id) {
+console.log("Professor ficou ativo!");
+if (!peerConnection) {
+conectarComoAluno(prof.id);
 }
 }
-atualizarContador();
 });
 
 // Ouvir sinais
-salaRef.child('signals/' + minhaId).on('child_added', async (snapshot) => {
+SALA_REF.child('signals/' + minhaId).on('child_added', async (snapshot) => {
 const signal = snapshot.val();
-console.log("Sinal recebido:", signal.type, "de", signal.from);
+console.log("Aluno recebeu sinal:", signal.type);
 await processarSinal(signal);
 snapshot.ref.remove();
 });
 
 // Chat
-salaRef.child('chat').on('child_added', (snapshot) => {
-const msg = snapshot.val(); 
+SALA_REF.child('chat').on('child_added', (snapshot) => {
+const msg = snapshot.val();
 adicionarChatMsg(msg.nome, msg.texto, msg.id === minhaId);
 });
 
-// Verificar se professor já está na sala (para aluno)
-if (!souProfessor) {
-salaRef.child('participants').once('value', (snap) => {
-let professorFound = false;
-snap.forEach((child) => {
-if (child.key !== minhaId && child.val().isProfessor) {
-professorFound = true;
-professorId = child.key;
-console.log("Professor já na sala:", professorId);
-conectarComoAluno(professorId, child.val().nome);
-}
-});
-if (!professorFound) {
-console.log("Professor ainda não na sala, aguardando...");
-}
-});
-}
+// Contador
+atualizarContador();
+SALA_REF.child('participants').on('value', atualizarContador);
 }
 
-// ========== PROFESSOR CONECTA COM ALUNO ==========
-async function conectarComoProfessor(peerId, peerNome) {
-if (peers[peerId]) return;
-console.log("Criando conexão com aluno:", peerId);
+// ========== PROFESSOR INICIA AULA ==========
+function iniciarAulaProfessor() {
+const nome = document.getElementById('input-nome-prof').value.trim();
+if (!nome) { alert("Escreve o teu nome!"); return; }
+meuNome = nome;
+souProfessor = true;
+fecharModal('modal-prof-nome');
+iniciarSalaComoProfessor();
+}
+
+async function iniciarSalaComoProfessor() {
+document.getElementById('page-home').classList.add('hidden');
+document.getElementById('page-sala').classList.remove('hidden');
+document.getElementById('prof-name').textContent = meuNome;
+document.getElementById('btn-cam').classList.remove('hidden');
+document.getElementById('btn-record').classList.remove('hidden');
+document.getElementById('connection-spinner').classList.add('hidden');
+camOn = true;
+
+// Professor liga câmara e microfone
+try {
+localStream = await navigator.mediaDevices.getUserMedia({ 
+video: { width: { ideal: 640 }, height: { ideal: 480 } }, 
+audio: true 
+});
+document.getElementById('profVideo').srcObject = localStream;
+} catch (err) {
+alert("Não foi possível aceder à câmara/microfone.");
+sairDaSala(); return;
+}
+
+updateMicButton(); updateCamButton();
+
+// Guardar que professor está ativo
+await SALA_REF.child('professor').set({
+id: minhaId,
+nome: meuNome,
+active: true,
+startedAt: Date.now()
+});
+SALA_REF.child('professor').onDisconnect().remove();
+
+// Registrar participante
+await SALA_REF.child('participants/' + minhaId).set({
+nome: meuNome,
+isProfessor: true,
+joinedAt: Date.now(),
+micOn: micOn,
+camOn: camOn
+});
+SALA_REF.child('participants/' + minhaId).onDisconnect().remove();
+
+// Quando aluno entra, conectar
+SALA_REF.child('participants').on('child_added', (snapshot) => {
+const peerId = snapshot.key;
+const data = snapshot.val();
+if (peerId !== minhaId && !data.isProfessor) {
+console.log("Novo aluno entrou:", peerId);
+conectarComoProfessor(peerId);
+}
+});
+
+// Ouvir sinais
+SALA_REF.child('signals/' + minhaId).on('child_added', async (snapshot) => {
+const signal = snapshot.val();
+console.log("Professor recebeu sinal:", signal.type);
+await processarSinal(signal);
+snapshot.ref.remove();
+});
+
+// Chat
+SALA_REF.child('chat').on('child_added', (snapshot) => {
+const msg = snapshot.val();
+adicionarChatMsg(msg.nome, msg.texto, msg.id === minhaId);
+});
+
+// Contador
+atualizarContador();
+SALA_REF.child('participants').on('value', atualizarContador);
+}
+
+// ========== WEBRTC CONEXÕES ==========
+async function conectarComoProfessor(peerId) {
+if (peerConnection) return; // Só uma conexão por vez (broadcast simplificado)
+console.log("Professor criando conexão para aluno:", peerId);
 
 const pc = new RTCPeerConnection({
 iceServers: [
@@ -594,9 +508,9 @@ iceServers: [
 { urls: 'stun:stun1.l.google.com:19302' }
 ]
 });
-peers[peerId] = pc;
+peerConnection = pc;
 
-// Adicionar tracks locais (vídeo + áudio do professor)
+// Adicionar tracks do professor
 if (localStream) {
 localStream.getTracks().forEach(track => {
 pc.addTrack(track, localStream);
@@ -606,22 +520,20 @@ pc.addTrack(track, localStream);
 // ICE candidates
 pc.onicecandidate = (event) => {
 if (event.candidate) {
-console.log("Professor enviando ICE para", peerId);
 enviarSinal(peerId, { type: 'ice', candidate: event.candidate });
 }
 };
 
-// Criar e enviar oferta
+// Criar oferta
 const offer = await pc.createOffer();
 await pc.setLocalDescription(offer);
-console.log("Professor enviando offer para", peerId);
+console.log("Professor enviando offer");
 enviarSinal(peerId, { type: 'offer', sdp: offer });
 }
 
-// ========== ALUNO CONECTA COM PROFESSOR ==========
-async function conectarComoAluno(peerId, peerNome) {
-if (peers[peerId]) return;
-console.log("Criando conexão com professor:", peerId);
+async function conectarComoAluno(profId) {
+if (peerConnection) return;
+console.log("Aluno criando conexão com professor:", profId);
 
 document.getElementById('status-text').textContent = "A conectar com o professor...";
 
@@ -631,11 +543,11 @@ iceServers: [
 { urls: 'stun:stun1.l.google.com:19302' }
 ]
 });
-peers[peerId] = pc;
+peerConnection = pc;
 
 // Receber stream do professor
 pc.ontrack = (event) => {
-console.log("Aluno recebeu track do professor!");
+console.log("Aluno recebeu stream do professor!");
 if (event.streams && event.streams[0]) {
 document.getElementById('connection-spinner').classList.add('hidden');
 document.getElementById('profVideo').srcObject = event.streams[0];
@@ -645,49 +557,42 @@ document.getElementById('profVideo').srcObject = event.streams[0];
 // ICE candidates
 pc.onicecandidate = (event) => {
 if (event.candidate) {
-console.log("Aluno enviando ICE para professor:", peerId);
-enviarSinal(peerId, { type: 'ice', candidate: event.candidate });
+enviarSinal(profId, { type: 'ice', candidate: event.candidate });
 }
-};
-
-// Aluno cria data channel (para chat)
-pc.ondatachannel = (event) => {
-console.log("Aluno recebeu data channel");
 };
 }
 
-// ========== PROCESSAR SINAL ==========
 async function processarSinal(signal) {
-const peerId = signal.from;
+const fromId = signal.from;
 
 if (signal.type === 'offer') {
 // Aluno recebe oferta do professor
-console.log("Aluno recebeu offer do professor");
-if (!peers[peerId]) await conectarComoAluno(peerId, "Professor");
-const pc = peers[peerId];
-await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
-const answer = await pc.createAnswer();
-await pc.setLocalDescription(answer);
+console.log("Aluno processando offer");
+if (!peerConnection) await conectarComoAluno(fromId);
+await peerConnection.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+const answer = await peerConnection.createAnswer();
+await peerConnection.setLocalDescription(answer);
 console.log("Aluno enviando answer");
-enviarSinal(peerId, { type: 'answer', sdp: answer });
+enviarSinal(fromId, { type: 'answer', sdp: answer });
 } 
 else if (signal.type === 'answer') {
 // Professor recebe answer do aluno
-console.log("Professor recebeu answer do aluno:", peerId);
-const pc = peers[peerId];
-if (pc) await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+console.log("Professor processando answer");
+if (peerConnection) {
+await peerConnection.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+}
 }
 else if (signal.type === 'ice') {
-// Ambos recebem ICE
-console.log("Recebendo ICE de:", peerId);
-const pc = peers[peerId];
-if (pc) await pc.addIceCandidate(new RTCIceCandidate(signal.candidate));
+console.log("Processando ICE");
+if (peerConnection) {
+await peerConnection.addIceCandidate(new RTCIceCandidate(signal.candidate));
+}
 }
 }
 
 function enviarSinal(peerId, data) {
 data.from = minhaId;
-salaRef.child('signals/' + peerId).push(data);
+SALA_REF.child('signals/' + peerId).push(data);
 }
 
 // ========== CONTROLES ==========
@@ -696,7 +601,7 @@ if (!localStream) return;
 micOn = !micOn;
 localStream.getAudioTracks().forEach(t => t.enabled = micOn);
 updateMicButton();
-if (salaRef) salaRef.child('participants/' + minhaId).update({ micOn: micOn });
+SALA_REF.child('participants/' + minhaId).update({ micOn: micOn });
 }
 
 function updateMicButton() {
@@ -711,7 +616,7 @@ if (!localStream || !souProfessor) return;
 camOn = !camOn;
 localStream.getVideoTracks().forEach(t => t.enabled = camOn);
 updateCamButton();
-if (salaRef) salaRef.child('participants/' + minhaId).update({ camOn: camOn });
+SALA_REF.child('participants/' + minhaId).update({ camOn: camOn });
 }
 
 function updateCamButton() {
@@ -729,12 +634,12 @@ const icon = document.getElementById('icon-hand');
 if (maoLevantada) {
 btn.classList.add('pulse');
 icon.textContent = '✋';
-if (salaRef) salaRef.child('participants/' + minhaId).update({ maoLevantada: true });
+SALA_REF.child('participants/' + minhaId).update({ maoLevantada: true });
 showModal('modal-mao');
 } else {
 btn.classList.remove('pulse');
 icon.textContent = '🙋';
-if (salaRef) salaRef.child('participants/' + minhaId).update({ maoLevantada: false });
+SALA_REF.child('participants/' + minhaId).update({ maoLevantada: false });
 }
 }
 
@@ -796,16 +701,16 @@ else { panel.classList.toggle('hidden'); panel.classList.toggle('flex'); }
 function enviarChat() {
 const input = document.getElementById('chat-input');
 const texto = input.value.trim();
-if (!texto || !salaRef) return;
-salaRef.child('chat').push({ id: minhaId, nome: meuNome, texto: texto, time: Date.now() });
+if (!texto) return;
+SALA_REF.child('chat').push({ id: minhaId, nome: meuNome, texto: texto, time: Date.now() });
 input.value = '';
 }
 
 function enviarChatMobile() {
 const input = document.getElementById('chat-input-mobile');
 const texto = input.value.trim();
-if (!texto || !salaRef) return;
-salaRef.child('chat').push({ id: minhaId, nome: meuNome, texto: texto, time: Date.now() });
+if (!texto) return;
+SALA_REF.child('chat').push({ id: minhaId, nome: meuNome, texto: texto, time: Date.now() });
 input.value = '';
 }
 
@@ -820,8 +725,7 @@ document.getElementById('chat-messages-mobile').scrollTop = document.getElementB
 }
 
 function atualizarContador() {
-if (!salaRef) return;
-salaRef.child('participants').once('value', (snap) => {
+SALA_REF.child('participants').once('value', (snap) => {
 document.getElementById('participant-count').textContent = '👥 ' + snap.numChildren();
 });
 }
@@ -830,12 +734,12 @@ document.getElementById('participant-count').textContent = '👥 ' + snap.numChi
 function sairDaSala() {
 if (isRecording) pararGravacao();
 if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
-Object.values(peers).forEach(pc => pc.close()); peers = {};
-if (salaRef) { 
-salaRef.child('participants/' + minhaId).remove(); 
-salaRef.child('signals/' + minhaId).remove(); 
-salaRef.off(); 
-}
+if (peerConnection) { peerConnection.close(); peerConnection = null; }
+
+SALA_REF.child('participants/' + minhaId).remove();
+SALA_REF.child('signals/' + minhaId).remove();
+if (souProfessor) { SALA_REF.child('professor').remove(); }
+SALA_REF.off();
 
 // Reset UI
 document.getElementById('connection-spinner').classList.remove('hidden');
@@ -852,7 +756,6 @@ const btn = document.getElementById('btn-record');
 btn.classList.remove('recording', 'saved');
 document.getElementById('icon-record').textContent = '⏺️';
 isRecording = false;
-professorId = null;
 }
 
 window.onclick = function(e) {
