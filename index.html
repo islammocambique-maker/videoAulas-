@@ -586,6 +586,22 @@ pc.onnegotiationneeded = async () => {
 };
 peers[peerId] = pc;
 
+// Monitorar mudanças de estado
+pc.onconnectionstatechange = () => {
+  console.log('🔗 Estado da conexão com', peerId.slice(0,4) + ':', pc.connectionState);
+  if (pc.connectionState === 'connected') {
+    logDebug('🔗 Conectado com ' + peerId.slice(0,4), 'ok');
+  } else if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
+    logDebug('❌ Conexão falhou com ' + peerId.slice(0,4), 'erro');
+  }
+};
+pc.oniceconnectionstatechange = () => {
+  console.log('🧊 ICE estado com', peerId.slice(0,4) + ':', pc.iceConnectionState);
+};
+pc.onsignalingstatechange = () => {
+  console.log('📶 Sinalização com', peerId.slice(0,4) + ':', pc.signalingState);
+};
+
 // Adicionar tracks locais
 if (localStream) {
 localStream.getTracks().forEach(track => {
@@ -618,7 +634,16 @@ videoEl.srcObject = stream;
 // ICE candidates
 pc.onicecandidate = (event) => {
 if (event.candidate) {
-enviarSinal(peerId, { type: 'ice', candidate: event.candidate });
+const cand = event.candidate;
+enviarSinal(peerId, { 
+  type: 'ice', 
+  candidate: {
+    candidate: cand.candidate,
+    sdpMid: cand.sdpMid,
+    sdpMLineIndex: cand.sdpMLineIndex,
+    usernameFragment: cand.usernameFragment
+  }
+});
 }
 };
 
@@ -660,17 +685,25 @@ return;
 if (signal.type === 'offer') {
 console.log('📥 Recebendo OFFER de:', fromId);
 try {
-if (pc.signalingState === 'stable' || pc.signalingState === 'have-local-offer') {
+if (pc.signalingState === 'stable') {
 await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
 const answer = await pc.createAnswer();
 await pc.setLocalDescription(answer);
 console.log('📤 Enviando ANSWER para:', fromId);
-enviarSinal(fromId, { type: 'answer', sdp: answer });
+enviarSinal(fromId, { type: 'answer', sdp: pc.localDescription });
+} else if (pc.signalingState === 'have-local-offer') {
+// Rollback e aceitar a oferta remota
+console.log('🔄 Rollback e aceitando offer remota');
+await pc.setLocalDescription({type:'rollback'});
+await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+const answer = await pc.createAnswer();
+await pc.setLocalDescription(answer);
+enviarSinal(fromId, { type: 'answer', sdp: pc.localDescription });
 } else {
-console.log("Ignorando offer, estado:", pc.signalingState);
+console.log('⏳ Ignorando offer, estado:', pc.signalingState);
 }
 } catch (err) {
-console.error("Erro ao processar offer:", err);
+console.error('❌ Erro ao processar offer:', err);
 }
 } 
 else if (signal.type === 'answer') {
@@ -678,31 +711,41 @@ console.log('📥 Recebendo ANSWER de:', fromId);
 try {
 if (pc.signalingState === 'have-local-offer') {
 await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
-console.log("Answer aplicada com sucesso para:", fromId);
+console.log('✅ ANSWER aplicada com sucesso para:', fromId);
+logDebug('✅ Conectado com ' + fromId.slice(0,4), 'ok');
 } else {
-console.log("Ignorando answer, estado:", pc.signalingState);
+console.log('⏳ Ignorando answer, estado:', pc.signalingState);
 }
 } catch (err) {
-console.error("Erro ao processar answer:", err);
+console.error('❌ Erro ao processar answer:', err);
 }
 }
 else if (signal.type === 'ice') {
-console.log("Recebendo ICE de:", fromId);
+console.log('📥 Recebendo ICE de:', fromId);
 try {
-if (pc.remoteDescription) {
-await pc.addIceCandidate(new RTCIceCandidate(signal.candidate));
+if (pc.remoteDescription && signal.candidate && signal.candidate.candidate) {
+const iceInit = {
+  candidate: signal.candidate.candidate,
+  sdpMid: signal.candidate.sdpMid || 0,
+  sdpMLineIndex: signal.candidate.sdpMLineIndex !== null ? signal.candidate.sdpMLineIndex : 0,
+  usernameFragment: signal.candidate.usernameFragment
+};
+await pc.addIceCandidate(new RTCIceCandidate(iceInit));
+console.log('✅ ICE candidate adicionado');
 } else {
-console.log("ICE candidate guardado para depois");
+console.log('⏳ ICE candidate guardado (sem remoteDescription ainda)');
 }
 } catch (e) {
-console.error("Erro ao adicionar ICE:", e);
+console.error('❌ Erro ao adicionar ICE:', e.message);
 }
 }
 }
 
 function enviarSinal(peerId, data) {
 data.from = minhaId;
+data.timestamp = Date.now();
 SALA_REF.child('signals/' + peerId).push(data);
+console.log('📤 Sinal enviado:', data.type, 'para', peerId);
 }
 
 // ========== LISTA DE PARTICIPANTES ==========
