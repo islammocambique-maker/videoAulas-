@@ -4,11 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moz1vendas - Marketplace de Moçambique</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
@@ -23,20 +20,14 @@
       }
     }
   </script>
-  <style>
-    .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-  <!-- ================= HEADER & NAUFRÁGIO / NAVEGAÇÃO ================= -->
-  <header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80">
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20 gap-4">
         
-        <!-- Logo -->
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 bg-gradient-to-tr from-brand-600 to-emerald-400 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-brand-500/30">
             M1
@@ -47,344 +38,330 @@
           </div>
         </div>
 
-        <!-- Barra de Pesquisa -->
-        <div class="hidden md:flex flex-1 max-w-xl mx-8 relative">
-          <input type="text" id="searchInput" placeholder="Pesquisar produtos, serviços, marcas..." 
-            class="w-full pl-12 pr-4 py-3 bg-slate-100/80 border border-slate-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all shadow-inner">
-          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-        </div>
-
         <!-- Botões de Ação -->
         <div class="flex items-center gap-3">
-          <button onclick="openModal('modalAnuncio')" class="hidden sm:flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-3 rounded-full transition-all shadow-md hover:shadow-lg">
-            <i class="fa-solid fa-bullhorn text-accent-500"></i> Anunciar (50 Mtn)
-          </button>
-          <button onclick="openModal('modalRegistro')" class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-5 py-3 rounded-full transition-all shadow-md shadow-brand-500/20">
-            <i class="fa-solid fa-store"></i> Criar Loja
-          </button>
+          <div id="sessaoVendedor" class="hidden items-center gap-2">
+            <span id="nomeLojaSessao" class="text-xs font-bold text-slate-700"></span>
+            <button onclick="openModal('modalAddProduto')" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow">
+              <i class="fa-solid fa-plus mr-1"></i> Adicionar Produto
+            </button>
+            <button onclick="terminarSessao()" class="text-xs text-red-500 hover:underline">Sair</button>
+          </div>
+
+          <div id="botoesVisitante" class="flex items-center gap-2">
+            <button onclick="openModal('modalLogin')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold px-4 py-3 rounded-full transition-all">
+              <i class="fa-solid fa-right-to-bracket mr-1"></i> Entrar na Loja
+            </button>
+            <button onclick="openModal('modalRegistro')" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-5 py-3 rounded-full transition-all shadow-md shadow-brand-500/20">
+              <i class="fa-solid fa-store mr-1"></i> Criar Loja
+            </button>
+          </div>
         </div>
 
-      </div>
-    </div>
-
-    <!-- Abas de Categorias -->
-    <div class="border-t border-slate-100 bg-white/50 backdrop-blur-md">
-      <div class="max-w-7xl mx-auto px-4 flex gap-8 overflow-x-auto hide-scrollbar text-xs font-bold text-slate-600">
-        <button onclick="filtrarCategoria('TODOS')" class="py-3 border-b-2 border-brand-600 text-brand-600 whitespace-nowrap"><i class="fa-solid fa-border-all mr-1"></i> Todos</button>
-        <button onclick="filtrarCategoria('DIGITAL')" class="py-3 border-b-2 border-transparent hover:text-brand-600 whitespace-nowrap"><i class="fa-solid fa-download mr-1"></i> Produtos Digitais</button>
-        <button onclick="filtrarCategoria('FISICO')" class="py-3 border-b-2 border-transparent hover:text-brand-600 whitespace-nowrap"><i class="fa-solid fa-box-open mr-1"></i> Produtos Físicos</button>
-        <button onclick="filtrarCategoria('ANUNCIO')" class="py-3 border-b-2 border-transparent hover:text-brand-600 whitespace-nowrap"><i class="fa-solid fa-rectangle-ad mr-1"></i> Anúncios</button>
       </div>
     </div>
   </header>
 
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
-
-    <!-- ================= SLIDESHOW DE ANÚNCIOS / DESTAQUES ================= -->
-    <section class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-2xl">
-      <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:16px_16px]"></div>
-      <div class="relative z-10 p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
-        <div class="space-y-4 max-w-xl text-center md:text-left">
-          <span class="inline-block bg-brand-500/20 text-brand-400 border border-brand-500/30 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Moz1vendas Destaque</span>
-          <h1 class="text-3xl sm:text-5xl font-black leading-tight">Compre e Venda com Segurança em Moçambique</h1>
-          <p class="text-slate-300 text-sm sm:text-base">Entrega automática de produtos digitais e negociação direta de produtos físicos via WhatsApp.</p>
-          <div class="flex flex-wrap gap-4 justify-center md:justify-start pt-2">
-            <button onclick="openModal('modalTermos')" class="text-xs text-slate-300 hover:text-white underline"><i class="fa-solid fa-shield-halved mr-1"></i> Termos & Condições de Uso</button>
-          </div>
-        </div>
-        
-        <!-- Slideshow Rotativo de 4 Segundos -->
-        <div id="slideshowContainer" class="w-full md:w-80 h-56 bg-slate-800/80 rounded-2xl border border-slate-700 p-4 flex flex-col items-center justify-center text-center shadow-xl transition-all duration-500">
-          <div class="animate-pulse space-y-2">
-            <div class="w-16 h-16 bg-slate-700 rounded-full mx-auto"></div>
-            <div class="h-4 bg-slate-700 rounded w-32 mx-auto"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= ANÚNCIOS PATROCINADOS (50 MT) ================= -->
-    <section>
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-extrabold flex items-center gap-2"><i class="fa-solid fa-bolt text-accent-500"></i> Anúncios Patrocinados</h2>
-        <span class="text-xs font-medium text-slate-500">50 Mtn / Semana</span>
-      </div>
-      <div id="gridAnuncios" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Renderizado dinamicamente -->
-      </div>
-    </section>
-
-    <!-- ================= BLOCOS DE EMPRESAS / LOJAS ================= -->
+    <!-- BLOCOS DE EMPRESAS / LOJAS -->
     <section class="space-y-10" id="seccaoBlocosEmpresas">
-      <!-- Blocos das empresas renderizados aqui -->
+      <!-- As lojas criadas vão ser renderizadas aqui dinamicamente -->
     </section>
-
   </main>
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 py-12 mt-16">
-    <div class="max-w-7xl mx-auto px-4 text-center space-y-4">
-      <div class="flex items-center justify-center gap-2 text-white font-bold text-lg">
-        <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center text-xs">M1</div>
-        Moz1vendas
-      </div>
-      <p class="text-xs max-w-md mx-auto">Plataforma Marketplace Moçambicana. O ecossistema inteligente de compra, venda e anúncios patrocinados.</p>
-      <p class="text-[11px] text-slate-600">&copy; 2026 Moz1vendas. Todos os direitos reservados. Integrado com NetShop & Google Apps Script.</p>
-    </div>
-  </footer>
-
-  <!-- ================= MODAL REGISTO DE EMPRESA ================= -->
+  <!-- MODAL REGISTO DE EMPRESA -->
   <div id="modalRegistro" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal('modalRegistro')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
       <div>
         <h3 class="text-xl font-extrabold text-slate-900">Registo de Empresa / Marca</h3>
-        <p class="text-xs text-slate-500">Crie sua loja no Moz1vendas e aproveite 14 dias grátis.</p>
+        <p class="text-xs text-slate-500">Crie a sua loja e publique os seus produtos.</p>
       </div>
       <form id="formRegistro" onsubmit="submeterRegistro(event)" class="space-y-4 text-xs">
         <div>
           <label class="font-bold text-slate-700 block mb-1">Nome Completo</label>
-          <input type="text" required id="regNome" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none">
+          <input type="text" required id="regNome" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="font-bold text-slate-700 block mb-1">E-mail</label>
-            <input type="email" required id="regEmail" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none">
+            <input type="email" required id="regEmail" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
           </div>
           <div>
             <label class="font-bold text-slate-700 block mb-1">Contacto (WhatsApp)</label>
-            <input type="tel" required id="regTelefone" placeholder="+258..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none">
+            <input type="tel" required id="regTelefone" placeholder="+258..." class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="font-bold text-slate-700 block mb-1">Nome da Empresa / Marca</label>
-            <input type="text" required id="regEmpresa" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none">
+            <input type="text" required id="regEmpresa" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
           </div>
           <div>
             <label class="font-bold text-slate-700 block mb-1">Link do Logotipo</label>
-            <input type="url" required id="regLogo" placeholder="https://..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none">
+            <input type="url" required id="regLogo" placeholder="https://..." class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="font-bold text-slate-700 block mb-1">Data de Nascimento</label>
-            <input type="date" required id="regDataNasc" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none">
+            <input type="date" required id="regDataNasc" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
           </div>
           <div>
             <label class="font-bold text-slate-700 block mb-1">BI Nº</label>
-            <input type="text" required id="regBI" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none">
+            <input type="text" required id="regBI" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
           </div>
         </div>
         <div>
           <label class="font-bold text-slate-700 block mb-1">PIN de Acesso (4-6 dígitos)</label>
-          <input type="password" required id="regPin" maxlength="6" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none">
+          <input type="password" required id="regPin" maxlength="6" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
         </div>
-        <button type="submit" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-500/30 transition-all text-sm">Criar Minha Empresa</button>
+        <button type="submit" id="btnSubmitReg" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all text-sm">
+          Criar Minha Empresa
+        </button>
       </form>
     </div>
   </div>
 
-  <!-- ================= MODAL ANÚNCIO (50 MT) ================= -->
-  <div id="modalAnuncio" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative">
-      <button onclick="closeModal('modalAnuncio')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-      <div>
-        <h3 class="text-xl font-extrabold text-slate-900">Publicar Anúncio Patrocinado</h3>
-        <p class="text-xs text-slate-500">Custo: <strong>50 Mtn</strong> | Validade: <strong>1 semana</strong></p>
-      </div>
-      <form id="formAnuncio" onsubmit="submeterAnuncio(event)" class="space-y-4 text-xs">
+  <!-- MODAL LOGIN -->
+  <div id="modalLogin" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-6 shadow-2xl relative">
+      <button onclick="closeModal('modalLogin')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+      <h3 class="text-xl font-extrabold text-slate-900">Entrar na Sua Loja</h3>
+      <form onsubmit="submeterLogin(event)" class="space-y-4 text-xs">
         <div>
-          <label class="font-bold text-slate-700 block mb-1">Tipo de Anúncio</label>
-          <select id="ancTipo" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none">
-            <option value="TEXTO">Texto Direto</option>
-            <option value="LINK_IMAGEM">Link de Imagem Banner</option>
-          </select>
+          <label class="font-bold text-slate-700 block mb-1">Contacto (WhatsApp)</label>
+          <input type="tel" id="loginTelefone" required class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
         </div>
         <div>
-          <label class="font-bold text-slate-700 block mb-1">Conteúdo do Anúncio</label>
-          <textarea id="ancConteudo" rows="3" required placeholder="Escreva o anúncio ou cole a URL da imagem..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none"></textarea>
+          <label class="font-bold text-slate-700 block mb-1">PIN de Acesso</label>
+          <input type="password" id="loginPin" required maxlength="6" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
         </div>
-        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-[11px]">
-          <i class="fa-solid fa-credit-card mr-1"></i> O pagamento será processado via <strong>NetShop</strong>.
-        </div>
-        <button type="submit" class="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-lg transition-all text-sm">Pagar 50 Mtn & Publicar</button>
+        <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-all">
+          Aceder ao Painel
+        </button>
       </form>
     </div>
   </div>
 
-  <!-- ================= MODAL TERMOS & CONDIÇÕES ================= -->
-  <div id="modalTermos" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-4 shadow-2xl relative max-h-[80vh] overflow-y-auto">
-      <button onclick="closeModal('modalTermos')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-      <h3 class="text-xl font-extrabold text-slate-900">Termos e Condições de Uso</h3>
-      <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
-        <p><strong>1. Produtos Físicos:</strong> A compra e venda de produtos físicos é negociada e combinada diretamente com o vendedor através dos contactos disponibilizados. O Moz1vendas não interfere no transporte ou pagamento presencial.</p>
-        <p><strong>2. Produtos Digitais:</strong> Pagos diretamente na plataforma através da API NetShop. A entrega/download do produto é realizada de forma automática imediatamente após a confirmação do pagamento.</p>
-        <p><strong>3. Avaliações e Moderação:</strong> Produtos ou empresas que acumularem mais de 5 "Não Gosto" num único dia serão automaticamente desativados do marketplace para proteção do consumidor.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= JAVASCRIPT & INTEGRAÇÃO GAS ================= -->
-  <script>
-    // Substituir pela URL pública de execução do Web App no GAS
-    const GAS_URL = "https://script.google.com/macros/s/AKfycby8uaqCoKnhHwwMguYNQeM8MLadi_oVLzUdSsFHj5MqHgtkvSxi_ID7lQ2ugbREAaQNpQ/exec";
-
-    // Dados Exemplo (Mock) para apresentação inicial
-    const mockBlocos = [
-      {
-        vendedorId: "VND-001",
-        empresa: "Muquila's Fashion",
-        logo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop",
-        slideshow: [
-          { id: "PRD-101", nome: "Vestido de Gala Seda", preco: 3500, img: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=600&auto=format&fit=crop" },
-          { id: "PRD-102", nome: "Sapatos de Salto Elegance", preco: 2200, img: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&auto=format&fit=crop" },
-          { id: "PRD-103", nome: "Bolsa de Couro Legitimo", preco: 1800, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&auto=format&fit=crop" }
-        ],
-        produtosLoja: [
-          { id: "PRD-101", nome: "Vestido de Gala Seda", preco: 3500, tipo: "FISICO", gosta: 12, naoGosta: 0, img: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=600&auto=format&fit=crop" },
-          { id: "PRD-102", nome: "Sapatos de Salto Elegance", preco: 2200, tipo: "FISICO", gosta: 8, naoGosta: 1, img: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&auto=format&fit=crop" },
-          { id: "PRD-103", nome: "E-Book Guia de Estilo PDF", preco: 450, tipo: "DIGITAL", gosta: 25, naoGosta: 0, img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop" }
-        ]
-      }
-    ];
-
-    const mockAnuncios = [
-      { id: "ANC-01", tipo: "TEXTO", conteudo: "Promoção de Abertura na Muquila's Fashion! Todo o catálogo com 15% OFF esta semana." },
-      { id: "ANC-02", tipo: "LINK_IMAGEM", conteudo: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&auto=format&fit=crop" }
-    ];
-
-    document.addEventListener("DOMContentLoaded", () => {
-      renderizarAnuncios(mockAnuncios);
-      renderizarBlocos(mockBlocos);
-      iniciarSlideshowGlobal(mockBlocos[0].slideshow);
-    });
-
-    function renderizarAnuncios(anuncios) {
-      const container = document.getElementById('gridAnuncios');
-      container.innerHTML = anuncios.map(a => `
-        <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm relative overflow-hidden flex flex-col justify-between">
-          <span class="absolute top-2 right-2 bg-accent-500/10 text-accent-600 font-bold text-[9px] px-2 py-0.5 rounded-full uppercase">Patrocinado</span>
-          ${a.tipo === 'TEXTO' ? `
-            <p class="text-xs text-slate-700 font-medium my-2 line-clamp-3">"${a.conteudo}"</p>
-          ` : `
-            <img src="${a.conteudo}" class="w-full h-28 object-cover rounded-xl my-2">
-          `}
-          <div class="text-[10px] text-slate-400 font-semibold pt-2 border-t border-slate-100 flex items-center justify-between">
-            <span>Anúncio Moz1vendas</span>
-            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+  <!-- MODAL ADICIONAR PRODUTO -->
+  <div id="modalAddProduto" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl relative">
+      <button onclick="closeModal('modalAddProduto')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+      <h3 class="text-xl font-extrabold text-slate-900">Novo Produto</h3>
+      <form onsubmit="submeterProduto(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Nome do Produto</label>
+          <input type="text" id="prodNome" required class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Preço (Mtn)</label>
+            <input type="number" id="prodPreco" required class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Tipo de Produto</label>
+            <select id="prodTipo" onchange="toggleLinkDigital(this.value)" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+              <option value="FISICO">Físico</option>
+              <option value="DIGITAL">Digital</option>
+            </select>
           </div>
         </div>
-      `).join('');
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">URL da Imagem</label>
+          <input type="url" id="prodImagem" required placeholder="https://..." class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+        </div>
+        <div id="divLinkDigital" class="hidden">
+          <label class="font-bold text-slate-700 block mb-1">Link de Download / Ficheiro Digital</label>
+          <input type="url" id="prodLinkDigital" placeholder="https://drive.google.com/..." class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+        </div>
+        <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all">
+          Publicar Produto
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Cole aqui o URL da sua Web App do Google Apps Script
+    const GAS_URL = "SUA_WEB_APP_URL_AQUI";
+
+    let lojas = [];
+    let usuarioLogado = null;
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
+    function toggleLinkDigital(val) { document.getElementById('divLinkDigital').classList.toggle('hidden', val !== 'DIGITAL'); }
+
+    // 1. SUBMETER REGISTO DE NOVA LOJA
+    async function submeterRegistro(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitReg');
+      btn.innerText = "A guardar no Google Sheets...";
+      btn.disabled = true;
+
+      const payload = {
+        action: "CRIAR_LOJA",
+        nome: document.getElementById('regNome').value,
+        email: document.getElementById('regEmail').value,
+        telefone: document.getElementById('regTelefone').value,
+        empresa: document.getElementById('regEmpresa').value,
+        logo: document.getElementById('regLogo').value,
+        dataNasc: document.getElementById('regDataNasc').value,
+        bi: document.getElementById('regBI').value,
+        pin: document.getElementById('regPin').value
+      };
+
+      try {
+        const res = await fetch(GAS_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+
+        if (result.status === "SUCCESS") {
+          // Adiciona a nova loja na interface imediatamente
+          const novaLoja = {
+            vendedorId: result.vendedorId,
+            empresa: payload.empresa,
+            logo: payload.logo,
+            produtosLoja: []
+          };
+          lojas.unshift(novaLoja);
+          renderizarBlocos(lojas);
+
+          // Efetua login automático
+          usuarioLogado = { id: result.vendedorId, empresa: payload.empresa };
+          atualizarEstadoSessao();
+
+          alert("Loja registada com sucesso no Google Sheets!");
+          closeModal('modalRegistro');
+          document.getElementById('formRegistro').reset();
+        } else {
+          alert("Erro ao registar: " + result.message);
+        }
+      } catch (err) {
+        alert("Falha na comunicação com o Google Sheets. Verifique a URL do GAS.");
+      } finally {
+        btn.innerText = "Criar Minha Empresa";
+        btn.disabled = false;
+      }
     }
 
-    function renderizarBlocos(blocos) {
+    // 2. LOGIN DO VENDEDOR
+    async function submeterLogin(e) {
+      e.preventDefault();
+      const payload = {
+        action: "LOGIN",
+        telefone: document.getElementById('loginTelefone').value,
+        pin: document.getElementById('loginPin').value
+      };
+
+      try {
+        const res = await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
+        const result = await res.json();
+
+        if (result.status === "SUCCESS") {
+          usuarioLogado = result.vendedor;
+          atualizarEstadoSessao();
+          closeModal('modalLogin');
+          alert("Sessão iniciada como " + usuarioLogado.empresa);
+        } else {
+          alert("Credenciais inválidas.");
+        }
+      } catch (err) {
+        alert("Erro no login.");
+      }
+    }
+
+    // 3. ADICIONAR PRODUTO À LOJA LOGADA
+    async function submeterProduto(e) {
+      e.preventDefault();
+      if (!usuarioLogado) return alert("Precisa de iniciar sessão.");
+
+      const payload = {
+        action: "CRIAR_PRODUTO",
+        vendedorId: usuarioLogado.id,
+        nome: document.getElementById('prodNome').value,
+        preco: Number(document.getElementById('prodPreco').value),
+        tipo: document.getElementById('prodTipo').value,
+        imagem: document.getElementById('prodImagem').value,
+        linkDigital: document.getElementById('prodLinkDigital').value
+      };
+
+      try {
+        const res = await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
+        const result = await res.json();
+
+        if (result.status === "SUCCESS") {
+          // Atualiza a loja na interface
+          const loja = lojas.find(l => l.vendedorId === usuarioLogado.id);
+          if (loja) {
+            loja.produtosLoja.push({
+              id: result.idProduto,
+              nome: payload.nome,
+              preco: payload.preco,
+              tipo: payload.tipo,
+              img: payload.imagem,
+              gosta: 0,
+              naoGosta: 0
+            });
+            renderizarBlocos(lojas);
+          }
+          alert("Produto adicionado com sucesso!");
+          closeModal('modalAddProduto');
+        }
+      } catch (err) {
+        alert("Erro ao publicar produto.");
+      }
+    }
+
+    function atualizarEstadoSessao() {
+      if (usuarioLogado) {
+        document.getElementById('botoesVisitante').classList.add('hidden');
+        document.getElementById('sessaoVendedor').classList.remove('hidden');
+        document.getElementById('sessaoVendedor').classList.add('flex');
+        document.getElementById('nomeLojaSessao').innerText = usuarioLogado.empresa;
+      } else {
+        document.getElementById('botoesVisitante').classList.remove('hidden');
+        document.getElementById('sessaoVendedor').classList.add('hidden');
+      }
+    }
+
+    function terminarSessao() {
+      usuarioLogado = null;
+      atualizarEstadoSessao();
+    }
+
+    function renderizarBlocos(listaLojas) {
       const container = document.getElementById('seccaoBlocosEmpresas');
-      container.innerHTML = blocos.map(b => `
-        <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 space-y-6 shadow-sm">
-          <div class="flex items-center justify-between flex-wrap gap-4 pb-4 border-b border-slate-100">
+      if (listaLojas.length === 0) {
+        container.innerHTML = `<div class="text-center py-12 text-slate-400">Nenhuma loja registada ainda.</div>`;
+        return;
+      }
+      container.innerHTML = listaLojas.map(b => `
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 space-y-6 shadow-sm">
+          <div class="flex items-center justify-between flex-wrap gap-4 pb-4 border-b">
             <div class="flex items-center gap-4">
               <img src="${b.logo}" class="w-14 h-14 rounded-2xl object-cover ring-2 ring-brand-500/20 shadow-md">
               <div>
-                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                  ${b.empresa} <span class="text-brand-600"><i class="fa-solid fa-circle-check text-xs"></i></span>
-                </h3>
-                <div class="flex items-center gap-3 text-xs text-slate-500 mt-0.5">
-                  <button onclick="avaliarEmpresa('${b.vendedorId}', 'GOSTO')" class="hover:text-brand-600"><i class="fa-regular fa-thumbs-up"></i> Gosto</button>
-                  <button onclick="avaliarEmpresa('${b.vendedorId}', 'NAO_GOSTO')" class="hover:text-red-500"><i class="fa-regular fa-thumbs-down"></i> Não gosto</button>
-                  <button onclick="partilharLoja('${b.empresa}')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-share-nodes"></i> Partilhar</button>
-                </div>
+                <h3 class="text-lg font-bold text-slate-900">${b.empresa}</h3>
+                <span class="text-xs text-slate-400">Loja Oficial Moz1vendas</span>
               </div>
             </div>
-            <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-5 py-2.5 rounded-full transition-all">
-              Ver Loja Completa <i class="fa-solid fa-chevron-right ml-1"></i>
-            </button>
           </div>
-
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            ${b.produtosLoja.length === 0 ? '<p class="text-xs text-slate-400 col-span-3">Nenhum produto publicado nesta loja.</p>' : ''}
             ${b.produtosLoja.map(p => `
-              <div class="bg-slate-50/50 rounded-2xl p-4 border border-slate-100 space-y-3 flex flex-col justify-between">
-                <div class="relative rounded-xl overflow-hidden group">
-                  <img src="${p.img}" class="w-full h-44 object-cover group-hover:scale-105 transition-all duration-300">
-                  <span class="absolute top-2 left-2 text-[10px] font-extrabold px-2 py-1 rounded-md text-white ${p.tipo === 'DIGITAL' ? 'bg-blue-600' : 'bg-emerald-600'}">
-                    ${p.tipo}
-                  </span>
-                </div>
-                <div>
-                  <h4 class="font-bold text-sm text-slate-800 line-clamp-1">${p.nome}</h4>
-                  <p class="text-brand-700 font-black text-base mt-1">${p.preco.toLocaleString()} Mtn</p>
-                </div>
-                <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-200/60">
-                  <div class="flex items-center gap-3 text-slate-500">
-                    <button onclick="avaliarProduto('${p.id}', 'GOSTO')" class="hover:text-brand-600 flex items-center gap-1">
-                      <i class="fa-regular fa-thumbs-up"></i> <span>${p.gosta}</span>
-                    </button>
-                    <button onclick="avaliarProduto('${p.id}', 'NAO_GOSTO')" class="hover:text-red-500 flex items-center gap-1">
-                      <i class="fa-regular fa-thumbs-down"></i> <span>${p.naoGosta}</span>
-                    </button>
-                  </div>
-                  <button onclick="comprarProduto('${p.id}', '${p.tipo}')" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-3 py-1.5 rounded-lg text-[11px]">
-                    ${p.tipo === 'DIGITAL' ? 'Pagar & Baixar' : 'Contactar Vendedor'}
-                  </button>
-                </div>
+              <div class="bg-slate-50/50 rounded-2xl p-4 border space-y-3">
+                <img src="${p.img}" class="w-full h-44 object-cover rounded-xl">
+                <h4 class="font-bold text-sm text-slate-800">${p.nome}</h4>
+                <p class="text-brand-700 font-black">${p.preco.toLocaleString()} Mtn</p>
               </div>
             `).join('')}
           </div>
         </div>
       `).join('');
-    }
-
-    function iniciarSlideshowGlobal(itens) {
-      let index = 0;
-      const el = document.getElementById('slideshowContainer');
-      setInterval(() => {
-        const item = itens[index];
-        el.innerHTML = `
-          <div class="space-y-2 animate-fade-in">
-            <span class="text-[10px] uppercase font-bold text-brand-400 tracking-wider">Destaque (4s)</span>
-            <img src="${item.img}" class="w-20 h-20 object-cover rounded-xl mx-auto shadow-md">
-            <h4 class="font-bold text-xs line-clamp-1">${item.nome}</h4>
-            <p class="text-brand-400 font-extrabold text-xs">${item.preco.toLocaleString()} Mtn</p>
-          </div>
-        `;
-        index = (index + 1) % itens.length;
-      }, 4000);
-    }
-
-    function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
-
-    function submeterRegistro(e) {
-      e.preventDefault();
-      alert("Registo submetido com sucesso! Aproveite os 14 dias grátis.");
-      closeModal('modalRegistro');
-    }
-
-    function submeterAnuncio(e) {
-      e.preventDefault();
-      alert("Redirecionando para NetShop para pagamento de 50 Mtn...");
-      closeModal('modalAnuncio');
-    }
-
-    function avaliarProduto(id, tipo) {
-      alert(`Avaliação ${tipo} registada.`);
-    }
-
-    function avaliarEmpresa(id, tipo) {
-      alert(`Avaliação de empresa ${tipo} registada.`);
-    }
-
-    function comprarProduto(id, tipo) {
-      if(tipo === 'DIGITAL') {
-        alert("Pagamento NetShop. Entrega automática do produto digital após a confirmação.");
-      } else {
-        alert("Negociação direta enviada ao WhatsApp do vendedor.");
-      }
-    }
-
-    function partilharLoja(empresa) {
-      alert(`Link de partilha da web Moz1vendas para a marca: ${empresa}`);
     }
   </script>
 </body>
