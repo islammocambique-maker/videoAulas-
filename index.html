@@ -1,1295 +1,2928 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Madrassa I.M - Vídeo Aula</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-body { font-family: 'Poppins', sans-serif; }
-.gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%); }
-.glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); }
-.video-card { background: #1e293b; border-radius: 12px; overflow: hidden; position: relative; min-height: 120px; }
-.video-card video { width: 100%; height: 100%; object-fit: cover; }
-.video-label { position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.7); padding: 4px 12px; border-radius: 20px; font-size: 12px; z-index: 5; }
-.video-muted { position: absolute; top: 8px; right: 8px; background: rgba(239,68,68,0.8); padding: 4px 8px; border-radius: 20px; font-size: 11px; z-index: 5; }
-.btn-control { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer; }
-.btn-control:hover { transform: scale(1.1); }
-.btn-on { background: rgba(255,255,255,0.2); }
-.btn-off { background: #ef4444; }
-.btn-record { background: #ef4444; }
-.btn-record.recording { animation: pulse-record 1.5s infinite; }
-.btn-record.saved { background: #10b981; }
-@keyframes pulse-record { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-.chat-msg { max-width: 80%; padding: 10px 16px; border-radius: 16px; margin-bottom: 8px; word-break: break-word; }
-.chat-me { background: #059669; margin-left: auto; border-bottom-right-radius: 4px; }
-.chat-other { background: #334155; margin-right: auto; border-bottom-left-radius: 4px; }
-.hidden { display: none !important; }
-.pulse { animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-.spinner { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #10b981; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-#localVideo { transform: scaleX(-1); }
-.recording-indicator { position: absolute; top: 8px; left: 8px; background: rgba(239,68,68,0.9); padding: 4px 12px; border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 6px; z-index: 10; }
-.recording-indicator::before { content: ''; width: 8px; height: 8px; background: white; border-radius: 50%; animation: blink 1s infinite; }
-@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-.connection-status { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 3; }
-.participant-item { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); margin-bottom: 4px; }
-</style>
-<base target="_blank">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOZ1VENDAS - Catálogo & Marketplace</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+    }
+
+    /* =========================================================
+       SLIDESHOW DE PRODUTOS
+       ========================================================= */
+
+    #produtoSlideshow {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-produto {
+      display: none;
+      animation: slideProdutoEntrada .5s ease;
+    }
+
+    .slide-produto.ativo {
+      display: block;
+    }
+
+    @keyframes slideProdutoEntrada {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .slide-imagem {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .slide-indicador {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.45);
+      transition: all .3s ease;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .slide-indicador.ativo {
+      width: 22px;
+      background: white;
+    }
+
+    @media (min-width: 768px) {
+      .slide-imagem {
+        height: 300px;
+      }
+    }
+  </style>
 </head>
-<body class="gradient-bg min-h-screen text-white">
-
-<!-- ============ PÁGINA INICIAL ============ -->
-<div id="page-home" class="min-h-screen">
-<nav class="glass sticky top-0 z-50 px-6 py-4">
-<div class="max-w-7xl mx-auto flex justify-between items-center">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-xl font-bold">M</div>
-<h1 class="text-xl font-bold">Madrassa I.M</h1>
-</div>
-<div class="flex gap-3">
-<button onclick="showPage('home')" class="px-4 py-2 rounded-lg hover:bg-white/10 transition">Início</button>
-<button onclick="showPage('como-funciona')" class="px-4 py-2 rounded-lg hover:bg-white/10 transition">Como Funciona</button>
-<button onclick="showLoginModal()" class="px-4 py-2 bg-emerald-500 rounded-lg hover:bg-emerald-600 transition font-medium">Entrar na Aula</button>
-</div>
-</div>
-</nav>
-
-<div id="hero-section" class="max-w-7xl mx-auto px-6 py-20 text-center">
-<div class="inline-block px-4 py-1 bg-emerald-500/20 rounded-full text-emerald-300 text-sm font-medium mb-6">🎓 Plataforma de Ensino Online</div>
-<h2 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">Madrassa I.M<br><span class="text-emerald-400">Vídeo Aula</span></h2>
-<p class="text-xl text-gray-300 max-w-2xl mx-auto mb-10">Uma única sala. Professor e alunos veem-se mutuamente. Simples e direto.</p>
-<div class="flex flex-wrap justify-center gap-4">
-<button onclick="showLoginModal()" class="px-8 py-4 bg-emerald-500 rounded-xl text-lg font-semibold hover:bg-emerald-600 transition pulse">🚀 Entrar na Aula Agora</button>
-<button onclick="showPage('como-funciona')" class="px-8 py-4 glass rounded-xl text-lg font-semibold hover:bg-white/20 transition">📖 Como Funciona</button>
-</div>
-</div>
-
-<div id="como-funciona-section" class="hidden max-w-5xl mx-auto px-6 py-16">
-<h2 class="text-4xl font-bold text-center mb-12">📖 Como Funciona</h2>
-<div class="space-y-6">
-<div class="glass rounded-2xl p-6 flex gap-4 items-start">
-<div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center font-bold shrink-0">1</div>
-<div><h3 class="text-xl font-bold text-emerald-400">Professor Entra</h3><p class="text-gray-300">O professor clica em "Sou Professor", introduz PIN e liga a câmara. Todos os alunos vêem-no!</p></div>
-</div>
-<div class="glass rounded-2xl p-6 flex gap-4 items-start">
-<div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center font-bold shrink-0">2</div>
-<div><h3 class="text-xl font-bold text-emerald-400">Aluno Entra Diretamente</h3><p class="text-gray-300">O aluno clica em "Sou Aluno", escreve o nome e entra. Vê o professor e o professor vê-o!</p></div>
-</div>
-<div class="glass rounded-2xl p-6 flex gap-4 items-start">
-<div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center font-bold shrink-0">3</div>
-<div><h3 class="text-xl font-bold text-emerald-400">Todos Veem Todos</h3><p class="text-gray-300">Professor vê todos os alunos. Alunos veem o professor e podem levantar a mão para falar.</p></div>
-</div>
-</div>
-<div class="text-center mt-10">
-<button onclick="showLoginModal()" class="px-8 py-4 bg-emerald-500 rounded-xl text-lg font-semibold hover:bg-emerald-600 transition">🚀 Quero Experimentar</button>
-</div>
-</div>
-</div>
-
-<!-- ============ SALA DE AULA ============ -->
-<div id="page-sala" class="hidden h-screen flex flex-col">
-<div class="glass px-4 py-3 flex justify-between items-center shrink-0">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-sm font-bold">M</div>
-<div>
-<h2 class="font-bold text-sm">Madrassa I.M - Sala de Aula</h2>
-<p class="text-xs text-gray-400" id="sala-status">🟢 Aula em direto</p>
-</div>
-</div>
-<div class="flex items-center gap-3">
-<span id="participant-count" class="text-sm text-gray-300">👥 1</span>
-<button onclick="toggleChat()" class="px-3 py-1 bg-white/10 rounded-lg hover:bg-white/20 transition text-sm">💬 Chat</button>
-<button onclick="toggleParticipants()" class="px-3 py-1 bg-white/10 rounded-lg hover:bg-white/20 transition text-sm md:hidden">👥</button>
-<button onclick="sairDaSala()" class="px-3 py-1 bg-red-500 rounded-lg hover:bg-red-600 transition text-sm">🚪 Sair</button>
-</div>
-</div>
-
-<div class="flex-1 flex overflow-hidden">
-<div class="flex-1 flex flex-col md:flex-row overflow-hidden">
-<div class="flex-1 p-4 overflow-y-auto">
-<div id="videos-container" class="space-y-4">
-<div class="video-card aspect-video relative" id="prof-video-container">
-<div id="recording-indicator" class="recording-indicator hidden">⏺️ A GRAVAR</div>
-<div id="connection-spinner" class="connection-status">
-<div class="spinner mx-auto mb-4"></div>
-<p class="text-gray-400" id="status-text">À espera do professor...</p>
-</div>
-<video id="profVideo" autoplay playsinline class="w-full h-full object-cover"></video>
-<div class="video-label">👨‍🏫 <span id="prof-name">Professor</span></div>
-</div>
-<div id="alunos-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4"></div>
-</div>
-</div>
-
-<div id="side-panel" class="hidden md:flex w-80 flex-col border-l border-white/10 bg-black/20">
-<div class="px-4 py-3 border-b border-white/10">
-<h3 class="font-bold text-sm">👥 Participantes</h3>
-</div>
-<div id="participants-list" class="p-3 overflow-y-auto max-h-48"></div>
-<div class="flex-1 flex flex-col border-t border-white/10">
-<div class="px-4 py-2 border-b border-white/10 font-bold text-sm">💬 Chat</div>
-<div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-2"></div>
-<div class="p-4 border-t border-white/10">
-<div class="flex gap-2">
-<input type="text" id="chat-input" placeholder="Escreve uma mensagem..." 
-class="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:border-emerald-400"
-onkeypress="if(event.key==='Enter') enviarChat()">
-<button onclick="enviarChat()" class="px-4 py-2 bg-emerald-500 rounded-lg hover:bg-emerald-600 transition">➤</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<div class="glass px-4 py-4 flex justify-center items-center gap-4 shrink-0">
-<button id="btn-mic" onclick="toggleMic()" class="btn-control btn-on" title="Microfone"><span id="icon-mic">🎤</span></button>
-<button id="btn-cam" onclick="toggleCam()" class="btn-control btn-on" title="Câmara"><span id="icon-cam">🎥</span></button>
-<button id="btn-hand" onclick="levantarMao()" class="btn-control btn-on" title="Levantar Mão"><span id="icon-hand">🙋</span></button>
-<button id="btn-record" onclick="toggleRecording()" class="btn-control btn-record hidden" title="Gravar Aula"><span id="icon-record">⏺️</span></button>
-<button onclick="toggleChat()" class="btn-control btn-on md:hidden" title="Chat"><span>💬</span></button>
-<button onclick="toggleParticipants()" class="btn-control btn-on md:hidden" title="Participantes"><span>👥</span></button>
-<button onclick="sairDaSala()" class="btn-control btn-off" title="Sair"><span>📞</span></button>
-</div>
-</div>
-
-<!-- Chat Mobile Overlay -->
-<div id="chat-overlay" class="hidden fixed inset-0 bg-black/80 z-50 flex flex-col">
-<div class="px-4 py-3 border-b border-white/10 flex justify-between items-center bg-slate-900">
-<span class="font-bold">💬 Chat</span>
-<button onclick="toggleChat()" class="text-2xl">✕</button>
-</div>
-<div id="chat-messages-mobile" class="flex-1 overflow-y-auto p-4 space-y-2"></div>
-<div class="p-4 border-t border-white/10 bg-slate-900">
-<div class="flex gap-2">
-<input type="text" id="chat-input-mobile" placeholder="Escreve..." 
-class="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:border-emerald-400"
-onkeypress="if(event.key==='Enter') enviarChatMobile()">
-<button onclick="enviarChatMobile()" class="px-4 py-2 bg-emerald-500 rounded-lg hover:bg-emerald-600 transition">➤</button>
-</div>
-</div>
-</div>
-
-<!-- Participantes Mobile Overlay -->
-<div id="participants-overlay" class="hidden fixed inset-0 bg-black/80 z-50 flex flex-col">
-<div class="px-4 py-3 border-b border-white/10 flex justify-between items-center bg-slate-900">
-<span class="font-bold">👥 Participantes</span>
-<button onclick="toggleParticipants()" class="text-2xl">✕</button>
-</div>
-<div id="participants-list-mobile" class="flex-1 overflow-y-auto p-4"></div>
-</div>
-
-<!-- ============ MODAIS ============ -->
-<div id="modal-login" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-<div class="glass rounded-2xl p-8 max-w-md w-full">
-<h3 class="text-2xl font-bold text-center mb-2">Entrar na Aula</h3>
-<p class="text-gray-300 text-center mb-6">Escolhe como queres aceder</p>
-<div class="space-y-4">
-<button onclick="entrarComoAluno()" class="w-full px-6 py-4 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition flex items-center gap-3">
-<span class="text-2xl">👨‍🎓</span>
-<div class="text-left"><div class="font-bold">Sou Aluno</div><div class="text-sm text-emerald-100">Ver aula ao vivo</div></div>
-</button>
-<button onclick="mostrarLoginAdmin()" class="w-full px-6 py-4 bg-blue-500/80 rounded-xl hover:bg-blue-500 transition flex items-center gap-3">
-<span class="text-2xl">👨‍🏫</span>
-<div class="text-left"><div class="font-bold">Sou Professor/Admin</div><div class="text-sm text-blue-100">Transmitir aula (PIN necessário)</div></div>
-</button>
-</div>
-<button onclick="fecharModal('modal-login')" class="w-full mt-4 px-4 py-2 text-gray-400 hover:text-white transition">Cancelar</button>
-</div>
-</div>
-
-<div id="modal-aluno" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-<div class="glass rounded-2xl p-8 max-w-md w-full">
-<h3 class="text-2xl font-bold text-center mb-2">👨‍🎓 Entrar na Aula</h3>
-<p class="text-gray-300 text-center mb-2">A sala é única e automática</p>
-<div class="inline-block px-3 py-1 bg-emerald-500/20 rounded-full text-emerald-300 text-xs mb-4">🟢 Conecta diretamente ao professor</div>
-<div class="space-y-4">
-<input type="text" id="input-nome-aluno" placeholder="Escreve o teu nome" 
-class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-center focus:outline-none focus:border-emerald-400">
-<button onclick="confirmarEntradaAluno()" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">🚀 Entrar na Aula</button>
-</div>
-</div>
-</div>
-
-<div id="modal-admin" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-<div class="glass rounded-2xl p-8 max-w-md w-full">
-<h3 class="text-2xl font-bold text-center mb-2">🔐 Acesso de Professor</h3>
-<p class="text-gray-300 text-center mb-4">Introduz as tuas credenciais</p>
-<div class="space-y-4">
-<select id="select-admin" class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-emerald-400">
-<option value="" class="text-gray-800">Selecionar administrador...</option>
-<option value="Abdullah" class="text-gray-800">Abdullah</option>
-<option value="Abdulfatah" class="text-gray-800">Abdulfatah</option>
-</select>
-<input type="password" id="input-pin" maxlength="6" placeholder="PIN (6 dígitos)" 
-class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-center text-2xl tracking-widest focus:outline-none focus:border-emerald-400">
-<button onclick="verificarAdmin()" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">Entrar como Professor</button>
-</div>
-<p id="msg-erro-admin" class="text-red-400 text-center mt-3 hidden">PIN incorreto. Tenta novamente.</p>
-<button onclick="fecharModal('modal-admin'); showModal('modal-login')" class="w-full mt-4 px-4 py-2 text-gray-400 hover:text-white transition">← Voltar</button>
-</div>
-</div>
-
-<div id="modal-prof-nome" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-<div class="glass rounded-2xl p-8 max-w-md w-full">
-<h3 class="text-2xl font-bold text-center mb-2">👨‍🏫 Iniciar Aula</h3>
-<p class="text-gray-300 text-center mb-2">Bem-vindo, Professor!</p>
-<div class="inline-block px-3 py-1 bg-emerald-500/20 rounded-full text-emerald-300 text-xs mb-4">📡 Vais transmitir para todos os alunos</div>
-<div class="space-y-4">
-<input type="text" id="input-nome-prof" value="Professor" 
-class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-center focus:outline-none focus:border-emerald-400">
-<button onclick="iniciarAulaProfessor()" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">🎥 Iniciar Transmissão</button>
-</div>
-</div>
-</div>
-
-<div id="modal-gravacao" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-<div class="glass rounded-2xl p-8 max-w-md w-full text-center">
-<div class="text-5xl mb-4">🎬</div>
-<h3 class="text-2xl font-bold mb-2">Aula Gravada!</h3>
-<p class="text-gray-300 mb-6">A gravação foi guardada no teu dispositivo.</p>
-<div class="space-y-3">
-<a id="link-download" href="#" download class="block w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">📥 Download do Vídeo</a>
-<button onclick="fecharModal('modal-gravacao')" class="w-full px-6 py-3 bg-white/10 rounded-xl hover:bg-white/20 transition">Fechar</button>
-</div>
-</div>
-</div>
-
-<div id="modal-mao" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-<div class="glass rounded-2xl p-8 max-w-md w-full text-center">
-<div class="text-5xl mb-4">🙋</div>
-<h3 class="text-2xl font-bold mb-2">Mão Levantada!</h3>
-<p class="text-gray-300 mb-4">O professor foi notificado.</p>
-<button onclick="fecharModal('modal-mao')" class="w-full px-6 py-3 bg-emerald-500 rounded-xl hover:bg-emerald-600 transition font-bold">Entendido</button>
-</div>
-</div>
-
-<!-- ============ SCRIPTS ============ -->
-<script>
-// ==================== CONFIGURAÇÃO FIREBASE ====================
-const firebaseConfig = {
-apiKey: "AIzaSyD2rNS7HSJyek3OCrRquudFgqQSWXZJYrY",
-authDomain: "madrassa-online-b851c.firebaseapp.com",
-databaseURL: "https://madrassa-online-b851c-default-rtdb.firebaseio.com",
-projectId: "madrassa-online-b851c",
-storageBucket: "madrassa-online-b851c.firebasestorage.app",
-messagingSenderId: "360782668012",
-appId: "1:360782668012:web:d501ef187911db632445c9",
-measurementId: "G-RV9GD4S22T"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-const ADMINISTRADORES = { "Abdullah": "123456", "Abdulfatah": "123456" };
-const NOME_SALA = "madrassa-im-aula-unica";
-
-// ==================== VARIÁVEIS GLOBAIS ====================
-let meuNome = "";
-let souProfessor = false;
-let localStream = null;
-let minhaId = Math.random().toString(36).substring(2, 10) + Date.now().toString(36).substring(0, 4);
-let micOn = true;
-let camOn = true;
-let mediaRecorder = null;
-let recordedChunks = [];
-let isRecording = false;
-let maoLevantada = false;
-
-// Mapa de conexões: peerId -> { pc, remoteStream, retryCount, iceQueue, isRemoteProfessor }
-let conexoes = {};
-
-// Referências Firebase (para cleanup)
-let fbRefs = {};
-
-// Intervalos
-let heartbeatTimer = null;
-let cleanupTimer = null;
-
-// ==================== NAVEGAÇÃO E MODAIS ====================
-function showPage(page) {
-document.getElementById('hero-section').classList.add('hidden');
-document.getElementById('como-funciona-section').classList.add('hidden');
-if (page === 'home') document.getElementById('hero-section').classList.remove('hidden');
-if (page === 'como-funciona') document.getElementById('como-funciona-section').classList.remove('hidden');
-window.scrollTo(0, 0);
-}
-
-function showModal(id) {
-const el = document.getElementById(id);
-el.classList.remove('hidden');
-el.classList.add('flex');
-}
-
-function fecharModal(id) {
-const el = document.getElementById(id);
-el.classList.add('hidden');
-el.classList.remove('flex');
-}
-
-function showLoginModal() { showModal('modal-login'); }
-function entrarComoAluno() { fecharModal('modal-login'); showModal('modal-aluno'); }
-function mostrarLoginAdmin() { fecharModal('modal-login'); showModal('modal-admin'); }
-
-function verificarAdmin() {
-const nome = document.getElementById('select-admin').value;
-const pin = document.getElementById('input-pin').value;
-if (ADMINISTRADORES[nome] && ADMINISTRADORES[nome] === pin) {
-fecharModal('modal-admin');
-document.getElementById('input-nome-prof').value = nome;
-showModal('modal-prof-nome');
-} else {
-document.getElementById('msg-erro-admin').classList.remove('hidden');
-document.getElementById('input-pin').value = '';
-}
-}
-
-// ==================== ENTRADA DO ALUNO ====================
-function confirmarEntradaAluno() {
-const nome = document.getElementById('input-nome-aluno').value.trim();
-if (!nome) { alert("Escreve o teu nome!"); return; }
-meuNome = nome;
-souProfessor = false;
-fecharModal('modal-aluno');
-entrarSala();
-}
-
-// ==================== ENTRADA DO PROFESSOR ====================
-function iniciarAulaProfessor() {
-const nome = document.getElementById('input-nome-prof').value.trim();
-if (!nome) { alert("Escreve o teu nome!"); return; }
-meuNome = nome;
-souProfessor = true;
-fecharModal('modal-prof-nome');
-entrarSala();
-}
-
-// ==================== ENTRAR NA SALA ====================
-async function entrarSala() {
-document.getElementById('page-home').classList.add('hidden');
-document.getElementById('page-sala').classList.remove('hidden');
-
-// Obter stream local
-try {
-const constraints = {
-video: { width: { ideal: 640, max: 1280 }, height: { ideal: 480, max: 720 }, frameRate: { ideal: 15, max: 24 } },
-audio: { sampleRate: 48000, channelCount: 2, echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-};
-
-localStream = await navigator.mediaDevices.getUserMedia(constraints);
-
-if (souProfessor) {
-console.log('👨‍🏫 PROFESSOR entrou');
-document.getElementById('prof-name').textContent = meuNome;
-document.getElementById('btn-record').classList.remove('hidden');
-document.getElementById('connection-spinner').classList.add('hidden');
-document.getElementById('profVideo').srcObject = localStream;
-camOn = true;
-} else {
-console.log('👨‍🎓 ALUNO entrou');
-document.getElementById('prof-name').textContent = "Professor";
-document.getElementById('btn-record').classList.add('hidden');
-camOn = true;
-}
-
-updateMicButton();
-updateCamButton();
-
-} catch (err) {
-console.error("Erro media:", err);
-try {
-localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-camOn = false;
-updateCamButton();
-} catch (err2) {
-console.error("Sem permissões:", err2);
-}
-}
-
-// Configurar referências Firebase
-const salaRef = db.ref('salas/' + NOME_SALA);
-fbRefs.sala = salaRef;
-fbRefs.participants = salaRef.child('participants');
-fbRefs.signals = salaRef.child('signals/' + minhaId);
-fbRefs.chat = salaRef.child('chat');
-fbRefs.kicks = salaRef.child('kicks/' + minhaId);
-
-// Registrar na sala
-await fbRefs.participants.child(minhaId).set({
-nome: meuNome,
-isProfessor: souProfessor,
-joinedAt: Date.now(),
-lastSeen: Date.now(),
-micOn: micOn,
-camOn: camOn,
-maoLevantada: false
-});
-
-fbRefs.participants.child(minhaId).onDisconnect().remove();
-
-// Se é professor, marcar como ativo
-if (souProfessor) {
-await salaRef.child('professor').set({ id: minhaId, nome: meuNome, active: true, startedAt: Date.now() });
-salaRef.child('professor').onDisconnect().remove();
-}
-
-// Iniciar heartbeat
-iniciarHeartbeat();
-
-// Iniciar limpeza
-iniciarCleanup();
-
-// Configurar listeners
-setupFirebaseListeners();
-
-// Conectar com participantes existentes
-const snap = await fbRefs.participants.once('value');
-console.log(`[Sala] ${snap.numChildren()} participante(s)`);
-
-snap.forEach((child) => {
-if (child.key === minhaId) return;
-const data = child.val();
-console.log(`[Sala] Participante existente: ${data.nome} (${child.key.slice(0,6)})`);
-
-// Criar vídeo para aluno
-if (!data.isProfessor) {
-criarVideoAluno(child.key, data.nome);
-}
-
-// Criar conexão WebRTC
-setTimeout(() => {
-criarConexaoWebRTC(child.key, data.isProfessor);
-}, 500);
-});
-
-atualizarListaParticipantes();
-atualizarContador();
-}
-
-// ==================== WEBRTC - CRIAR CONEXÃO ====================
-function criarConexaoWebRTC(peerId, isRemoteProfessor) {
-// Evitar duplicação
-if (conexoes[peerId]) {
-console.log(`[WebRTC] Conexão com ${peerId.slice(0,6)} já existe`);
-return;
-}
-
-console.log(`[WebRTC] Criando conexão com ${peerId.slice(0,6)} (Professor: ${isRemoteProfessor})`);
-
-const pc = new RTCPeerConnection({
-iceServers: [
-{ urls: 'stun:stun.l.google.com:19302' },
-{ urls: 'stun:stun1.l.google.com:19302' },
-{ urls: 'stun:stun2.l.google.com:19302' }
-],
-iceCandidatePoolSize: 10,
-bundlePolicy: 'max-bundle',
-rtcpMuxPolicy: 'require'
-});
-
-const conn = {
-pc: pc,
-remoteStream: null,
-retryCount: 0,
-iceQueue: [],
-isRemoteProfessor: isRemoteProfessor,
-makingOffer: false,
-ignoreOffer: false,
-isSettingRemoteAnswerPending: false
-};
-
-conexoes[peerId] = conn;
-
-// ─── ADICIONAR TRACKS LOCAIS ───
-if (localStream) {
-localStream.getTracks().forEach(track => {
-console.log(`[WebRTC ${peerId.slice(0,6)}] Adicionando track:`, track.kind);
-const sender = pc.getSenders().find(s => s.track && s.track.id === track.id);
-if (!sender) {
-pc.addTrack(track, localStream);
-}
-});
-}
-
-// ─── RECEBER STREAM REMOTO ───
-pc.ontrack = (event) => {
-console.log(`[WebRTC ${peerId.slice(0,6)}] ontrack:`, event.track.kind);
-const [stream] = event.streams;
-if (!stream) return;
-
-conn.remoteStream = stream;
-
-if (isRemoteProfessor && !souProfessor) {
-// Aluno recebe professor
-console.log("[Aluno] Stream do professor recebido!");
-const profVideo = document.getElementById('profVideo');
-if (profVideo) {
-profVideo.srcObject = stream;
-document.getElementById('connection-spinner').classList.add('hidden');
-}
-} else if (souProfessor && !isRemoteProfessor) {
-// Professor recebe aluno
-console.log("[Professor] Stream do aluno recebido!");
-const videoEl = document.getElementById('video-' + peerId);
-if (videoEl) {
-videoEl.srcObject = stream;
-}
-const loadingEl = document.getElementById('loading-' + peerId);
-if (loadingEl) loadingEl.classList.add('hidden');
-}
-};
-
-// ─── ICE CANDIDATES ───
-pc.onicecandidate = (event) => {
-if (event.candidate) {
-enviarSinal(peerId, {
-type: 'ice',
-candidate: {
-candidate: event.candidate.candidate,
-sdpMid: event.candidate.sdpMid,
-sdpMLineIndex: event.candidate.sdpMLineIndex,
-usernameFragment: event.candidate.usernameFragment
-}
-});
-}
-};
-
-// ─── ESTADO DA CONEXÃO ───
-pc.onconnectionstatechange = () => {
-console.log(`[WebRTC ${peerId.slice(0,6)}] connectionState:`, pc.connectionState);
-
-if (pc.connectionState === 'connected') {
-conn.retryCount = 0;
-const loadingEl = document.getElementById('loading-' + peerId);
-if (loadingEl) loadingEl.classList.add('hidden');
-} else if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
-console.log(`[WebRTC ${peerId.slice(0,6)}] Conexão falhou!`);
-if (conn.retryCount < 5) {
-conn.retryCount++;
-const delay = 2000 * conn.retryCount;
-console.log(`[WebRTC ${peerId.slice(0,6)}] Reconectando em ${delay}ms (tentativa ${conn.retryCount})`);
-setTimeout(() => {
-if (conexoes[peerId]) {
-fecharConexao(peerId);
-fbRefs.participants.child(peerId).once('value').then(snap => {
-if (snap.exists()) {
-criarConexaoWebRTC(peerId, snap.val().isProfessor);
-}
-});
-}
-}, delay);
-}
-}
-};
-
-pc.oniceconnectionstatechange = () => {
-console.log(`[WebRTC ${peerId.slice(0,6)}] iceConnectionState:`, pc.iceConnectionState);
-if (pc.iceConnectionState === 'failed') {
-pc.restartIce();
-}
-};
-
-// ─── QUEM CRIA A OFERTA? ───
-// REGRA SIMPLES: Professor sempre cria oferta, aluno sempre espera
-// Isso elimina COMPLETAMENTE o problema de colisão de ofertas
-if (souProfessor) {
-// Professor cria oferta para o aluno
-console.log(`[WebRTC ${peerId.slice(0,6)}] Professor criando OFFER...`);
-setTimeout(() => criarOffer(peerId), 800);
-} else {
-// Aluno aguarda oferta do professor
-console.log(`[WebRTC ${peerId.slice(0,6)}] Aluno aguardando OFFER do professor...`);
-}
-}
-
-// ==================== CRIAR OFFER ====================
-async function criarOffer(peerId) {
-const conn = conexoes[peerId];
-if (!conn || !conn.pc) return;
-
-const pc = conn.pc;
-
-// Verificar se já tem localDescription
-if (pc.localDescription) {
-console.log(`[WebRTC ${peerId.slice(0,6)}] Já tem localDescription, skip criarOffer`);
-return;
-}
-
-try {
-console.log(`[WebRTC ${peerId.slice(0,6)}] Criando offer...`);
-conn.makingOffer = true;
-
-const offer = await pc.createOffer();
-await pc.setLocalDescription(offer);
-
-console.log(`[WebRTC ${peerId.slice(0,6)}] Offer criada, enviando...`);
-enviarSinal(peerId, { type: 'offer', sdp: pc.localDescription });
-
-} catch (err) {
-console.error(`[WebRTC ${peerId.slice(0,6)}] Erro ao criar offer:`, err);
-} finally {
-conn.makingOffer = false;
-}
-}
-
-// ==================== PROCESSAR SINAL ====================
-async function processarSinal(peerId, signal) {
-let conn = conexoes[peerId];
-
-// Se não existe conexão, criar
-if (!conn) {
-const snap = await fbRefs.participants.child(peerId).once('value');
-const data = snap.val() || {};
-
-if (!data.isProfessor && souProfessor) {
-criarVideoAluno(peerId, data.nome);
-}
-
-criarConexaoWebRTC(peerId, data.isProfessor);
-conn = conexoes[peerId];
-
-// Aguardar estabilização
-await new Promise(r => setTimeout(r, 300));
-}
-
-if (!conn || !conn.pc) {
-console.error(`[WebRTC ${peerId.slice(0,6)}] Conexão não encontrada`);
-return;
-}
-
-const pc = conn.pc;
-
-try {
-if (signal.type === 'offer') {
-console.log(`[WebRTC ${peerId.slice(0,6)}] Recebido OFFER`);
-
-// Verificar colisão (Perfect Negotiation simplificado)
-const readyForOffer = !conn.makingOffer && (pc.signalingState === 'stable' || pc.signalingState === 'have-local-offer');
-const offerCollision = !readyForOffer;
-
-// Se sou professor e recebo offer de aluno, ignoro (professor sempre cria offer)
-// Se sou aluno e recebo offer, aceito
-if (souProfessor && !conn.isRemoteProfessor) {
-console.log(`[WebRTC ${peerId.slice(0,6)}] Professor ignorando offer de aluno`);
-return;
-}
-
-if (offerCollision) {
-console.log(`[WebRTC ${peerId.slice(0,6)}] Offer collision, rollback...`);
-await pc.setLocalDescription({type: 'rollback'});
-}
-
-await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
-
-// Processar fila ICE
-processarFilaIce(peerId);
-
-// Criar answer
-await pc.setLocalDescription();
-console.log(`[WebRTC ${peerId.slice(0,6)}] Answer criada, enviando...`);
-enviarSinal(peerId, { type: 'answer', sdp: pc.localDescription });
-
-} else if (signal.type === 'answer') {
-console.log(`[WebRTC ${peerId.slice(0,6)}] Recebido ANSWER`);
-
-if (pc.signalingState === 'have-local-offer') {
-await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
-processarFilaIce(peerId);
-console.log(`[WebRTC ${peerId.slice(0,6)}] Answer aplicada!`);
-} else {
-console.log(`[WebRTC ${peerId.slice(0,6)}] Ignorando answer, estado:`, pc.signalingState);
-}
-
-} else if (signal.type === 'ice') {
-console.log(`[WebRTC ${peerId.slice(0,6)}] Recebido ICE`);
-
-if (signal.candidate && signal.candidate.candidate) {
-if (pc.remoteDescription && pc.remoteDescription.type) {
-await adicionarIceCandidate(peerId, signal.candidate);
-} else {
-console.log(`[WebRTC ${peerId.slice(0,6)}] ICE enfileirado`);
-conn.iceQueue.push(signal.candidate);
-}
-}
-}
-} catch (err) {
-console.error(`[WebRTC ${peerId.slice(0,6)}] Erro processar sinal:`, err);
-}
-}
-
-// ==================== ADICIONAR ICE CANDIDATE ====================
-async function adicionarIceCandidate(peerId, candidate) {
-const conn = conexoes[peerId];
-if (!conn || !conn.pc) return;
-
-try {
-const iceInit = {
-candidate: candidate.candidate,
-sdpMid: candidate.sdpMid !== null ? candidate.sdpMid : 0,
-sdpMLineIndex: candidate.sdpMLineIndex !== null ? candidate.sdpMLineIndex : 0,
-usernameFragment: candidate.usernameFragment
-};
-await conn.pc.addIceCandidate(new RTCIceCandidate(iceInit));
-console.log(`[WebRTC ${peerId.slice(0,6)}] ICE adicionado`);
-} catch (e) {
-console.error(`[WebRTC ${peerId.slice(0,6)}] Erro ICE:`, e.message);
-}
-}
-
-// ==================== PROCESSAR FILA ICE ====================
-function processarFilaIce(peerId) {
-const conn = conexoes[peerId];
-if (!conn) return;
-
-console.log(`[WebRTC ${peerId.slice(0,6)}] Processando fila ICE (${conn.iceQueue.length})`);
-while (conn.iceQueue.length > 0) {
-const candidate = conn.iceQueue.shift();
-adicionarIceCandidate(peerId, candidate);
-}
-}
-
-// ==================== ENVIAR SINAL ====================
-function enviarSinal(peerId, data) {
-data.from = minhaId;
-data.timestamp = Date.now();
-db.ref('salas/' + NOME_SALA + '/signals/' + peerId).push(data);
-}
-
-// ==================== FECHAR CONEXÃO ====================
-function fecharConexao(peerId) {
-const conn = conexoes[peerId];
-if (!conn) return;
-
-console.log(`[WebRTC ${peerId.slice(0,6)}] Fechando conexão`);
-
-if (conn.pc) {
-try { conn.pc.close(); } catch(e) {}
-conn.pc = null;
-}
-
-if (conn.remoteStream) {
-conn.remoteStream.getTracks().forEach(t => t.stop());
-conn.remoteStream = null;
-}
-
-delete conexoes[peerId];
-}
-
-// ==================== LISTENERS FIREBASE ====================
-function setupFirebaseListeners() {
-
-// ─── PARTICIPANTES ENTRANDO ───
-fbRefs.participants.on('child_added', (snapshot) => {
-const peerId = snapshot.key;
-const data = snapshot.val();
-
-if (peerId === minhaId) return;
-
-console.log(`[Firebase] Novo participante: ${data.nome} (${peerId.slice(0,6)})`);
-
-// Criar vídeo para aluno
-if (!data.isProfessor) {
-criarVideoAluno(peerId, data.nome);
-}
-
-// Criar conexão WebRTC (se ainda não existe)
-if (!conexoes[peerId]) {
-setTimeout(() => {
-criarConexaoWebRTC(peerId, data.isProfessor);
-}, 300);
-}
-
-atualizarListaParticipantes();
-atualizarContador();
-});
-
-// ─── PARTICIPANTES SAINDO ───
-fbRefs.participants.on('child_removed', (snapshot) => {
-const peerId = snapshot.key;
-console.log(`[Firebase] Participante saiu: ${peerId.slice(0,6)}`);
-
-fecharConexao(peerId);
-removerVideoAluno(peerId);
-atualizarListaParticipantes();
-atualizarContador();
-});
-
-// ─── PARTICIPANTES ATUALIZANDO ───
-fbRefs.participants.on('child_changed', (snapshot) => {
-atualizarListaParticipantes();
-});
-
-// ─── SINAIS WEBRTC ───
-fbRefs.signals.on('child_added', async (snapshot) => {
-const signal = snapshot.val();
-if (!signal || signal.from === minhaId) {
-snapshot.ref.remove();
-return;
-}
-
-console.log(`[Firebase] Sinal ${signal.type} de ${signal.from.slice(0,6)}`);
-snapshot.ref.remove();
-
-await processarSinal(signal.from, signal);
-});
-
-// ─── CHAT ───
-fbRefs.chat.on('child_added', (snapshot) => {
-const msg = snapshot.val();
-if (!msg) return;
-adicionarChatMsg(msg.nome, msg.texto, msg.id === minhaId);
-});
-
-// ─── KICKS ───
-fbRefs.kicks.on('value', (snapshot) => {
-if (snapshot.exists()) {
-alert('🚫 Foste removido da aula por ' + snapshot.val().by);
-sairDaSala();
-snapshot.ref.remove();
-}
-});
-
-// ─── CONTADOR ───
-fbRefs.participants.on('value', () => {
-atualizarContador();
-});
-}
-
-// ==================== HEARTBEAT ====================
-function iniciarHeartbeat() {
-heartbeatTimer = setInterval(() => {
-if (fbRefs.participants) {
-fbRefs.participants.child(minhaId).update({ lastSeen: Date.now() });
-}
-}, 5000);
-}
-
-// ==================== LIMPEZA ====================
-function iniciarCleanup() {
-cleanupTimer = setInterval(() => {
-const now = Date.now();
-const timeout = 30000;
-
-fbRefs.participants.once('value', (snapshot) => {
-snapshot.forEach((child) => {
-const peerId = child.key;
-const data = child.val();
-
-if (peerId === minhaId) return;
-
-if (data.lastSeen && (now - data.lastSeen > timeout)) {
-console.log(`[Cleanup] Removendo fantasma: ${peerId.slice(0,6)}`);
-fbRefs.participants.child(peerId).remove();
-fecharConexao(peerId);
-removerVideoAluno(peerId);
-}
-});
-});
-}, 15000);
-}
-
-// ==================== VÍDEOS ====================
-function criarVideoAluno(peerId, nome) {
-if (document.getElementById('video-container-' + peerId)) return;
-
-const container = document.createElement('div');
-container.id = 'video-container-' + peerId;
-container.className = 'video-card aspect-video relative';
-container.style.minHeight = '120px';
-container.style.background = '#0f172a';
-container.innerHTML = `
-<video id="video-${peerId}" autoplay playsinline muted class="w-full h-full object-cover" style="transform: scaleX(-1); min-height:120px;"></video>
-<div class="video-label">👤 ${nome || 'Aluno'}</div>
-<div id="muted-${peerId}" class="video-muted hidden">🔇</div>
-<div id="loading-${peerId}" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#10b981; font-size:12px;">⏳ A ligar...</div>
-`;
-document.getElementById('alunos-grid').appendChild(container);
-}
-
-function removerVideoAluno(peerId) {
-const el = document.getElementById('video-container-' + peerId);
-if (el) {
-const video = el.querySelector('video');
-if (video && video.srcObject) {
-video.srcObject.getTracks().forEach(t => t.stop());
-video.srcObject = null;
-}
-el.remove();
-}
-}
-
-// ==================== PARTICIPANTES ====================
-function atualizarListaParticipantes() {
-fbRefs.participants.once('value', (snapshot) => {
-const listEl = document.getElementById('participants-list');
-const listMobile = document.getElementById('participants-list-mobile');
-let html = '';
-
-snapshot.forEach((child) => {
-const data = child.val();
-const isMe = child.key === minhaId;
-const mao = data.maoLevantada ? ' ✋' : '';
-const prof = data.isProfessor ? ' 👨‍🏫' : '';
-const me = isMe ? ' (Tu)' : '';
-
-html += `<div class="participant-item" style="justify-content:space-between;">
-<div style="display:flex; align-items:center; gap:8px;">
-<span>${data.isProfessor ? '👨‍🏫' : '👤'}</span>
-<span class="text-sm ${data.isProfessor ? 'text-emerald-400 font-bold' : ''}">${data.nome}${prof}${me}${mao}</span>
-</div>
-${(souProfessor && !data.isProfessor && !isMe) ? `<button onclick="removerParticipante('${child.key}', '${data.nome}')" style="background:#ef4444; color:white; border:none; border-radius:4px; padding:2px 8px; font-size:11px; cursor:pointer;">🚫 Remover</button>` : ''}
-</div>`;
-});
-
-if (listEl) listEl.innerHTML = html;
-if (listMobile) listMobile.innerHTML = html;
-});
-}
-
-function atualizarContador() {
-fbRefs.participants.once('value', (snapshot) => {
-document.getElementById('participant-count').textContent = '👥 ' + snapshot.numChildren();
-});
-}
-
-// ==================== CONTROLES ====================
-function toggleMic() {
-if (!localStream) return;
-micOn = !micOn;
-localStream.getAudioTracks().forEach(t => t.enabled = micOn);
-updateMicButton();
-if (fbRefs.participants) {
-fbRefs.participants.child(minhaId).update({ micOn: micOn });
-}
-}
-
-function updateMicButton() {
-const btn = document.getElementById('btn-mic');
-const icon = document.getElementById('icon-mic');
-if (micOn) { btn.className = 'btn-control btn-on'; icon.textContent = '🎤'; }
-else { btn.className = 'btn-control btn-off'; icon.textContent = '🔇'; }
-}
-
-function toggleCam() {
-if (!localStream) return;
-camOn = !camOn;
-localStream.getVideoTracks().forEach(t => t.enabled = camOn);
-updateCamButton();
-if (fbRefs.participants) {
-fbRefs.participants.child(minhaId).update({ camOn: camOn });
-}
-}
-
-function updateCamButton() {
-const btn = document.getElementById('btn-cam');
-const icon = document.getElementById('icon-cam');
-if (camOn) { btn.className = 'btn-control btn-on'; icon.textContent = '🎥'; }
-else { btn.className = 'btn-control btn-off'; icon.textContent = '📷'; }
-}
-
-function levantarMao() {
-if (souProfessor) return;
-maoLevantada = !maoLevantada;
-const btn = document.getElementById('btn-hand');
-const icon = document.getElementById('icon-hand');
-if (maoLevantada) {
-btn.classList.add('pulse');
-icon.textContent = '✋';
-fbRefs.participants.child(minhaId).update({ maoLevantada: true });
-showModal('modal-mao');
-} else {
-btn.classList.remove('pulse');
-icon.textContent = '🙋';
-fbRefs.participants.child(minhaId).update({ maoLevantada: false });
-}
-}
-
-// ==================== GRAVAÇÃO ====================
-function toggleRecording() {
-if (!isRecording) { iniciarGravacao(); } else { pararGravacao(); }
-}
-
-function iniciarGravacao() {
-if (!localStream) { alert("Precisas de câmara/microfone para gravar."); return; }
-
-recordedChunks = [];
-const combinedStream = new MediaStream();
-localStream.getVideoTracks().forEach(t => combinedStream.addTrack(t));
-localStream.getAudioTracks().forEach(t => combinedStream.addTrack(t));
-
-let options = {};
-if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')) {
-options = { mimeType: 'video/webm;codecs=vp9,opus' };
-} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
-options = { mimeType: 'video/webm;codecs=vp8,opus' };
-} else if (MediaRecorder.isTypeSupported('video/webm')) {
-options = { mimeType: 'video/webm' };
-}
-
-try {
-mediaRecorder = new MediaRecorder(combinedStream, options);
-} catch (e) {
-alert("Gravação não suportada neste navegador.");
-return;
-}
-
-mediaRecorder.ondataavailable = (event) => {
-if (event.data && event.data.size > 0) recordedChunks.push(event.data);
-};
-
-mediaRecorder.onstop = () => {
-const blob = new Blob(recordedChunks, { type: 'video/webm' });
-const url = URL.createObjectURL(blob);
-document.getElementById('link-download').href = url;
-document.getElementById('link-download').download = 'MadrassaIM_Aula_' + new Date().toISOString().slice(0,19).replace(/:/g,'-') + '.webm';
-showModal('modal-gravacao');
-};
-
-mediaRecorder.start(1000);
-isRecording = true;
-const btn = document.getElementById('btn-record');
-const icon = document.getElementById('icon-record');
-btn.classList.add('recording');
-icon.textContent = '⏹️';
-document.getElementById('recording-indicator').classList.remove('hidden');
-}
-
-function pararGravacao() {
-if (mediaRecorder && isRecording) {
-mediaRecorder.stop();
-isRecording = false;
-const btn = document.getElementById('btn-record');
-const icon = document.getElementById('icon-record');
-btn.classList.remove('recording');
-btn.classList.add('saved');
-icon.textContent = '✅';
-document.getElementById('recording-indicator').classList.add('hidden');
-setTimeout(() => { btn.classList.remove('saved'); icon.textContent = '⏺️'; }, 3000);
-}
-}
-
-// ==================== CHAT ====================
-function toggleChat() {
-const overlay = document.getElementById('chat-overlay');
-const panel = document.getElementById('side-panel');
-if (window.innerWidth < 768) {
-overlay.classList.toggle('hidden');
-overlay.classList.toggle('flex');
-} else {
-if (panel.classList.contains('hidden')) {
-panel.classList.remove('hidden');
-panel.classList.add('flex');
-} else {
-panel.classList.toggle('hidden');
-panel.classList.toggle('flex');
-}
-}
-}
-
-function toggleParticipants() {
-const overlay = document.getElementById('participants-overlay');
-overlay.classList.toggle('hidden');
-overlay.classList.toggle('flex');
-}
-
-function enviarChat() {
-const input = document.getElementById('chat-input');
-const texto = input.value.trim();
-if (!texto) return;
-fbRefs.chat.push({ id: minhaId, nome: meuNome, texto: texto, time: Date.now() });
-input.value = '';
-}
-
-function enviarChatMobile() {
-const input = document.getElementById('chat-input-mobile');
-const texto = input.value.trim();
-if (!texto) return;
-fbRefs.chat.push({ id: minhaId, nome: meuNome, texto: texto, time: Date.now() });
-input.value = '';
-}
-
-function adicionarChatMsg(nome, texto, isMe) {
-const msgDiv = document.createElement('div');
-msgDiv.className = 'chat-msg ' + (isMe ? 'chat-me' : 'chat-other');
-msgDiv.innerHTML = `<strong class="text-xs opacity-70">${nome}</strong><br>${texto}`;
-
-const desktopChat = document.getElementById('chat-messages');
-const mobileChat = document.getElementById('chat-messages-mobile');
-
-if (desktopChat) {
-desktopChat.appendChild(msgDiv.cloneNode(true));
-desktopChat.scrollTop = desktopChat.scrollHeight;
-}
-if (mobileChat) {
-mobileChat.appendChild(msgDiv.cloneNode(true));
-mobileChat.scrollTop = mobileChat.scrollHeight;
-}
-}
-
-// ==================== REMOVER PARTICIPANTE ====================
-function removerParticipante(peerId, nome) {
-if (!souProfessor) return;
-if (!confirm('Remover ' + nome + ' da aula?')) return;
-
-console.log('🚫 Professor removeu:', nome);
-
-const salaRef = db.ref('salas/' + NOME_SALA);
-salaRef.child('participants/' + peerId).remove();
-salaRef.child('signals/' + peerId).remove();
-salaRef.child('kicks/' + peerId).set({ by: meuNome, time: Date.now() });
-
-fecharConexao(peerId);
-removerVideoAluno(peerId);
-atualizarListaParticipantes();
-atualizarContador();
-}
-
-// ==================== SAIR DA SALA ====================
-function sairDaSala() {
-console.log('🚪 Saindo da sala...');
-
-if (isRecording) pararGravacao();
-
-if (localStream) {
-localStream.getTracks().forEach(t => t.stop());
-localStream = null;
-}
-
-if (heartbeatTimer) {
-clearInterval(heartbeatTimer);
-heartbeatTimer = null;
-}
-
-if (cleanupTimer) {
-clearInterval(cleanupTimer);
-cleanupTimer = null;
-}
-
-// Fechar todas as conexões
-Object.keys(conexoes).forEach(peerId => {
-fecharConexao(peerId);
-});
-conexoes = {};
-
-// Remover listeners Firebase
-if (fbRefs.participants) fbRefs.participants.off();
-if (fbRefs.signals) fbRefs.signals.off();
-if (fbRefs.chat) fbRefs.chat.off();
-if (fbRefs.kicks) fbRefs.kicks.off();
-
-// Remover dados
-const salaRef = db.ref('salas/' + NOME_SALA);
-salaRef.child('participants/' + minhaId).remove();
-salaRef.child('signals/' + minhaId).remove();
-salaRef.child('kicks/' + minhaId).remove();
-
-if (souProfessor) {
-salaRef.child('professor').remove();
-}
-
-// Reset UI
-document.getElementById('alunos-grid').innerHTML = '';
-document.getElementById('participants-list').innerHTML = '';
-document.getElementById('participants-list-mobile').innerHTML = '';
-document.getElementById('connection-spinner').classList.remove('hidden');
-document.getElementById('status-text').textContent = "À espera do professor...";
-document.getElementById('profVideo').srcObject = null;
-document.getElementById('chat-messages').innerHTML = '';
-document.getElementById('chat-messages-mobile').innerHTML = '';
-document.getElementById('page-sala').classList.add('hidden');
-document.getElementById('page-home').classList.remove('hidden');
-
-showPage('home');
-
-micOn = true; camOn = true; maoLevantada = false;
-souProfessor = false;
-meuNome = "";
-updateMicButton();
-updateCamButton();
-
-const btn = document.getElementById('btn-record');
-btn.classList.remove('recording', 'saved');
-document.getElementById('icon-record').textContent = '⏺️';
-isRecording = false;
-
-fbRefs = {};
-}
-
-// ==================== FECHAR MODAL AO CLICAR FORA ====================
-window.onclick = function(e) {
-if (e.target.classList.contains('fixed')) {
-e.target.classList.add('hidden');
-e.target.classList.remove('flex');
-}
-};
-
-// ==================== DEBUG ====================
-let debugAtivo = false;
-function toggleDebug() {
-const panel = document.getElementById('debug-panel');
-debugAtivo = !debugAtivo;
-panel.style.display = debugAtivo ? 'block' : 'none';
-}
-
-function logDebug(msg, tipo) {
-const logs = document.getElementById('debug-logs');
-if (!logs) return;
-const div = document.createElement('div');
-const hora = new Date().toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-let cor = '#10b981';
-if (tipo === 'erro') cor = '#ef4444';
-if (tipo === 'aviso') cor = '#f59e0b';
-if (tipo === 'ok') cor = '#3b82f6';
-div.style.color = cor;
-div.innerHTML = `<span style="opacity:0.6;">[${hora}]</span> ${msg}`;
-logs.appendChild(div);
-logs.scrollTop = logs.scrollHeight;
-while (logs.children.length > 50) logs.removeChild(logs.firstChild);
-}
-
-const logOriginal = console.log;
-console.log = function(...args) {
-logOriginal.apply(console, args);
-logDebug(args.join(' '));
-};
-
-const erroOriginal = console.error;
-console.error = function(...args) {
-erroOriginal.apply(console, args);
-logDebug('❌ ' + args.join(' '), 'erro');
-};
-
-setInterval(() => {
-if (!debugAtivo) return;
-const numConns = Object.keys(conexoes).length;
-const numVideos = document.getElementById('alunos-grid').children.length;
-const estados = [];
-Object.entries(conexoes).forEach(([id, conn]) => {
-if (conn.pc) {
-const estado = conn.pc.connectionState?.slice(0,3) || '?';
-const sinal = conn.pc.signalingState?.slice(0,3) || '?';
-const ice = conn.pc.iceConnectionState?.slice(0,3) || '?';
-estados.push(`${id.slice(0,4)}:${estado}/${sinal}/${ice}`);
-}
-});
-logDebug(`🔗 Conns:${numConns} Vídeos:${numVideos} | ${estados.join(' ')}`, 'ok');
-}, 5000);
-</script>
-
-<!-- PAINEL DE DEBUG -->
-<div id="debug-panel" style="position:fixed; bottom:70px; left:10px; right:10px; max-height:150px; overflow-y:auto; background:rgba(0,0,0,0.85); border:1px solid #10b981; border-radius:8px; padding:8px; z-index:9999; font-family:monospace; font-size:11px; color:#10b981; display:none;">
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom:1px solid #10b981; padding-bottom:4px;">
-<span style="font-weight:bold;">📋 LOGS</span>
-<button onclick="document.getElementById('debug-panel').style.display='none'" style="background:#ef4444; color:white; border:none; border-radius:4px; padding:2px 8px; font-size:10px;">✕</button>
-</div>
-<div id="debug-logs" style="display:flex; flex-direction:column; gap:2px;"></div>
-</div>
-<button id="btn-debug" onclick="toggleDebug()" style="position:fixed; bottom:70px; right:10px; z-index:9999; background:#10b981; color:white; border:none; border-radius:50%; width:40px; height:40px; font-size:16px; opacity:0.7;">🐛</button>
+
+<body class="bg-slate-50 font-sans min-h-screen flex flex-col text-slate-800">
+
+  <!-- =========================================================
+       HEADER
+       ========================================================= -->
+
+  <header class="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-900 text-white shadow-lg sticky top-0 z-40">
+
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+
+      <div
+        class="flex items-center space-x-3 cursor-pointer"
+        onclick="carregarProdutos()"
+      >
+
+        <div class="bg-white/10 p-2 rounded-xl backdrop-blur-md">
+          <i class="fa-solid fa-store text-2xl text-amber-400"></i>
+        </div>
+
+        <div>
+          <h1 class="text-xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
+            MOZ1VENDAS
+          </h1>
+
+          <p class="text-[10px] text-blue-200 uppercase tracking-widest font-semibold">
+            Marketplace Moçambique
+          </p>
+        </div>
+
+      </div>
+
+      <div class="flex items-center gap-3">
+
+        <a
+          href="https://wa.me/258860407269?text=Olá! Preciso de suporte no MOZ1VENDAS."
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden sm:flex items-center gap-2 bg-emerald-600/90 hover:bg-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-semibold transition backdrop-blur-sm border border-emerald-500/30"
+        >
+          <i class="fa-brands fa-whatsapp text-base"></i>
+          Suporte
+        </a>
+
+        <div id="authArea" class="flex gap-2">
+
+          <button
+            onclick="abrirModalAuth()"
+            class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-semibold transition border border-white/20"
+          >
+            Entrar / Registar
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================================================
+       BANNER DE BOAS-VINDAS
+       ========================================================= -->
+
+  <section class="bg-blue-600 text-white py-6 shadow-inner">
+
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+
+      <div>
+
+        <h2 class="text-lg md:text-xl font-bold">
+          Compre e Venda com Segurança em Moçambique
+        </h2>
+
+        <p class="text-blue-100 text-xs md:text-sm mt-1">
+          Produtos Físicos e Digitais com pagamento via M-Pesa e e-Mola.
+        </p>
+
+      </div>
+
+      <button
+        onclick="abrirModalTermos()"
+        class="text-xs bg-blue-800/60 hover:bg-blue-800 text-blue-100 px-3 py-1.5 rounded-lg border border-blue-400/30 transition flex items-center gap-1"
+      >
+        <i class="fa-solid fa-shield-halved text-amber-400"></i>
+        Termos de Segurança & Banimento
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       SLIDESHOW DE PRODUTOS NO TOPO
+       ========================================================= -->
+
+  <section class="bg-slate-100 border-b border-slate-200">
+
+    <div class="container mx-auto px-4 py-5">
+
+      <div class="relative bg-slate-900 rounded-2xl overflow-hidden shadow-lg">
+
+        <div
+          id="produtoSlideshow"
+          class="min-h-[330px] md:min-h-[390px]"
+        >
+
+          <div class="flex flex-col items-center justify-center min-h-[330px] md:min-h-[390px] text-white/70">
+
+            <i class="fa-solid fa-spinner fa-spin text-3xl mb-3"></i>
+
+            <p class="text-sm">
+              Carregando produtos em destaque...
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- SETA ANTERIOR -->
+
+        <button
+          type="button"
+          onclick="slideAnterior()"
+          aria-label="Produto anterior"
+          class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center transition z-10"
+        >
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+
+        <!-- SETA PRÓXIMO -->
+
+        <button
+          type="button"
+          onclick="slideProximo()"
+          aria-label="Próximo produto"
+          class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center transition z-10"
+        >
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+
+        <!-- INDICADORES -->
+
+        <div
+          id="slideIndicadores"
+          class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       FILTROS E BUSCA
+       ========================================================= -->
+
+  <main class="container mx-auto px-4 py-8 flex-grow">
+
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 mb-8 flex flex-col md:flex-row gap-4 items-center">
+
+      <div class="relative flex-grow w-full">
+
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+
+        <input
+          type="text"
+          id="inputBusca"
+          placeholder="Buscar por produtos ou marcas..."
+          class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition text-sm"
+        >
+
+      </div>
+
+
+      <div class="flex gap-3 w-full md:w-auto">
+
+        <select
+          id="selectCategoria"
+          class="w-full md:w-48 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm font-medium"
+        >
+
+          <option value="">
+            Todas Categorias
+          </option>
+
+          <option value="FISICO">
+            📦 Produtos Físicos
+          </option>
+
+          <option value="DIGITAL">
+            ⚡ Produtos Digitais
+          </option>
+
+        </select>
+
+
+        <button
+          onclick="carregarProdutos()"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition shadow-sm shadow-blue-600/30 flex items-center justify-center gap-2"
+        >
+          <i class="fa-solid fa-filter"></i>
+          Filtrar
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =======================================================
+         LISTA DE PRODUTOS
+         ======================================================= -->
+
+    <div
+      id="gridProdutos"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+    >
+
+      <div class="col-span-full py-12 text-center">
+
+        <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
+
+        <p class="text-slate-500 font-medium">
+          Carregando catálogo...
+        </p>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- =========================================================
+       FOOTER
+       ========================================================= -->
+
+  <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800">
+
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      <div>
+
+        <div class="flex items-center space-x-2 text-white font-bold text-lg mb-3">
+
+          <i class="fa-solid fa-store text-amber-400"></i>
+
+          <span>
+            MOZ1VENDAS
+          </span>
+
+        </div>
+
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Sua plataforma confiável de vendas online em Moçambique.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h4 class="text-white font-semibold text-sm mb-3">
+          Políticas & Segurança
+        </h4>
+
+        <ul class="space-y-2 text-xs">
+
+          <li>
+            <button
+              onclick="abrirModalTermos()"
+              class="hover:text-blue-400 transition"
+            >
+              Termos de Uso e Condições
+            </button>
+          </li>
+
+          <li>
+            <button
+              onclick="abrirModalTermos()"
+              class="hover:text-blue-400 transition"
+            >
+              Política de Zero Tolerância contra Fraudes
+            </button>
+          </li>
+
+        </ul>
+
+      </div>
+
+
+      <div>
+
+        <h4 class="text-white font-semibold text-sm mb-3">
+          Atendimento ao Cliente
+        </h4>
+
+        <a
+          href="https://wa.me/258860407269"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 text-emerald-400 text-xs hover:underline"
+        >
+          <i class="fa-brands fa-whatsapp text-base"></i>
+          +258 860 407 269 (WhatsApp)
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <div class="container mx-auto px-4 mt-8 pt-6 border-t border-slate-800/60 text-center text-[11px] text-slate-500">
+
+      &copy; MOZ1VENDAS - Todos os direitos reservados.
+
+    </div>
+
+  </footer>
+
+
+  <!-- =========================================================
+       MODAL SELEÇÃO AUTH
+       ========================================================= -->
+
+  <div
+    id="modalAuth"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50"
+  >
+
+    <div class="bg-white p-6 rounded-2xl max-w-sm w-full relative shadow-xl border border-slate-100 text-center">
+
+      <button
+        onclick="fecharModal('modalAuth')"
+        class="absolute top-3 right-4 text-slate-400 hover:text-slate-600 text-2xl font-bold"
+      >
+        &times;
+      </button>
+
+      <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+        <i class="fa-solid fa-user-gear"></i>
+      </div>
+
+      <h2 class="text-xl font-bold text-slate-800 mb-1">
+        Área do Vendedor
+      </h2>
+
+      <p class="text-slate-500 text-xs mb-6">
+        Acesse sua conta para gerenciar produtos.
+      </p>
+
+      <div class="flex flex-col gap-3">
+
+        <button
+          onclick="trocarModalAuth('modalAuth', 'modalLogin')"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-bold text-sm transition"
+        >
+          Entrar na Conta
+        </button>
+
+        <button
+          onclick="trocarModalAuth('modalAuth', 'modalRegisto')"
+          class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-sm transition"
+        >
+          Criar Nova Conta
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       MODAL LOGIN
+       ========================================================= -->
+
+  <div
+    id="modalLogin"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50"
+  >
+
+    <div class="bg-white p-6 rounded-2xl max-w-md w-full relative shadow-xl border border-slate-100">
+
+      <button
+        onclick="fecharModal('modalLogin')"
+        class="absolute top-3 right-4 text-slate-400 hover:text-slate-600 text-2xl font-bold"
+      >
+        &times;
+      </button>
+
+      <h2 class="text-xl font-bold text-slate-800 mb-4">
+        Entrar como Vendedor
+      </h2>
+
+      <form onsubmit="fazerLogin(event)">
+
+        <div class="mb-4">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Empresa ou Telefone
+          </label>
+
+          <input
+            type="text"
+            id="loginIdentificador"
+            required
+            class="w-full border border-slate-200 p-2.5 rounded-xl focus:ring-2 focus:ring-blue-600 text-sm"
+          >
+
+        </div>
+
+        <div class="mb-6">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            PIN Numérico
+          </label>
+
+          <input
+            type="password"
+            id="loginPin"
+            required
+            class="w-full border border-slate-200 p-2.5 rounded-xl focus:ring-2 focus:ring-blue-600 text-sm"
+          >
+
+        </div>
+
+        <button
+          type="submit"
+          id="btnLogin"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm transition"
+        >
+          Entrar
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       MODAL REGISTO
+       ========================================================= -->
+
+  <div
+    id="modalRegisto"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50"
+  >
+
+    <div class="bg-white p-6 rounded-2xl max-w-md w-full relative shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+
+      <button
+        onclick="fecharModal('modalRegisto')"
+        class="absolute top-3 right-4 text-slate-400 hover:text-slate-600 text-2xl font-bold"
+      >
+        &times;
+      </button>
+
+      <h2 class="text-xl font-bold text-slate-800 mb-1">
+        Registar Vendedor
+      </h2>
+
+      <p class="text-xs text-slate-500 mb-4">
+        Crie sua conta para começar a vender hoje.
+      </p>
+
+      <form onsubmit="fazerRegisto(event)">
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Nome Completo
+          </label>
+
+          <input
+            type="text"
+            id="regNome"
+            required
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Telefone
+          </label>
+
+          <input
+            type="tel"
+            id="regTelefone"
+            placeholder="841234567"
+            required
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Número do BI
+          </label>
+
+          <input
+            type="text"
+            id="regBi"
+            required
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Nome da Empresa / Marca
+          </label>
+
+          <input
+            type="text"
+            id="regEmpresa"
+            required
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            PIN Secreto
+          </label>
+
+          <input
+            type="password"
+            id="regPin"
+            required
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+        </div>
+
+
+        <div class="mb-4">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Plano Inicial
+          </label>
+
+          <select
+            id="regPlano"
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+            <option value="SIMPLES">
+              Plano Simples
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="mb-5 bg-amber-50 p-3 rounded-xl border border-amber-200/60">
+
+          <label class="flex items-start gap-2 text-xs text-slate-700 cursor-pointer">
+
+            <input
+              type="checkbox"
+              id="regAceitaTermos"
+              required
+              class="mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+            >
+
+            <span>
+              Declaro que li e concordo com os
+              <button
+                type="button"
+                onclick="abrirModalTermos()"
+                class="text-blue-600 underline font-semibold"
+              >
+                Termos de Uso
+              </button>.
+
+              Estou ciente de que vendas fraudulentas ou ilegalidades resultam em banimento imediato.
+            </span>
+
+          </label>
+
+        </div>
+
+
+        <button
+          type="submit"
+          id="btnRegisto"
+          class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-sm transition"
+        >
+          Registar Conta
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       MODAL TERMOS
+       ========================================================= -->
+
+  <div
+    id="modalTermos"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50"
+  >
+
+    <div class="bg-white p-6 rounded-2xl max-w-lg w-full relative shadow-xl border border-slate-100 max-h-[85vh] overflow-y-auto">
+
+      <button
+        onclick="fecharModal('modalTermos')"
+        class="absolute top-3 right-4 text-slate-400 hover:text-slate-600 text-2xl font-bold"
+      >
+        &times;
+      </button>
+
+      <div class="flex items-center gap-2 text-red-600 font-bold text-lg mb-3">
+
+        <i class="fa-solid fa-gavel"></i>
+
+        <h3>
+          Termos de Uso & Segurança
+        </h3>
+
+      </div>
+
+
+      <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
+
+        <p class="font-semibold text-slate-800">
+          Ao utilizar a plataforma MOZ1VENDAS, você concorda expressamente com os seguintes termos:
+        </p>
+
+
+        <div class="bg-red-50 p-3 rounded-xl border border-red-200 text-red-800 space-y-2">
+
+          <p class="font-bold">
+            🚫 Proibições Estritas:
+          </p>
+
+          <ul class="list-disc pl-4 space-y-1">
+
+            <li>
+              É estritamente proibida a publicação de produtos roubados, furtados ou sem procedência legal.
+            </li>
+
+            <li>
+              É proibida a venda de cópias não autorizadas, pirataria, cursos/arquivos falsos ou golpes digitais.
+            </li>
+
+            <li>
+              É proibida a criação de múltiplos perfis falsos para induzir clientes ao erro.
+            </li>
+
+          </ul>
+
+        </div>
+
+
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+
+          <p class="font-bold text-slate-800 mb-1">
+            ⚖️ Penalizações & Banimento:
+          </p>
+
+          <p>
+            Qualquer atividade suspeita ou denúncia confirmada de fraude resultará no
+            <strong>banimento definitivo e imediato</strong>
+            da conta do vendedor, bloqueio de saques e envio de dados às autoridades competentes.
+          </p>
+
+        </div>
+
+
+        <p class="text-[11px] text-slate-400">
+          Dúvidas? Entre em contato com o nosso suporte oficial pelo WhatsApp:
+          <strong>+258 860 407 269</strong>.
+        </p>
+
+      </div>
+
+
+      <button
+        onclick="fecharModal('modalTermos')"
+        class="w-full mt-5 bg-slate-800 hover:bg-slate-900 text-white py-2.5 rounded-xl font-semibold text-xs transition"
+      >
+        Entendido
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       MODAL PAINEL DO VENDEDOR
+       ========================================================= -->
+
+  <div
+    id="modalPainelVendedor"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50"
+  >
+
+    <div class="bg-white p-6 rounded-2xl max-w-2xl w-full relative shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+
+      <button
+        onclick="fecharModal('modalPainelVendedor')"
+        class="absolute top-3 right-4 text-slate-400 hover:text-slate-600 text-2xl font-bold"
+      >
+        &times;
+      </button>
+
+
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+
+        <div>
+
+          <h2 class="text-xl font-bold text-slate-800">
+            Painel do Vendedor
+          </h2>
+
+          <p class="text-xs text-slate-500">
+            Gerencie seu catálogo de produtos cadastrados.
+          </p>
+
+        </div>
+
+
+        <button
+          onclick="abrirModalCriarProduto()"
+          class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold text-xs transition flex items-center gap-1.5 shadow-sm shadow-emerald-600/30"
+        >
+          <i class="fa-solid fa-plus"></i>
+          Adicionar Produto
+        </button>
+
+      </div>
+
+
+      <h3 class="font-bold text-sm text-slate-700 mb-3">
+        Meus Produtos Cadastrados
+      </h3>
+
+
+      <div id="listaMeusProdutos" class="space-y-3">
+
+        <p class="text-slate-500 text-center py-4 text-xs">
+          Carregando seus produtos...
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       MODAL CRIAR PRODUTO
+       ========================================================= -->
+
+  <div
+    id="modalCriarProduto"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50"
+  >
+
+    <div class="bg-white p-6 rounded-2xl max-w-md w-full relative shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+
+      <button
+        onclick="fecharModal('modalCriarProduto')"
+        class="absolute top-3 right-4 text-slate-400 hover:text-slate-600 text-2xl font-bold"
+      >
+        &times;
+      </button>
+
+
+      <h2 class="text-xl font-bold text-slate-800 mb-4">
+        Novo Produto
+      </h2>
+
+
+      <form onsubmit="salvarProduto(event)">
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Nome do Produto
+          </label>
+
+          <input
+            type="text"
+            id="prodNome"
+            required
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Descrição
+          </label>
+
+          <textarea
+            id="prodDescricao"
+            required
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+            rows="2"
+          ></textarea>
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Link / URL da Imagem (Google Drive, ImgBB, etc.)
+          </label>
+
+          <input
+            type="url"
+            id="prodImagem"
+            placeholder="Cole o link aqui..."
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Preço (MT)
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            id="prodPreco"
+            required
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Tipo de Produto
+          </label>
+
+          <select
+            id="prodTipo"
+            onchange="alternarCamposTipo()"
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+            <option value="FISICO">
+              Físico
+            </option>
+
+            <option value="DIGITAL">
+              Digital (PDF, E-book, Cursos, etc.)
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Método de Recebimento
+          </label>
+
+          <select
+            id="prodMetodo"
+            onchange="alternarCamposTipo()"
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+            <option value="NETSHOP">
+              Netshop (M-Pesa / e-Mola)
+            </option>
+
+            <option value="WHATSAPP">
+              WhatsApp Direto
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="mb-3" id="campoWhatsapp">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            WhatsApp para Contato
+          </label>
+
+          <input
+            type="tel"
+            id="prodWhatsapp"
+            placeholder="258841234567"
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+        </div>
+
+
+        <div class="mb-4 hidden" id="campoDownload">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Link do Arquivo / PDF (Google Drive ou Dropbox)
+          </label>
+
+          <input
+            type="url"
+            id="prodDownload"
+            placeholder="https://drive.google.com/..."
+            class="w-full border border-slate-200 p-2 rounded-xl text-sm"
+          >
+
+          <p class="text-[11px] text-slate-400 mt-1">
+            Pode colar o link normal de partilha, o sistema converte para download automático.
+          </p>
+
+        </div>
+
+
+        <button
+          type="submit"
+          id="btnSalvarProd"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-sm transition"
+        >
+          Publicar Produto
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       MODAL CHECKOUT / COMPRA
+       ========================================================= -->
+
+  <div
+    id="modalCompra"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50"
+  >
+
+    <div class="bg-white p-6 rounded-2xl max-w-md w-full relative shadow-xl border border-slate-100">
+
+      <button
+        onclick="fecharModal('modalCompra')"
+        class="absolute top-3 right-4 text-slate-400 hover:text-slate-600 text-2xl font-bold"
+      >
+        &times;
+      </button>
+
+
+      <h2
+        id="modalTitulo"
+        class="text-xl font-bold text-slate-800 mb-1"
+      >
+        Comprar Produto
+      </h2>
+
+
+      <p
+        id="modalPreco"
+        class="text-lg text-blue-600 font-bold mb-4"
+      ></p>
+
+
+      <form
+        id="formCheckout"
+        onsubmit="processarCompra(event)"
+      >
+
+        <input
+          type="hidden"
+          id="compraProdutoId"
+        >
+
+
+        <div class="mb-4">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Telefone M-Pesa / e-Mola
+          </label>
+
+          <input
+            type="tel"
+            id="clienteTelefone"
+            placeholder="841234567"
+            required
+            class="w-full border border-slate-200 p-2.5 rounded-xl text-sm"
+          >
+
+        </div>
+
+
+        <div class="mb-6">
+
+          <label class="block text-xs font-semibold text-slate-600 mb-1">
+            Carteira Móvel
+          </label>
+
+          <select
+            id="metodoPagamento"
+            class="w-full border border-slate-200 p-2.5 rounded-xl text-sm"
+          >
+
+            <option value="mpesa">
+              M-Pesa
+            </option>
+
+            <option value="emola">
+              e-Mola
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <button
+          type="submit"
+          id="btnPagar"
+          class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-sm transition"
+        >
+          Pagar com Netshop
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       SCRIPT
+       ========================================================= -->
+
+  <script>
+
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbz62rB-RTzLg-h6fXMogftj01-z-sCOtTz0PFo7BoTdalzoVQvnIoOfi5a7vcBhOGMh/exec";
+
+
+    /* =========================================================
+       SLIDESHOW
+       ========================================================= */
+
+    let produtosSlide = [];
+
+    let slideAtual = 0;
+
+    let intervaloSlide = null;
+
+
+    async function carregarSlideshow() {
+
+      const container =
+        document.getElementById("produtoSlideshow");
+
+      const indicadores =
+        document.getElementById("slideIndicadores");
+
+      if (!container) return;
+
+
+      try {
+
+        /*
+         * O slideshow utiliza o mesmo endpoint público
+         * já utilizado pela aplicação.
+         *
+         * Não utiliza busca nem categoria.
+         */
+
+        const res = await fetch(
+          `${GAS_URL}?action=produtos&search=&categoria=`
+        );
+
+        const json = await res.json();
+
+
+        if (
+          json.ok &&
+          Array.isArray(json.produtos) &&
+          json.produtos.length > 0
+        ) {
+
+          produtosSlide = json.produtos;
+
+          slideAtual = 0;
+
+          renderizarSlideshow();
+
+          iniciarIntervaloSlideshow();
+
+        } else {
+
+          produtosSlide = [];
+
+          container.innerHTML = `
+
+            <div class="flex flex-col items-center justify-center min-h-[330px] md:min-h-[390px] text-white/70 px-6 text-center">
+
+              <i class="fa-solid fa-store-slash text-3xl mb-3"></i>
+
+              <p class="text-sm">
+                Nenhum produto disponível no momento.
+              </p>
+
+            </div>
+
+          `;
+
+          indicadores.innerHTML = "";
+
+          pararIntervaloSlideshow();
+
+        }
+
+
+      } catch (e) {
+
+        container.innerHTML = `
+
+          <div class="flex flex-col items-center justify-center min-h-[330px] md:min-h-[390px] text-white/70 px-6 text-center">
+
+            <i class="fa-solid fa-triangle-exclamation text-3xl mb-3"></i>
+
+            <p class="text-sm">
+              Não foi possível carregar os produtos em destaque.
+            </p>
+
+          </div>
+
+        `;
+
+        indicadores.innerHTML = "";
+
+        pararIntervaloSlideshow();
+
+      }
+
+    }
+
+
+    function renderizarSlideshow() {
+
+      const container =
+        document.getElementById("produtoSlideshow");
+
+      const indicadores =
+        document.getElementById("slideIndicadores");
+
+
+      if (
+        !container ||
+        !produtosSlide.length
+      ) {
+        return;
+      }
+
+
+      container.innerHTML =
+        produtosSlide.map((p, index) => {
+
+          const imgFinal =
+            formatarUrlImagem(p.imagemUrl);
+
+          const nome =
+            escaparHtml(p.nome || "Produto");
+
+          const descricao =
+            escaparHtml(p.descricao || "");
+
+          const marca =
+            escaparHtml(p.marca || "");
+
+          const preco =
+            p.preco != null
+              ? p.preco
+              : "0";
+
+          const tipo =
+            p.tipo || "";
+
+
+          let acao = "";
+
+
+          if (
+            p.metodoPagamento === "NETSHOP"
+          ) {
+
+            acao = `
+
+              <button
+                type="button"
+                onclick="abrirCompra(
+                  '${escaparAtributo(p.produtoId)}',
+                  '${escaparAtributo(p.nome)}',
+                  ${Number(preco) || 0}
+                )"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-lg flex items-center justify-center gap-2"
+              >
+
+                <i class="fa-solid fa-credit-card"></i>
+
+                Comprar / Pagar
+
+              </button>
+
+            `;
+
+          } else {
+
+            acao = `
+
+              <a
+                href="https://wa.me/${encodeURIComponent(p.whatsapp || "")}?text=Olá! Tenho interesse no produto: ${encodeURIComponent(p.nome || "")}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-lg flex items-center justify-center gap-2"
+              >
+
+                <i class="fa-brands fa-whatsapp"></i>
+
+                Contactar vendedor
+
+              </a>
+
+            `;
+
+          }
+
+
+          return `
+
+            <article
+              class="slide-produto ${index === 0 ? "ativo" : ""} absolute inset-0"
+            >
+
+              <div class="grid grid-cols-1 md:grid-cols-2 h-full min-h-[330px] md:min-h-[390px]">
+
+
+                <!-- IMAGEM -->
+
+                <div class="relative bg-slate-800 overflow-hidden">
+
+                  <img
+                    src="${imgFinal}"
+                    onerror="this.onerror=null; this.src='https://via.placeholder.com/700x400?text=Sem+Imagem';"
+                    alt="${escaparAtributo(p.nome || "Produto")}"
+                    class="slide-imagem h-full min-h-[220px] md:min-h-[390px] object-cover"
+                  >
+
+
+                  <div class="absolute top-3 left-3">
+
+                    <span
+                      class="text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-1 rounded-md shadow ${
+                        tipo === "DIGITAL"
+                          ? "bg-amber-400 text-amber-950"
+                          : "bg-blue-600 text-white"
+                      }"
+                    >
+                      ${escaparHtml(tipo)}
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <!-- INFORMAÇÕES -->
+
+                <div class="relative flex flex-col justify-center p-6 md:p-10 bg-gradient-to-br from-slate-900 via-slate-800 to-blue-950 text-white">
+
+                  <p class="text-[10px] uppercase tracking-[0.2em] text-blue-300 font-bold mb-2">
+                    Produto em destaque
+                  </p>
+
+
+                  <h2 class="text-xl md:text-3xl font-extrabold leading-tight mb-2">
+
+                    ${nome}
+
+                  </h2>
+
+
+                  ${
+                    marca
+                      ? `
+                        <p class="text-xs text-slate-400 mb-3">
+
+                          <i class="fa-solid fa-store mr-1"></i>
+
+                          ${marca}
+
+                        </p>
+                      `
+                      : ""
+                  }
+
+
+                  <p class="text-xs md:text-sm text-slate-300 leading-relaxed line-clamp-3 mb-5">
+
+                    ${descricao}
+
+                  </p>
+
+
+                  <div class="flex flex-wrap items-end justify-between gap-4">
+
+
+                    <!-- PREÇO -->
+
+                    <div>
+
+                      <p class="text-[11px] text-slate-400">
+                        Preço
+                      </p>
+
+                      <p class="text-2xl md:text-3xl font-extrabold text-amber-400">
+
+                        ${escaparHtml(String(preco))}
+
+                        <span class="text-sm font-semibold text-amber-300">
+                          MT
+                        </span>
+
+                      </p>
+
+                    </div>
+
+
+                    <!-- LINK DE COMPRA/CONTACTO -->
+
+                    ${acao}
+
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }).join("");
+
+
+      indicadores.innerHTML =
+        produtosSlide.map((_, index) => `
+
+          <button
+            type="button"
+            onclick="irParaSlide(${index})"
+            aria-label="Ver produto ${index + 1}"
+            class="slide-indicador ${index === 0 ? "ativo" : ""}"
+          ></button>
+
+        `).join("");
+
+
+      atualizarSlideVisual();
+
+    }
+
+
+    function atualizarSlideVisual() {
+
+      const slides =
+        document.querySelectorAll(".slide-produto");
+
+      const indicadores =
+        document.querySelectorAll(".slide-indicador");
+
+
+      slides.forEach((slide, index) => {
+
+        slide.classList.toggle(
+          "ativo",
+          index === slideAtual
+        );
+
+      });
+
+
+      indicadores.forEach((indicador, index) => {
+
+        indicador.classList.toggle(
+          "ativo",
+          index === slideAtual
+        );
+
+      });
+
+    }
+
+
+    function irParaSlide(index) {
+
+      if (!produtosSlide.length) return;
+
+
+      slideAtual =
+        (index + produtosSlide.length) %
+        produtosSlide.length;
+
+
+      atualizarSlideVisual();
+
+      reiniciarIntervaloSlideshow();
+
+    }
+
+
+    function slideProximo() {
+
+      if (!produtosSlide.length) return;
+
+      irParaSlide(slideAtual + 1);
+
+    }
+
+
+    function slideAnterior() {
+
+      if (!produtosSlide.length) return;
+
+      irParaSlide(slideAtual - 1);
+
+    }
+
+
+    function iniciarIntervaloSlideshow() {
+
+      pararIntervaloSlideshow();
+
+
+      if (produtosSlide.length > 1) {
+
+        intervaloSlide =
+          setInterval(() => {
+
+            slideAtual =
+              (slideAtual + 1) %
+              produtosSlide.length;
+
+            atualizarSlideVisual();
+
+          }, 6000);
+
+      }
+
+    }
+
+
+    function reiniciarIntervaloSlideshow() {
+
+      iniciarIntervaloSlideshow();
+
+    }
+
+
+    function pararIntervaloSlideshow() {
+
+      if (intervaloSlide) {
+
+        clearInterval(intervaloSlide);
+
+        intervaloSlide = null;
+
+      }
+
+    }
+
+
+    /* =========================================================
+       SEGURANÇA BÁSICA PARA EXIBIÇÃO DE TEXTO
+       ========================================================= */
+
+    function escaparHtml(valor) {
+
+      return String(valor ?? "")
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    function escaparAtributo(valor) {
+
+      return String(valor ?? "")
+
+        .replace(/\\/g, "\\\\")
+
+        .replace(/'/g, "\\'")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/\n/g, " ");
+
+    }
+
+
+    /* =========================================================
+       CONVERSÃO DE LINK DE IMAGEM
+       ========================================================= */
+
+    function formatarUrlImagem(rawUrl) {
+
+      if (!rawUrl) {
+
+        return "https://via.placeholder.com/300x200?text=Sem+Imagem";
+
+      }
+
+
+      let url = rawUrl.trim();
+
+
+      if (url.includes("[img]")) {
+
+        const match =
+          url.match(/\[img\](.*?)\[\/img\]/i);
+
+        if (match && match[1]) {
+
+          url = match[1];
+
+        }
+
+      }
+
+
+      if (
+        url.includes("ibb.co/") &&
+        !url.includes("i.ibb.co/")
+      ) {
+
+        url =
+          url.replace(
+            "ibb.co/",
+            "i.ibb.co/"
+          );
+
+      }
+
+
+      if (url.includes("drive.google.com")) {
+
+        const idMatch =
+          url.match(/[-\w]{25,}/);
+
+        if (idMatch) {
+
+          return `https://lh3.googleusercontent.com/d/${idMatch[0]}`;
+
+        }
+
+      }
+
+
+      if (url.includes("dropbox.com")) {
+
+        return url
+          .replace(
+            "www.dropbox.com",
+            "dl.dropboxusercontent.com"
+          )
+          .replace("?dl=0", "");
+
+      }
+
+
+      return url;
+
+    }
+
+
+    /* =========================================================
+       CONVERSÃO DE LINK DOWNLOAD
+       ========================================================= */
+
+    function formatarUrlDownload(rawUrl) {
+
+      if (!rawUrl) return "";
+
+      let url = rawUrl.trim();
+
+
+      if (url.includes("drive.google.com")) {
+
+        const idMatch =
+          url.match(/[-\w]{25,}/);
+
+        if (idMatch) {
+
+          return `https://drive.google.com/uc?export=download&id=${idMatch[0]}`;
+
+        }
+
+      }
+
+
+      if (url.includes("dropbox.com")) {
+
+        if (url.endsWith("dl=0")) {
+
+          return url.replace(
+            "dl=0",
+            "dl=1"
+          );
+
+        }
+
+        if (!url.includes("dl=")) {
+
+          return url +
+            (
+              url.includes("?")
+                ? "&dl=1"
+                : "?dl=1"
+            );
+
+        }
+
+      }
+
+
+      return url;
+
+    }
+
+
+    /* =========================================================
+       INICIALIZAÇÃO
+       ========================================================= */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+
+        carregarProdutos();
+
+        carregarSlideshow();
+
+        verificarSessao();
+
+      }
+    );
+
+
+    /* =========================================================
+       MODAIS
+       ========================================================= */
+
+    function abrirModalAuth() {
+
+      document
+        .getElementById("modalAuth")
+        .classList.remove("hidden");
+
+    }
+
+
+    function abrirModalTermos() {
+
+      document
+        .getElementById("modalTermos")
+        .classList.remove("hidden");
+
+    }
+
+
+    function trocarModalAuth(
+      fecharId,
+      abrirId
+    ) {
+
+      fecharModal(fecharId);
+
+      document
+        .getElementById(abrirId)
+        .classList.remove("hidden");
+
+    }
+
+
+    function fecharModal(id) {
+
+      document
+        .getElementById(id)
+        .classList.add("hidden");
+
+    }
+
+
+    /* =========================================================
+       LOGIN
+       ========================================================= */
+
+    async function fazerLogin(e) {
+
+      e.preventDefault();
+
+
+      const btn =
+        document.getElementById("btnLogin");
+
+
+      btn.disabled = true;
+
+      btn.innerText = "Entrando...";
+
+
+      const payload = {
+
+        action: "loginVendedor",
+
+        identificador:
+          document.getElementById(
+            "loginIdentificador"
+          ).value,
+
+        pin:
+          document.getElementById(
+            "loginPin"
+          ).value
+
+      };
+
+
+      try {
+
+        const res =
+          await fetch(
+            GAS_URL,
+            {
+              method: "POST",
+              body: JSON.stringify(payload)
+            }
+          );
+
+
+        const json =
+          await res.json();
+
+
+        if (
+          json.ok &&
+          json.token
+        ) {
+
+          localStorage.setItem(
+            "moz1_token",
+            json.token
+          );
+
+
+          fecharModal("modalLogin");
+
+          verificarSessao();
+
+          abrirPainelVendedor();
+
+
+        } else {
+
+          alert(
+            "Erro: " +
+            (
+              json.erro ||
+              "PIN ou utilizador incorreto"
+            )
+          );
+
+        }
+
+
+      } catch (err) {
+
+        alert(
+          "Erro na comunicação com o servidor."
+        );
+
+
+      } finally {
+
+        btn.disabled = false;
+
+        btn.innerText = "Entrar";
+
+      }
+
+    }
+
+
+    /* =========================================================
+       REGISTO
+       ========================================================= */
+
+    async function fazerRegisto(e) {
+
+      e.preventDefault();
+
+
+      const btn =
+        document.getElementById("btnRegisto");
+
+
+      btn.disabled = true;
+
+      btn.innerText = "Registando...";
+
+
+      const payload = {
+
+        action: "registarVendedor",
+
+        nome:
+          document.getElementById(
+            "regNome"
+          ).value,
+
+        telefone:
+          document.getElementById(
+            "regTelefone"
+          ).value,
+
+        bi:
+          document.getElementById(
+            "regBi"
+          ).value,
+
+        empresa:
+          document.getElementById(
+            "regEmpresa"
+          ).value,
+
+        pin:
+          document.getElementById(
+            "regPin"
+          ).value,
+
+        plano:
+          document.getElementById(
+            "regPlano"
+          ).value
+
+      };
+
+
+      try {
+
+        const res =
+          await fetch(
+            GAS_URL,
+            {
+              method: "POST",
+              body: JSON.stringify(payload)
+            }
+          );
+
+
+        const json =
+          await res.json();
+
+
+        if (json.ok) {
+
+          alert(
+            json.msg ||
+            "Conta criada com sucesso! Faça login."
+          );
+
+
+          fecharModal("modalRegisto");
+
+          trocarModalAuth(
+            "modalRegisto",
+            "modalLogin"
+          );
+
+
+        } else {
+
+          alert(
+            "Erro: " +
+            (
+              json.erro ||
+              "Falha ao criar conta"
+            )
+          );
+
+        }
+
+
+      } catch (err) {
+
+        alert(
+          "Erro na comunicação com o servidor."
+        );
+
+
+      } finally {
+
+        btn.disabled = false;
+
+        btn.innerText = "Registar Conta";
+
+      }
+
+    }
+
+
+    /* =========================================================
+       SESSÃO
+       ========================================================= */
+
+    function verificarSessao() {
+
+      const token =
+        localStorage.getItem(
+          "moz1_token"
+        );
+
+
+      const authArea =
+        document.getElementById(
+          "authArea"
+        );
+
+
+      if (token) {
+
+        authArea.innerHTML = `
+
+          <button
+            onclick="abrirPainelVendedor()"
+            class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-white/20"
+          >
+            Meus Produtos
+          </button>
+
+
+          <button
+            onclick="sair()"
+            class="bg-red-500/80 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+          >
+            Sair
+          </button>
+
+        `;
+
+      } else {
+
+        authArea.innerHTML = `
+
+          <button
+            onclick="abrirModalAuth()"
+            class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-semibold transition border border-white/20"
+          >
+            Entrar / Registar
+          </button>
+
+        `;
+
+      }
+
+    }
+
+
+    function sair() {
+
+      localStorage.removeItem(
+        "moz1_token"
+      );
+
+      verificarSessao();
+
+    }
+
+
+    /* =========================================================
+       PAINEL DO VENDEDOR
+       ========================================================= */
+
+    function abrirPainelVendedor() {
+
+      document
+        .getElementById(
+          "modalPainelVendedor"
+        )
+        .classList.remove("hidden");
+
+
+      carregarMeusProdutos();
+
+    }
+
+
+    async function carregarMeusProdutos() {
+
+      const container =
+        document.getElementById(
+          "listaMeusProdutos"
+        );
+
+
+      const token =
+        localStorage.getItem(
+          "moz1_token"
+        );
+
+
+      if (!token) return;
+
+
+      container.innerHTML =
+        '<p class="text-slate-400 text-center py-4 text-xs">Carregando seus produtos...</p>';
+
+
+      try {
+
+        const res =
+          await fetch(
+            `${GAS_URL}?action=meusProdutos&token=${encodeURIComponent(token)}`
+          );
+
+
+        const data =
+          await res.json();
+
+
+        const produtos =
+          Array.isArray(data)
+            ? data
+            : (
+                data.produtos ||
+                []
+              );
+
+
+        if (produtos.length > 0) {
+
+          container.innerHTML =
+            produtos.map(p => `
+
+              <div
+                id="meu-produto-${p.produtoId}"
+                class="border border-slate-200 p-3 rounded-xl flex justify-between items-center bg-slate-50"
+              >
+
+                <div>
+
+                  <p class="font-bold text-slate-800 text-sm">
+                    ${p.nome}
+                  </p>
+
+                  <p class="text-xs text-slate-500">
+
+                    ${p.preco} MT |
+
+                    Status:
+
+                    <span
+                      class="font-bold ${
+                        p.status === "ATIVO"
+                          ? "text-emerald"
+                          : "text-red"
+                      }-600"
+                    >
+                      ${p.status}
+                    </span>
+
+                  </p>
+
+                </div>
+
+                <span
+                  class="text-[10px] font-bold bg-slate-200 text-slate-700 px-2 py-1 rounded-md uppercase"
+                >
+                  ${p.tipo}
+                </span>
+
+              </div>
+
+            `).join("");
+
+
+        } else {
+
+          container.innerHTML =
+            '<p class="text-slate-400 text-center py-4 text-xs">Você ainda não tem produtos cadastrados.</p>';
+
+        }
+
+
+      } catch (err) {
+
+        container.innerHTML =
+          '<p class="text-red-500 text-center py-4 text-xs">Erro ao carregar produtos.</p>';
+
+      }
+
+    }
+
+
+    /* =========================================================
+       DELETAR PRODUTO LOCAL
+       ========================================================= */
+
+    function deletarProdutoLocal(
+      produtoId
+    ) {
+
+      if (
+        !confirm(
+          "Tem certeza que deseja remover este produto da tela?"
+        )
+      ) {
+        return;
+      }
+
+
+      const elementoPainel =
+        document.getElementById(
+          `meu-produto-${produtoId}`
+        );
+
+
+      if (elementoPainel) {
+
+        elementoPainel.remove();
+
+      }
+
+
+      const containerPainel =
+        document.getElementById(
+          "listaMeusProdutos"
+        );
+
+
+      if (
+        containerPainel &&
+        containerPainel.children.length === 0
+      ) {
+
+        containerPainel.innerHTML =
+          '<p class="text-slate-400 text-center py-4 text-xs">Você ainda não tem produtos cadastrados.</p>';
+
+      }
+
+
+      carregarProdutos();
+
+      carregarSlideshow();
+
+    }
+
+
+    /* =========================================================
+       CRIAR PRODUTO
+       ========================================================= */
+
+    function abrirModalCriarProduto() {
+
+      document
+        .getElementById(
+          "modalCriarProduto"
+        )
+        .classList.remove("hidden");
+
+
+      alternarCamposTipo();
+
+    }
+
+
+    function alternarCamposTipo() {
+
+      const tipo =
+        document.getElementById(
+          "prodTipo"
+        ).value;
+
+
+      const metodo =
+        document.getElementById(
+          "prodMetodo"
+        );
+
+
+      const campoDownload =
+        document.getElementById(
+          "campoDownload"
+        );
+
+
+      const campoWhatsapp =
+        document.getElementById(
+          "campoWhatsapp"
+        );
+
+
+      if (tipo === "DIGITAL") {
+
+        metodo.value = "NETSHOP";
+
+        metodo.disabled = true;
+
+        campoDownload.classList.remove(
+          "hidden"
+        );
+
+        campoWhatsapp.classList.add(
+          "hidden"
+        );
+
+
+      } else {
+
+        metodo.disabled = false;
+
+        campoDownload.classList.add(
+          "hidden"
+        );
+
+
+        if (
+          metodo.value === "WHATSAPP"
+        ) {
+
+          campoWhatsapp.classList.remove(
+            "hidden"
+          );
+
+        } else {
+
+          campoWhatsapp.classList.add(
+            "hidden"
+          );
+
+        }
+
+      }
+
+    }
+
+
+    /* =========================================================
+       SALVAR PRODUTO
+       ========================================================= */
+
+    async function salvarProduto(e) {
+
+      e.preventDefault();
+
+
+      const btn =
+        document.getElementById(
+          "btnSalvarProd"
+        );
+
+
+      const token =
+        localStorage.getItem(
+          "moz1_token"
+        );
+
+
+      btn.disabled = true;
+
+      btn.innerText = "Salvando...";
+
+
+      const rawImagem =
+        document.getElementById(
+          "prodImagem"
+        ).value;
+
+
+      const rawDownload =
+        document.getElementById(
+          "prodDownload"
+        ).value;
+
+
+      const payload = {
+
+        action: "criarProduto",
+
+        token: token,
+
+        nome:
+          document.getElementById(
+            "prodNome"
+          ).value,
+
+        descricao:
+          document.getElementById(
+            "prodDescricao"
+          ).value,
+
+        imagemUrl:
+          formatarUrlImagem(
+            rawImagem
+          ),
+
+        preco:
+          parseFloat(
+            document.getElementById(
+              "prodPreco"
+            ).value
+          ),
+
+        tipo:
+          document.getElementById(
+            "prodTipo"
+          ).value,
+
+        metodoPagamento:
+          document.getElementById(
+            "prodMetodo"
+          ).value,
+
+        whatsapp:
+          document.getElementById(
+            "prodWhatsapp"
+          ).value,
+
+        downloadUrl:
+          formatarUrlDownload(
+            rawDownload
+          )
+
+      };
+
+
+      try {
+
+        const res =
+          await fetch(
+            GAS_URL,
+            {
+              method: "POST",
+              body: JSON.stringify(payload)
+            }
+          );
+
+
+        const json =
+          await res.json();
+
+
+        if (json.ok) {
+
+          alert(
+            json.msg ||
+            "Produto cadastrado com sucesso!"
+          );
+
+
+          fecharModal(
+            "modalCriarProduto"
+          );
+
+
+          carregarMeusProdutos();
+
+          carregarProdutos();
+
+          carregarSlideshow();
+
+
+        } else {
+
+          alert(
+            "Erro: " +
+            (
+              json.erro ||
+              "Falha ao criar produto"
+            )
+          );
+
+        }
+
+
+      } catch (err) {
+
+        alert(
+          "Erro na comunicação com o servidor."
+        );
+
+
+      } finally {
+
+        btn.disabled = false;
+
+        btn.innerText =
+          "Publicar Produto";
+
+      }
+
+    }
+
+
+    /* =========================================================
+       CARREGAR PRODUTOS PÚBLICOS
+       ========================================================= */
+
+    async function carregarProdutos() {
+
+      const grid =
+        document.getElementById(
+          "gridProdutos"
+        );
+
+
+      grid.innerHTML = `
+
+        <div class="col-span-full py-12 text-center">
+
+          <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
+
+          <p class="text-slate-500 font-medium">
+            Carregando produtos...
+          </p>
+
+        </div>
+
+      `;
+
+
+      const busca =
+        document.getElementById(
+          "inputBusca"
+        ).value;
+
+
+      const cat =
+        document.getElementById(
+          "selectCategoria"
+        ).value;
+
+
+      try {
+
+        const res =
+          await fetch(
+            `${GAS_URL}?action=produtos&search=${encodeURIComponent(busca)}&categoria=${encodeURIComponent(cat)}`
+          );
+
+
+        const json =
+          await res.json();
+
+
+        if (
+          json.ok &&
+          json.produtos.length > 0
+        ) {
+
+
+          grid.innerHTML =
+            json.produtos.map(p => {
+
+              const imgFinal =
+                formatarUrlImagem(
+                  p.imagemUrl
+                );
+
+
+              return `
+
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-slate-200/70 overflow-hidden flex flex-col justify-between hover:shadow-md transition"
+                >
+
+
+                  <!-- IMAGEM -->
+
+                  <div class="relative bg-slate-100">
+
+                    <img
+                      src="${imgFinal}"
+                      onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=Sem+Imagem';"
+                      alt="${p.nome}"
+                      class="w-full h-48 object-cover"
+                    >
+
+
+                    <span
+                      class="absolute top-2 right-2 text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md shadow-sm ${
+                        p.tipo === "DIGITAL"
+                          ? "bg-amber-400 text-amber-950"
+                          : "bg-blue-600 text-white"
+                      }"
+                    >
+                      ${p.tipo}
+                    </span>
+
+                  </div>
+
+
+                  <!-- INFORMAÇÕES -->
+
+                  <div class="p-4 flex-grow flex flex-col justify-between">
+
+                    <div>
+
+                      <h3
+                        class="font-bold text-slate-800 text-base leading-snug line-clamp-1"
+                      >
+                        ${p.nome}
+                      </h3>
+
+
+                      <p
+                        class="text-slate-500 text-xs mt-1 line-clamp-2"
+                      >
+                        ${p.descricao}
+                      </p>
+
+                    </div>
+
+
+                    <div
+                      class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between"
+                    >
+
+                      <div>
+
+                        <p class="text-xs text-slate-400">
+                          Preço
+                        </p>
+
+                        <p class="text-blue-700 font-extrabold text-lg leading-none">
+
+                          ${p.preco}
+
+                          <span class="text-xs font-semibold">
+                            MT
+                          </span>
+
+                        </p>
+
+                      </div>
+
+
+                      <p
+                        class="text-[11px] text-slate-400 text-right"
+                      >
+
+                        <i class="fa-solid fa-store text-slate-300"></i>
+
+                        ${p.marca}
+
+                      </p>
+
+                    </div>
+
+                  </div>
+
+
+                  <!-- BOTÃO -->
+
+                  <div class="p-4 bg-slate-50 border-t border-slate-100">
+
+                    ${
+                      p.metodoPagamento === "NETSHOP"
+
+                        ? `
+
+                          <button
+                            onclick="abrirCompra(
+                              '${p.produtoId}',
+                              '${p.nome}',
+                              ${p.preco}
+                            )"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm shadow-blue-600/20 flex items-center justify-center gap-2"
+                          >
+
+                            <i class="fa-solid fa-cart-shopping"></i>
+
+                            Comprar Agora
+
+                          </button>
+
+                        `
+
+                        : `
+
+                          <a
+                            href="https://wa.me/${p.whatsapp}?text=Olá! Tenho interesse no produto: ${encodeURIComponent(p.nome)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="w-full block text-center bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-bold transition shadow-sm shadow-emerald-600/20 flex items-center justify-center gap-2"
+                          >
+
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
+
+                            Contactar WhatsApp
+
+                          </a>
+
+                        `
+                    }
+
+                  </div>
+
+
+                </div>
+
+              `;
+
+            }).join("");
+
+
+        } else {
+
+          grid.innerHTML = `
+
+            <p class="text-slate-400 col-span-full text-center py-12">
+              Nenhum produto encontrado na loja.
+            </p>
+
+          `;
+
+        }
+
+
+      } catch (e) {
+
+        grid.innerHTML = `
+
+          <p class="text-red-500 col-span-full text-center py-12">
+            Erro ao carregar os produtos.
+          </p>
+
+        `;
+
+      }
+
+    }
+
+
+    /* =========================================================
+       ABRIR COMPRA
+       ========================================================= */
+
+    function abrirCompra(
+      id,
+      nome,
+      preco
+    ) {
+
+      document.getElementById(
+        "compraProdutoId"
+      ).value = id;
+
+
+      document.getElementById(
+        "modalTitulo"
+      ).innerText = nome;
+
+
+      document.getElementById(
+        "modalPreco"
+      ).innerText =
+        `${preco} MT`;
+
+
+      document
+        .getElementById(
+          "modalCompra"
+        )
+        .classList.remove(
+          "hidden"
+        );
+
+    }
+
+
+    /* =========================================================
+       PROCESSAR COMPRA
+       ========================================================= */
+
+    async function processarCompra(e) {
+
+      e.preventDefault();
+
+
+      const btn =
+        document.getElementById(
+          "btnPagar"
+        );
+
+
+      btn.disabled = true;
+
+      btn.innerText =
+        "Processando...";
+
+
+      const payload = {
+
+        action: "criarPagamento",
+
+        produtoId:
+          document.getElementById(
+            "compraProdutoId"
+          ).value,
+
+        clienteTelefone:
+          document.getElementById(
+            "clienteTelefone"
+          ).value,
+
+        metodo:
+          document.getElementById(
+            "metodoPagamento"
+          ).value
+
+      };
+
+
+      try {
+
+        const res =
+          await fetch(
+            GAS_URL,
+            {
+              method: "POST",
+              body: JSON.stringify(payload)
+            }
+          );
+
+
+        const json =
+          await res.json();
+
+
+        if (
+          json.ok &&
+          json.checkoutUrl
+        ) {
+
+          window.location.href =
+            json.checkoutUrl;
+
+
+        } else if (json.ok) {
+
+          alert(
+            "Solicitação de pagamento enviada ao seu telefone!"
+          );
+
+
+          fecharModal(
+            "modalCompra"
+          );
+
+
+        } else {
+
+          alert(
+            "Erro: " +
+            (
+              json.erro ||
+              "Falha ao processar"
+            )
+          );
+
+        }
+
+
+      } catch (err) {
+
+        alert(
+          "Erro na comunicação com o servidor."
+        );
+
+
+      } finally {
+
+        btn.disabled = false;
+
+        btn.innerText =
+          "Pagar com Netshop";
+
+      }
+
+    }
+
+  </script>
 
 </body>
 </html>
