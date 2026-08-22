@@ -184,7 +184,7 @@
 
   <script>
     // Cole aqui o URL da sua Web App do Google Apps Script
-    const GAS_URL = "https://script.google.com/macros/s/AKfycby8uaqCoKnhHwwMguYNQeM8MLadi_oVLzUdSsFHj5MqHgtkvSxi_ID7lQ2ugbREAaQNpQ/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyk1aHNra-wkW_njq182H_T4AA9w7QZ5dbHdZTlXJ1Cz3UzOIp6U4L9LCwxrdE76PZbKA/exec";
 
     let lojas = [];
     let usuarioLogado = null;
@@ -195,58 +195,59 @@
 
     // 1. SUBMETER REGISTO DE NOVA LOJA
     async function submeterRegistro(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmitReg');
-      btn.innerText = "A guardar no Google Sheets...";
-      btn.disabled = true;
+  e.preventDefault();
+  const btn = document.getElementById('btnSubmitReg');
+  btn.innerText = "A guardar no Google Sheets...";
+  btn.disabled = true;
 
-      const payload = {
-        action: "CRIAR_LOJA",
-        nome: document.getElementById('regNome').value,
-        email: document.getElementById('regEmail').value,
-        telefone: document.getElementById('regTelefone').value,
-        empresa: document.getElementById('regEmpresa').value,
-        logo: document.getElementById('regLogo').value,
-        dataNasc: document.getElementById('regDataNasc').value,
-        bi: document.getElementById('regBI').value,
-        pin: document.getElementById('regPin').value
+  const payload = {
+    action: "CRIAR_LOJA",
+    nome: document.getElementById('regNome').value,
+    email: document.getElementById('regEmail').value,
+    telefone: document.getElementById('regTelefone').value,
+    empresa: document.getElementById('regEmpresa').value,
+    logo: document.getElementById('regLogo').value,
+    dataNasc: document.getElementById('regDataNasc').value,
+    bi: document.getElementById('regBI').value,
+    pin: document.getElementById('regPin').value
+  };
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await res.json();
+
+    if (result && result.status === "SUCCESS") {
+      const novaLoja = {
+        vendedorId: result.vendedorId,
+        empresa: payload.empresa,
+        logo: payload.logo,
+        produtosLoja: []
       };
 
-      try {
-        const res = await fetch(GAS_URL, {
-          method: "POST",
-          body: JSON.stringify(payload)
-        });
-        const result = await res.json();
+      lojas.unshift(novaLoja);
+      renderizarBlocos(lojas);
 
-        if (result.status === "SUCCESS") {
-          // Adiciona a nova loja na interface imediatamente
-          const novaLoja = {
-            vendedorId: result.vendedorId,
-            empresa: payload.empresa,
-            logo: payload.logo,
-            produtosLoja: []
-          };
-          lojas.unshift(novaLoja);
-          renderizarBlocos(lojas);
+      usuarioLogado = { id: result.vendedorId, empresa: payload.empresa };
+      atualizarEstadoSessao();
 
-          // Efetua login automático
-          usuarioLogado = { id: result.vendedorId, empresa: payload.empresa };
-          atualizarEstadoSessao();
-
-          alert("Loja registada com sucesso no Google Sheets!");
-          closeModal('modalRegistro');
-          document.getElementById('formRegistro').reset();
-        } else {
-          alert("Erro ao registar: " + result.message);
-        }
-      } catch (err) {
-        alert("Falha na comunicação com o Google Sheets. Verifique a URL do GAS.");
-      } finally {
-        btn.innerText = "Criar Minha Empresa";
-        btn.disabled = false;
-      }
+      alert("Loja registada e gravada no Google Sheets com sucesso!");
+      closeModal('modalRegistro');
+      document.getElementById('formRegistro').reset();
+    } else {
+      alert("Erro ao registar: " + (result && result.message ? result.message : "Falha interna no servidor"));
     }
+  } catch (err) {
+    alert("Falha de ligação ao Google Sheets: " + err.message);
+  } finally {
+    btn.innerText = "Criar Minha Empresa";
+    btn.disabled = false;
+  }
+}
 
     // 2. LOGIN DO VENDEDOR
     async function submeterLogin(e) {
