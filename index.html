@@ -3,367 +3,3083 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moz1vendas - Marketplace de Moçambique</title>
+
+  <title>Moz1Vendas - Marketplace de Moçambique</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif']
+          },
+
           colors: {
-            brand: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 900: '#14532d' },
-            accent: { 500: '#f59e0b', 600: '#d97706' }
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d'
+            },
+
+            accent: {
+              500: '#f59e0b',
+              600: '#d97706'
+            }
           }
         }
       }
     }
   </script>
+
+  <style>
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    .modal {
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-box {
+      animation: modalEntrada 0.25s ease;
+    }
+
+    @keyframes modalEntrada {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .slide-wrapper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .slide-track {
+      display: flex;
+      transition: transform 0.45s ease-in-out;
+      width: 100%;
+    }
+
+    .slide-item {
+      min-width: 100%;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .slide-dots {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 5;
+    }
+
+    .slide-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.55);
+      transition: all 0.25s ease;
+    }
+
+    .slide-dot.active {
+      width: 22px;
+      background: white;
+    }
+
+    .product-image {
+      background: #f1f5f9;
+    }
+
+    .loading-spinner {
+      width: 25px;
+      height: 25px;
+      border: 3px solid #dcfce7;
+      border-top-color: #16a34a;
+      border-radius: 50%;
+      animation: girar 0.8s linear infinite;
+    }
+
+    @keyframes girar {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .toast {
+      animation: toastEntrada 0.3s ease;
+    }
+
+    @keyframes toastEntrada {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+  </style>
 </head>
+
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-  <!-- HEADER -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+  <!-- =========================================================
+       HEADER
+  ========================================================== -->
+
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20 gap-4">
-        
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 bg-gradient-to-tr from-brand-600 to-emerald-400 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-brand-500/30">
+
+      <div class="flex items-center justify-between min-h-20 gap-4">
+
+        <!-- LOGO -->
+
+        <div class="flex items-center gap-3 min-w-0">
+
+          <div class="w-12 h-12 shrink-0 bg-gradient-to-tr from-brand-600 to-emerald-400 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-brand-500/30">
             M1
           </div>
-          <div>
-            <span class="text-2xl font-extrabold bg-gradient-to-r from-slate-900 via-brand-700 to-slate-800 bg-clip-text text-transparent">Moz1vendas</span>
-            <span class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 -mt-1">Marketplace Digital</span>
+
+          <div class="min-w-0">
+
+            <span class="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-slate-900 via-brand-700 to-slate-800 bg-clip-text text-transparent">
+              Moz1Vendas
+            </span>
+
+            <span class="block text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 -mt-1">
+              Marketplace Digital
+            </span>
+
           </div>
+
         </div>
 
-        <!-- Botões de Ação -->
-        <div class="flex items-center gap-3">
-          <div id="sessaoVendedor" class="hidden items-center gap-2">
-            <span id="nomeLojaSessao" class="text-xs font-bold text-slate-700"></span>
-            <button onclick="openModal('modalAddProduto')" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow">
-              <i class="fa-solid fa-plus mr-1"></i> Adicionar Produto
+
+        <!-- ÁREA DO VENDEDOR -->
+
+        <div class="flex items-center gap-2">
+
+          <!-- SESSÃO LOGADA -->
+
+          <div id="sessaoVendedor"
+               class="hidden items-center gap-2">
+
+            <div class="hidden sm:block text-right mr-1">
+
+              <span id="nomeLojaSessao"
+                    class="block text-xs font-bold text-slate-700">
+              </span>
+
+              <span class="text-[9px] text-slate-400">
+                Vendedor
+              </span>
+
+            </div>
+
+            <button
+              onclick="openModal('modalAddProduto')"
+              class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-3 sm:px-4 py-2.5 rounded-full shadow">
+
+              <i class="fa-solid fa-plus mr-1"></i>
+
+              <span class="hidden sm:inline">
+                Adicionar Produto
+              </span>
+
+              <span class="sm:hidden">
+                Produto
+              </span>
+
             </button>
-            <button onclick="terminarSessao()" class="text-xs text-red-500 hover:underline">Sair</button>
+
+            <button
+              onclick="terminarSessao()"
+              class="text-xs text-red-500 hover:underline">
+
+              Sair
+
+            </button>
+
           </div>
 
-          <div id="botoesVisitante" class="flex items-center gap-2">
-            <button onclick="openModal('modalLogin')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold px-4 py-3 rounded-full transition-all">
-              <i class="fa-solid fa-right-to-bracket mr-1"></i> Entrar na Loja
+
+          <!-- VISITANTE -->
+
+          <div id="botoesVisitante"
+               class="flex items-center gap-2">
+
+            <button
+              onclick="openModal('modalLogin')"
+              class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold px-3 sm:px-4 py-3 rounded-full transition-all">
+
+              <i class="fa-solid fa-right-to-bracket mr-1"></i>
+
+              <span class="hidden sm:inline">
+                Entrar na Loja
+              </span>
+
+              <span class="sm:hidden">
+                Entrar
+              </span>
+
             </button>
-            <button onclick="openModal('modalRegistro')" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-5 py-3 rounded-full transition-all shadow-md shadow-brand-500/20">
-              <i class="fa-solid fa-store mr-1"></i> Criar Loja
+
+            <button
+              onclick="openModal('modalRegistro')"
+              class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-4 sm:px-5 py-3 rounded-full transition-all shadow-md shadow-brand-500/20">
+
+              <i class="fa-solid fa-store mr-1"></i>
+
+              <span class="hidden sm:inline">
+                Criar Loja
+              </span>
+
+              <span class="sm:hidden">
+                Criar
+              </span>
+
             </button>
+
           </div>
+
         </div>
 
       </div>
+
     </div>
+
   </header>
 
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
-    <!-- BLOCOS DE EMPRESAS / LOJAS -->
-    <section class="space-y-10" id="seccaoBlocosEmpresas">
-      <!-- As lojas criadas vão ser renderizadas aqui dinamicamente -->
+
+  <!-- =========================================================
+       CONTEÚDO PRINCIPAL
+  ========================================================== -->
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- TÍTULO -->
+
+    <section class="mb-8">
+
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+
+        <div>
+
+          <p class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">
+            Marketplace de Moçambique
+          </p>
+
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+            Produtos e lojas
+          </h1>
+
+          <p class="text-sm text-slate-500 mt-2">
+            Descubra produtos publicados por vendedores no Moz1Vendas.
+          </p>
+
+        </div>
+
+        <button
+          onclick="carregarLojas(true)"
+          class="self-start sm:self-auto text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 px-4 py-2.5 rounded-full">
+
+          <i class="fa-solid fa-rotate mr-1"></i>
+
+          Atualizar
+
+        </button>
+
+      </div>
+
     </section>
+
+
+    <!-- INDICADOR DE CARREGAMENTO -->
+
+    <section id="estadoCarregamento"
+             class="py-16 flex flex-col items-center justify-center">
+
+      <div class="loading-spinner mb-4"></div>
+
+      <p class="text-sm font-semibold text-slate-500">
+        A carregar lojas e produtos...
+      </p>
+
+      <p class="text-xs text-slate-400 mt-1">
+        A consultar o Google Sheets
+      </p>
+
+    </section>
+
+
+    <!-- ERRO -->
+
+    <section id="estadoErro"
+             class="hidden py-12">
+
+      <div class="max-w-lg mx-auto bg-red-50 border border-red-100 rounded-3xl p-6 text-center">
+
+        <div class="w-14 h-14 mx-auto rounded-full bg-red-100 flex items-center justify-center text-red-600 text-xl mb-4">
+
+          <i class="fa-solid fa-triangle-exclamation"></i>
+
+        </div>
+
+        <h3 class="font-extrabold text-red-800">
+          Não foi possível carregar as lojas
+        </h3>
+
+        <p id="mensagemErro"
+           class="text-xs text-red-600 mt-2">
+          O servidor não respondeu corretamente.
+        </p>
+
+        <button
+          onclick="carregarLojas(true)"
+          class="mt-5 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-full text-xs font-bold">
+
+          Tentar novamente
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- BLOCOS DE EMPRESAS / LOJAS -->
+
+    <section id="seccaoBlocosEmpresas"
+             class="hidden space-y-10">
+
+    </section>
+
+
+    <!-- SEM LOJAS -->
+
+    <section id="estadoVazio"
+             class="hidden py-16">
+
+      <div class="text-center">
+
+        <div class="w-20 h-20 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-3xl mb-5">
+
+          <i class="fa-solid fa-store"></i>
+
+        </div>
+
+        <h3 class="text-lg font-extrabold text-slate-700">
+          Nenhuma loja registada ainda
+        </h3>
+
+        <p class="text-sm text-slate-400 mt-2">
+          Seja o primeiro vendedor a criar a sua loja no Moz1Vendas.
+        </p>
+
+        <button
+          onclick="openModal('modalRegistro')"
+          class="mt-5 bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-full text-xs font-bold shadow">
+
+          <i class="fa-solid fa-store mr-1"></i>
+
+          Criar Minha Loja
+
+        </button>
+
+      </div>
+
+    </section>
+
   </main>
 
-  <!-- MODAL REGISTO DE EMPRESA -->
-  <div id="modalRegistro" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-      <button onclick="closeModal('modalRegistro')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-      <div>
-        <h3 class="text-xl font-extrabold text-slate-900">Registo de Empresa / Marca</h3>
-        <p class="text-xs text-slate-500">Crie a sua loja e publique os seus produtos.</p>
+
+  <!-- =========================================================
+       MODAL REGISTO
+  ========================================================== -->
+
+  <div id="modalRegistro"
+       class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
+
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto modal-box">
+
+      <button
+        onclick="closeModal('modalRegistro')"
+        class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+
+        <i class="fa-solid fa-xmark text-xl"></i>
+
+      </button>
+
+      <div class="pr-8">
+
+        <h3 class="text-xl font-extrabold text-slate-900">
+          Registo de Empresa / Marca
+        </h3>
+
+        <p class="text-xs text-slate-500 mt-1">
+          Crie a sua loja e publique os seus produtos.
+        </p>
+
       </div>
-      <form id="formRegistro" onsubmit="submeterRegistro(event)" class="space-y-4 text-xs">
+
+
+      <form id="formRegistro"
+            onsubmit="submeterRegistro(event)"
+            class="space-y-4 text-xs">
+
         <div>
-          <label class="font-bold text-slate-700 block mb-1">Nome Completo</label>
-          <input type="text" required id="regNome" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+          <label class="font-bold text-slate-700 block mb-1">
+            Nome Completo
+          </label>
+
+          <input
+            type="text"
+            required
+            id="regNome"
+            class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
         </div>
-        <div class="grid grid-cols-2 gap-3">
+
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
           <div>
-            <label class="font-bold text-slate-700 block mb-1">E-mail</label>
-            <input type="email" required id="regEmail" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+            <label class="font-bold text-slate-700 block mb-1">
+              E-mail
+            </label>
+
+            <input
+              type="email"
+              required
+              id="regEmail"
+              class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
           </div>
+
+
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Contacto (WhatsApp)</label>
-            <input type="tel" required id="regTelefone" placeholder="+258..." class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+            <label class="font-bold text-slate-700 block mb-1">
+              Contacto (WhatsApp)
+            </label>
+
+            <input
+              type="tel"
+              required
+              id="regTelefone"
+              placeholder="+258..."
+              class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
           </div>
+
         </div>
-        <div class="grid grid-cols-2 gap-3">
+
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Nome da Empresa / Marca</label>
-            <input type="text" required id="regEmpresa" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+            <label class="font-bold text-slate-700 block mb-1">
+              Nome da Empresa / Marca
+            </label>
+
+            <input
+              type="text"
+              required
+              id="regEmpresa"
+              class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
           </div>
+
+
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Link do Logotipo</label>
-            <input type="url" required id="regLogo" placeholder="https://..." class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+            <label class="font-bold text-slate-700 block mb-1">
+              Link do Logotipo
+            </label>
+
+            <input
+              type="url"
+              required
+              id="regLogo"
+              placeholder="https://..."
+              class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
           </div>
+
         </div>
-        <div class="grid grid-cols-2 gap-3">
+
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Data de Nascimento</label>
-            <input type="date" required id="regDataNasc" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+            <label class="font-bold text-slate-700 block mb-1">
+              Data de Nascimento
+            </label>
+
+            <input
+              type="date"
+              required
+              id="regDataNasc"
+              class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
           </div>
+
+
           <div>
-            <label class="font-bold text-slate-700 block mb-1">BI Nº</label>
-            <input type="text" required id="regBI" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+            <label class="font-bold text-slate-700 block mb-1">
+              BI Nº
+            </label>
+
+            <input
+              type="text"
+              required
+              id="regBI"
+              class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
           </div>
+
         </div>
+
+
         <div>
-          <label class="font-bold text-slate-700 block mb-1">PIN de Acesso (4-6 dígitos)</label>
-          <input type="password" required id="regPin" maxlength="6" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+          <label class="font-bold text-slate-700 block mb-1">
+            PIN de Acesso (4-6 dígitos)
+          </label>
+
+          <input
+            type="password"
+            required
+            id="regPin"
+            maxlength="6"
+            minlength="4"
+            inputmode="numeric"
+            class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
         </div>
-        <button type="submit" id="btnSubmitReg" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all text-sm">
+
+
+        <button
+          type="submit"
+          id="btnSubmitReg"
+          class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all text-sm">
+
           Criar Minha Empresa
+
         </button>
+
       </form>
+
     </div>
+
   </div>
 
-  <!-- MODAL LOGIN -->
-  <div id="modalLogin" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-6 shadow-2xl relative">
-      <button onclick="closeModal('modalLogin')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-      <h3 class="text-xl font-extrabold text-slate-900">Entrar na Sua Loja</h3>
-      <form onsubmit="submeterLogin(event)" class="space-y-4 text-xs">
+
+  <!-- =========================================================
+       MODAL LOGIN
+  ========================================================== -->
+
+  <div id="modalLogin"
+       class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
+
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-6 shadow-2xl relative modal-box">
+
+      <button
+        onclick="closeModal('modalLogin')"
+        class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+
+        <i class="fa-solid fa-xmark text-xl"></i>
+
+      </button>
+
+
+      <div class="pr-8">
+
+        <h3 class="text-xl font-extrabold text-slate-900">
+          Entrar na Sua Loja
+        </h3>
+
+        <p class="text-xs text-slate-500 mt-1">
+          Aceda ao painel do vendedor.
+        </p>
+
+      </div>
+
+
+      <form onsubmit="submeterLogin(event)"
+            class="space-y-4 text-xs">
+
         <div>
-          <label class="font-bold text-slate-700 block mb-1">Contacto (WhatsApp)</label>
-          <input type="tel" id="loginTelefone" required class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+          <label class="font-bold text-slate-700 block mb-1">
+            Contacto (WhatsApp)
+          </label>
+
+          <input
+            type="tel"
+            id="loginTelefone"
+            required
+            class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
         </div>
+
+
         <div>
-          <label class="font-bold text-slate-700 block mb-1">PIN de Acesso</label>
-          <input type="password" id="loginPin" required maxlength="6" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+          <label class="font-bold text-slate-700 block mb-1">
+            PIN de Acesso
+          </label>
+
+          <input
+            type="password"
+            id="loginPin"
+            required
+            maxlength="6"
+            class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
         </div>
-        <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-all">
+
+
+        <button
+          type="submit"
+          id="btnLogin"
+          class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-all">
+
           Aceder ao Painel
+
         </button>
+
       </form>
+
     </div>
+
   </div>
 
-  <!-- MODAL ADICIONAR PRODUTO -->
-  <div id="modalAddProduto" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl relative">
-      <button onclick="closeModal('modalAddProduto')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-      <h3 class="text-xl font-extrabold text-slate-900">Novo Produto</h3>
-      <form onsubmit="submeterProduto(event)" class="space-y-4 text-xs">
+
+  <!-- =========================================================
+       MODAL ADICIONAR PRODUTO
+  ========================================================== -->
+
+  <div id="modalAddProduto"
+       class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
+
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto modal-box">
+
+      <button
+        onclick="closeModal('modalAddProduto')"
+        class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+
+        <i class="fa-solid fa-xmark text-xl"></i>
+
+      </button>
+
+
+      <div class="pr-8">
+
+        <h3 class="text-xl font-extrabold text-slate-900">
+          Novo Produto
+        </h3>
+
+        <p class="text-xs text-slate-500 mt-1">
+          Publique um produto na sua loja.
+        </p>
+
+      </div>
+
+
+      <form onsubmit="submeterProduto(event)"
+            class="space-y-4 text-xs">
+
         <div>
-          <label class="font-bold text-slate-700 block mb-1">Nome do Produto</label>
-          <input type="text" id="prodNome" required class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+          <label class="font-bold text-slate-700 block mb-1">
+            Nome do Produto
+          </label>
+
+          <input
+            type="text"
+            id="prodNome"
+            required
+            class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
         </div>
-        <div class="grid grid-cols-2 gap-3">
+
+
+        <div>
+
+          <label class="font-bold text-slate-700 block mb-1">
+            Descrição
+          </label>
+
+          <textarea
+            id="prodDescricao"
+            rows="3"
+            placeholder="Descrição do produto..."
+            class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 resize-none"></textarea>
+
+        </div>
+
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Preço (Mtn)</label>
-            <input type="number" id="prodPreco" required class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+            <label class="font-bold text-slate-700 block mb-1">
+              Preço (Mtn)
+            </label>
+
+            <input
+              type="number"
+              id="prodPreco"
+              required
+              min="0"
+              step="0.01"
+              class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
           </div>
+
+
           <div>
-            <label class="font-bold text-slate-700 block mb-1">Tipo de Produto</label>
-            <select id="prodTipo" onchange="toggleLinkDigital(this.value)" class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
-              <option value="FISICO">Físico</option>
-              <option value="DIGITAL">Digital</option>
+
+            <label class="font-bold text-slate-700 block mb-1">
+              Tipo de Produto
+            </label>
+
+            <select
+              id="prodTipo"
+              onchange="toggleLinkDigital(this.value)"
+              class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
+              <option value="FISICO">
+                Físico
+              </option>
+
+              <option value="DIGITAL">
+                Digital
+              </option>
+
             </select>
+
           </div>
+
         </div>
+
+
         <div>
-          <label class="font-bold text-slate-700 block mb-1">URL da Imagem</label>
-          <input type="url" id="prodImagem" required placeholder="https://..." class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+          <label class="font-bold text-slate-700 block mb-1">
+            URL da Imagem
+          </label>
+
+          <input
+            type="url"
+            id="prodImagem"
+            required
+            placeholder="https://..."
+            class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
         </div>
-        <div id="divLinkDigital" class="hidden">
-          <label class="font-bold text-slate-700 block mb-1">Link de Download / Ficheiro Digital</label>
-          <input type="url" id="prodLinkDigital" placeholder="https://drive.google.com/..." class="w-full p-3 bg-slate-100 border rounded-xl outline-none">
+
+
+        <div>
+
+          <label class="font-bold text-slate-700 block mb-1">
+            WhatsApp do Produto
+          </label>
+
+          <input
+            type="tel"
+            id="prodWhatsapp"
+            placeholder="+258..."
+            class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
+          <p class="text-[10px] text-slate-400 mt-1">
+            Campo preparado para a coluna WHATSAPP do GAS.
+          </p>
+
         </div>
-        <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all">
+
+
+        <div id="divLinkDigital"
+             class="hidden">
+
+          <label class="font-bold text-slate-700 block mb-1">
+            Link de Download / Ficheiro Digital
+          </label>
+
+          <input
+            type="url"
+            id="prodLinkDigital"
+            placeholder="https://..."
+            class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+
+        </div>
+
+
+        <button
+          type="submit"
+          id="btnSubmitProduto"
+          class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all">
+
           Publicar Produto
+
         </button>
+
       </form>
+
     </div>
+
   </div>
+
+
+  <!-- =========================================================
+       TOAST
+  ========================================================== -->
+
+  <div id="toast"
+       class="fixed bottom-5 right-5 z-[200] hidden max-w-sm">
+
+    <div id="toastBox"
+         class="toast bg-slate-900 text-white rounded-2xl shadow-2xl px-5 py-4 flex items-start gap-3">
+
+      <i id="toastIcon"
+         class="fa-solid fa-circle-check text-brand-400 mt-0.5"></i>
+
+      <div>
+
+        <p id="toastTitle"
+           class="font-bold text-sm">
+          Concluído
+        </p>
+
+        <p id="toastMessage"
+           class="text-xs text-slate-300 mt-1">
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       JAVASCRIPT
+  ========================================================== -->
 
   <script>
-    // Cole aqui o URL da sua Web App do Google Apps Script
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbw5jh7MqqNJGL5VE0O_zjkWSk3xSqhu-MpZAeP1gH4MvHzlQnwBfEhwmv6KUteYamkdfw/exec";
+
+    /*
+     * ==========================================================
+     * CONFIGURAÇÃO
+     * ==========================================================
+     */
+
+    const GAS_URL =
+      "https://script.google.com/macros/s/AKfycbw5jh7MqqNJGL5VE0O_zjkWSk3xSqhu-MpZAeP1gH4MvHzlQnwBfEhwmv6KUteYamkdfw/exec";
+
+    /*
+     * IMPORTANTE:
+     * O slideshow passa para o próximo produto a cada 6 segundos.
+     */
+
+    const SLIDE_INTERVALO = 6000;
+
+
+    /*
+     * ==========================================================
+     * ESTADO DA APLICAÇÃO
+     * ==========================================================
+     */
 
     let lojas = [];
+
     let usuarioLogado = null;
 
-    function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
-    function toggleLinkDigital(val) { document.getElementById('divLinkDigital').classList.toggle('hidden', val !== 'DIGITAL'); }
+    let timersSlideshow = {};
 
-    // 1. SUBMETER REGISTO DE NOVA LOJA
-    async function submeterRegistro(e) {
-  e.preventDefault();
-  const btn = document.getElementById('btnSubmitReg');
-  btn.innerText = "A guardar no Google Sheets...";
-  btn.disabled = true;
 
-  const payload = {
-    action: "CRIAR_LOJA",
-    nome: document.getElementById('regNome').value,
-    email: document.getElementById('regEmail').value,
-    telefone: document.getElementById('regTelefone').value,
-    empresa: document.getElementById('regEmpresa').value,
-    logo: document.getElementById('regLogo').value,
-    dataNasc: document.getElementById('regDataNasc').value,
-    bi: document.getElementById('regBI').value,
-    pin: document.getElementById('regPin').value
-  };
+    /*
+     * ==========================================================
+     * FUNÇÕES DE MODAL
+     * ==========================================================
+     */
 
-  try {
-    const res = await fetch(GAS_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
+    function openModal(id) {
+
+      const modal = document.getElementById(id);
+
+      if (!modal) return;
+
+      modal.classList.remove('hidden');
+
+      modal.classList.add('flex');
+
+      document.body.classList.add('overflow-hidden');
+    }
+
+
+    function closeModal(id) {
+
+      const modal = document.getElementById(id);
+
+      if (!modal) return;
+
+      modal.classList.add('hidden');
+
+      modal.classList.remove('flex');
+
+      document.body.classList.remove('overflow-hidden');
+    }
+
+
+    /*
+     * Fecha modal quando clicar fora da caixa.
+     */
+
+    document.querySelectorAll('.modal').forEach(function(modal) {
+
+      modal.addEventListener('click', function(event) {
+
+        if (event.target === modal) {
+
+          closeModal(modal.id);
+
+        }
+
+      });
+
     });
 
-    const result = await res.json();
 
-    if (result && result.status === "SUCCESS") {
-      const novaLoja = {
-        vendedorId: result.vendedorId,
-        empresa: payload.empresa,
-        logo: payload.logo,
-        produtosLoja: []
-      };
+    /*
+     * ==========================================================
+     * TOAST
+     * ==========================================================
+     */
 
-      lojas.unshift(novaLoja);
-      renderizarBlocos(lojas);
+    function mostrarToast(mensagem, tipo = 'success') {
 
-      usuarioLogado = { id: result.vendedorId, empresa: payload.empresa };
-      atualizarEstadoSessao();
+      const toast = document.getElementById('toast');
 
-      alert("Loja registada e gravada no Google Sheets com sucesso!");
-      closeModal('modalRegistro');
-      document.getElementById('formRegistro').reset();
-    } else {
-      alert("Erro ao registar: " + (result && result.message ? result.message : "Falha interna no servidor"));
-    }
-  } catch (err) {
-    alert("Falha de ligação ao Google Sheets: " + err.message);
-  } finally {
-    btn.innerText = "Criar Minha Empresa";
-    btn.disabled = false;
-  }
-}
+      const title = document.getElementById('toastTitle');
 
-    // 2. LOGIN DO VENDEDOR
-    async function submeterLogin(e) {
-      e.preventDefault();
-      const payload = {
-        action: "LOGIN",
-        telefone: document.getElementById('loginTelefone').value,
-        pin: document.getElementById('loginPin').value
-      };
+      const message = document.getElementById('toastMessage');
 
-      try {
-        const res = await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
-        const result = await res.json();
+      const icon = document.getElementById('toastIcon');
 
-        if (result.status === "SUCCESS") {
-          usuarioLogado = result.vendedor;
-          atualizarEstadoSessao();
-          closeModal('modalLogin');
-          alert("Sessão iniciada como " + usuarioLogado.empresa);
-        } else {
-          alert("Credenciais inválidas.");
-        }
-      } catch (err) {
-        alert("Erro no login.");
-      }
-    }
+      if (!toast) return;
 
-    // 3. ADICIONAR PRODUTO À LOJA LOGADA
-    async function submeterProduto(e) {
-      e.preventDefault();
-      if (!usuarioLogado) return alert("Precisa de iniciar sessão.");
+      message.innerText = mensagem;
 
-      const payload = {
-        action: "CRIAR_PRODUTO",
-        vendedorId: usuarioLogado.id,
-        nome: document.getElementById('prodNome').value,
-        preco: Number(document.getElementById('prodPreco').value),
-        tipo: document.getElementById('prodTipo').value,
-        imagem: document.getElementById('prodImagem').value,
-        linkDigital: document.getElementById('prodLinkDigital').value
-      };
+      if (tipo === 'error') {
 
-      try {
-        const res = await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
-        const result = await res.json();
+        title.innerText = 'Erro';
 
-        if (result.status === "SUCCESS") {
-          // Atualiza a loja na interface
-          const loja = lojas.find(l => l.vendedorId === usuarioLogado.id);
-          if (loja) {
-            loja.produtosLoja.push({
-              id: result.idProduto,
-              nome: payload.nome,
-              preco: payload.preco,
-              tipo: payload.tipo,
-              img: payload.imagem,
-              gosta: 0,
-              naoGosta: 0
-            });
-            renderizarBlocos(lojas);
-          }
-          alert("Produto adicionado com sucesso!");
-          closeModal('modalAddProduto');
-        }
-      } catch (err) {
-        alert("Erro ao publicar produto.");
-      }
-    }
+        icon.className =
+          'fa-solid fa-circle-exclamation text-red-400 mt-0.5';
 
-    function atualizarEstadoSessao() {
-      if (usuarioLogado) {
-        document.getElementById('botoesVisitante').classList.add('hidden');
-        document.getElementById('sessaoVendedor').classList.remove('hidden');
-        document.getElementById('sessaoVendedor').classList.add('flex');
-        document.getElementById('nomeLojaSessao').innerText = usuarioLogado.empresa;
       } else {
-        document.getElementById('botoesVisitante').classList.remove('hidden');
-        document.getElementById('sessaoVendedor').classList.add('hidden');
+
+        title.innerText = 'Concluído';
+
+        icon.className =
+          'fa-solid fa-circle-check text-brand-400 mt-0.5';
+
       }
+
+      toast.classList.remove('hidden');
+
+      clearTimeout(window.__toastTimer);
+
+      window.__toastTimer = setTimeout(function() {
+
+        toast.classList.add('hidden');
+
+      }, 4000);
+
     }
 
-    function terminarSessao() {
-      usuarioLogado = null;
-      atualizarEstadoSessao();
+
+    /*
+     * ==========================================================
+     * UTILITÁRIOS
+     * ==========================================================
+     */
+
+    function escaparHTML(valor) {
+
+      if (valor === null || valor === undefined) {
+        return '';
+      }
+
+      return String(valor)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
+
+
+    function formatarPreco(valor) {
+
+      const numero = Number(valor);
+
+      if (!Number.isFinite(numero)) {
+        return '0';
+      }
+
+      return numero.toLocaleString('pt-MZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
+
+
+    function normalizarWhatsApp(numero) {
+
+      if (!numero) return '';
+
+      let n = String(numero).trim();
+
+      n = n.replace(/[^\d+]/g, '');
+
+      if (n.startsWith('00')) {
+        n = '+' + n.substring(2);
+      }
+
+      if (!n.startsWith('+') && n.length === 9) {
+        n = '+258' + n;
+      }
+
+      return n;
+    }
+
+
+    function gerarLinkWhatsApp(numero, nomeProduto) {
+
+      const n = normalizarWhatsApp(numero);
+
+      if (!n) return '';
+
+      const telefone = n.replace(/\+/g, '');
+
+      const mensagem =
+        'Olá! Tenho interesse no produto "' +
+        (nomeProduto || '') +
+        '" publicado no Moz1Vendas.';
+
+      return 'https://wa.me/' +
+        telefone +
+        '?text=' +
+        encodeURIComponent(mensagem);
+    }
+
+
+    function validarURL(url) {
+
+      if (!url) return false;
+
+      try {
+
+        const u = new URL(url);
+
+        return u.protocol === 'http:' ||
+               u.protocol === 'https:';
+
+      } catch (e) {
+
+        return false;
+
+      }
+
+    }
+
+
+    /*
+     * ==========================================================
+     * TIPO DE PRODUTO
+     * ==========================================================
+     */
+
+    function toggleLinkDigital(valor) {
+
+      const div = document.getElementById('divLinkDigital');
+
+      const input = document.getElementById('prodLinkDigital');
+
+      if (!div || !input) return;
+
+      if (valor === 'DIGITAL') {
+
+        div.classList.remove('hidden');
+
+      } else {
+
+        div.classList.add('hidden');
+
+        input.value = '';
+
+      }
+
+    }
+
+
+    /*
+     * ==========================================================
+     * ESTADO VISUAL DA PÁGINA
+     * ==========================================================
+     */
+
+    function mostrarCarregamento() {
+
+      document
+        .getElementById('estadoCarregamento')
+        .classList.remove('hidden');
+
+      document
+        .getElementById('estadoErro')
+        .classList.add('hidden');
+
+      document
+        .getElementById('estadoVazio')
+        .classList.add('hidden');
+
+      document
+        .getElementById('seccaoBlocosEmpresas')
+        .classList.add('hidden');
+    }
+
+
+    function mostrarErro(mensagem) {
+
+      document
+        .getElementById('estadoCarregamento')
+        .classList.add('hidden');
+
+      document
+        .getElementById('estadoVazio')
+        .classList.add('hidden');
+
+      document
+        .getElementById('seccaoBlocosEmpresas')
+        .classList.add('hidden');
+
+      document
+        .getElementById('estadoErro')
+        .classList.remove('hidden');
+
+      document
+        .getElementById('mensagemErro')
+        .innerText = mensagem || 'Falha ao comunicar com o servidor.';
+    }
+
+
+    function mostrarVazio() {
+
+      document
+        .getElementById('estadoCarregamento')
+        .classList.add('hidden');
+
+      document
+        .getElementById('estadoErro')
+        .classList.add('hidden');
+
+      document
+        .getElementById('seccaoBlocosEmpresas')
+        .classList.add('hidden');
+
+      document
+        .getElementById('estadoVazio')
+        .classList.remove('hidden');
+    }
+
+
+    /*
+     * ==========================================================
+     * COMUNICAÇÃO GET COM GAS
+     * ==========================================================
+     */
+
+    async function gasGet(action, parametros = {}) {
+
+      let url = GAS_URL +
+        '?action=' +
+        encodeURIComponent(action);
+
+      Object.keys(parametros).forEach(function(chave) {
+
+        const valor = parametros[chave];
+
+        if (valor !== undefined &&
+            valor !== null &&
+            valor !== '') {
+
+          url += '&' +
+            encodeURIComponent(chave) +
+            '=' +
+            encodeURIComponent(valor);
+
+        }
+
+      });
+
+
+      const resposta = await fetch(url, {
+        method: 'GET',
+        cache: 'no-store'
+      });
+
+
+      if (!resposta.ok) {
+
+        throw new Error(
+          'Servidor respondeu com HTTP ' +
+          resposta.status
+        );
+
+      }
+
+
+      const texto = await resposta.text();
+
+      let resultado;
+
+      try {
+
+        resultado = JSON.parse(texto);
+
+      } catch (e) {
+
+        throw new Error(
+          'O GAS não devolveu JSON válido.'
+        );
+
+      }
+
+
+      return resultado;
+    }
+
+
+    /*
+     * ==========================================================
+     * COMUNICAÇÃO POST COM GAS
+     * ==========================================================
+     */
+
+    async function gasPost(payload) {
+
+      const resposta = await fetch(GAS_URL, {
+
+        method: 'POST',
+
+        headers: {
+          'Content-Type':
+            'text/plain;charset=utf-8'
+        },
+
+        body: JSON.stringify(payload)
+
+      });
+
+
+      if (!resposta.ok) {
+
+        throw new Error(
+          'Servidor respondeu com HTTP ' +
+          resposta.status
+        );
+
+      }
+
+
+      const texto = await resposta.text();
+
+      let resultado;
+
+      try {
+
+        resultado = JSON.parse(texto);
+
+      } catch (e) {
+
+        throw new Error(
+          'Resposta inválida do Google Apps Script.'
+        );
+
+      }
+
+
+      return resultado;
+    }
+
+
+    /*
+     * ==========================================================
+     * CARREGAR LOJAS
+     *
+     * Esta é a ligação que faltava no frontend original.
+     *
+     * GAS:
+     * ?action=homeBlocos
+     * ==========================================================
+     */
+
+    async function carregarLojas(mostrarMensagem = false) {
+
+      if (mostrarMensagem) {
+        mostrarToast('A atualizar lojas e produtos...');
+      }
+
+      mostrarCarregamento();
+
+
+      try {
+
+        const resultado =
+          await gasGet('homeBlocos');
+
+
+        if (!resultado ||
+            resultado.ok !== true) {
+
+          throw new Error(
+            resultado && resultado.erro
+              ? resultado.erro
+              : 'Resposta inválida do GAS.'
+          );
+
+        }
+
+
+        const blocos =
+          Array.isArray(resultado.blocos)
+            ? resultado.blocos
+            : [];
+
+
+        lojas =
+          normalizarBlocosRecebidos(blocos);
+
+
+        if (lojas.length === 0) {
+
+          mostrarVazio();
+
+          return;
+
+        }
+
+
+        renderizarBlocos(lojas);
+
+
+        if (mostrarMensagem) {
+
+          mostrarToast(
+            'Dados atualizados com sucesso.'
+          );
+
+        }
+
+      } catch (erro) {
+
+        console.error(
+          'Erro ao carregar lojas:',
+          erro
+        );
+
+        mostrarErro(
+          erro.message ||
+          'Não foi possível carregar as lojas.'
+        );
+
+      }
+
+    }
+
+
+    /*
+     * ==========================================================
+     * NORMALIZAR RESPOSTA DO GAS
+     *
+     * O GAS usa:
+     *
+     * produtoDestaque
+     * slideshowProdutos
+     *
+     * O frontend transforma para:
+     *
+     * produtosLoja
+     * ==========================================================
+     */
+
+    function normalizarBlocosRecebidos(blocos) {
+
+      return blocos.map(function(bloco) {
+
+        const produtos = Array.isArray(
+          bloco.slideshowProdutos
+        )
+          ? bloco.slideshowProdutos
+          : [];
+
+
+        return {
+
+          vendedorId:
+            bloco.vendedorId ||
+            bloco.id ||
+            extrairVendedorDoLink(bloco.linkLoja),
+
+          empresa:
+            bloco.empresa || 'Loja',
+
+          logo:
+            bloco.logo || '',
+
+          linkLoja:
+            bloco.linkLoja || '#',
+
+          produtoDestaque:
+            bloco.produtoDestaque || null,
+
+          produtosLoja:
+            produtos.map(function(produto) {
+
+              return {
+
+                id:
+                  produto.produtoId ||
+                  produto.id ||
+                  '',
+
+                produtoId:
+                  produto.produtoId ||
+                  produto.id ||
+                  '',
+
+                nome:
+                  produto.nome || 'Produto',
+
+                preco:
+                  produto.preco || 0,
+
+                img:
+                  produto.imagemUrl ||
+                  produto.img ||
+                  '',
+
+                imagemUrl:
+                  produto.imagemUrl ||
+                  produto.img ||
+                  '',
+
+                descricao:
+                  produto.descricao || '',
+
+                tipo:
+                  produto.tipo || '',
+
+                whatsapp:
+                  produto.whatsapp || '',
+
+                downloadUrl:
+                  produto.downloadUrl ||
+                  produto.linkDigital ||
+                  '',
+
+                metodoPagamento:
+                  produto.metodoPagamento || ''
+
+              };
+
+            })
+
+        };
+
+      });
+
+    }
+
+
+    function extrairVendedorDoLink(link) {
+
+      if (!link) return '';
+
+      try {
+
+        const params =
+          new URLSearchParams(
+            link.replace('?', '')
+          );
+
+        return params.get('vendedor') || '';
+
+      } catch (e) {
+
+        return '';
+
+      }
+
+    }
+
+
+    /*
+     * ==========================================================
+     * RENDERIZAR LOJAS
+     * ==========================================================
+     */
 
     function renderizarBlocos(listaLojas) {
-      const container = document.getElementById('seccaoBlocosEmpresas');
-      if (listaLojas.length === 0) {
-        container.innerHTML = `<div class="text-center py-12 text-slate-400">Nenhuma loja registada ainda.</div>`;
+
+      pararTodosSlideshows();
+
+
+      const container =
+        document.getElementById(
+          'seccaoBlocosEmpresas'
+        );
+
+
+      if (!listaLojas ||
+          listaLojas.length === 0) {
+
+        mostrarVazio();
+
         return;
+
       }
-      container.innerHTML = listaLojas.map(b => `
-        <div class="bg-white rounded-3xl border border-slate-200 p-6 space-y-6 shadow-sm">
-          <div class="flex items-center justify-between flex-wrap gap-4 pb-4 border-b">
-            <div class="flex items-center gap-4">
-              <img src="${b.logo}" class="w-14 h-14 rounded-2xl object-cover ring-2 ring-brand-500/20 shadow-md">
-              <div>
-                <h3 class="text-lg font-bold text-slate-900">${b.empresa}</h3>
-                <span class="text-xs text-slate-400">Loja Oficial Moz1vendas</span>
-              </div>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            ${b.produtosLoja.length === 0 ? '<p class="text-xs text-slate-400 col-span-3">Nenhum produto publicado nesta loja.</p>' : ''}
-            ${b.produtosLoja.map(p => `
-              <div class="bg-slate-50/50 rounded-2xl p-4 border space-y-3">
-                <img src="${p.img}" class="w-full h-44 object-cover rounded-xl">
-                <h4 class="font-bold text-sm text-slate-800">${p.nome}</h4>
-                <p class="text-brand-700 font-black">${p.preco.toLocaleString()} Mtn</p>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `).join('');
+
+
+      document
+        .getElementById('estadoCarregamento')
+        .classList.add('hidden');
+
+      document
+        .getElementById('estadoErro')
+        .classList.add('hidden');
+
+      document
+        .getElementById('estadoVazio')
+        .classList.add('hidden');
+
+      container.classList.remove('hidden');
+
+
+      container.innerHTML =
+        listaLojas.map(function(loja, indice) {
+
+          return criarBlocoLoja(
+            loja,
+            indice
+          );
+
+        }).join('');
+
+
+      /*
+       * Iniciar slideshow depois de criar o HTML.
+       */
+
+      listaLojas.forEach(function(loja, indice) {
+
+        if (loja.produtosLoja &&
+            loja.produtosLoja.length > 1) {
+
+          iniciarSlideshow(
+            indice,
+            loja.produtosLoja.length
+          );
+
+        }
+
+      });
+
     }
+
+
+    /*
+     * ==========================================================
+     * CRIAR BLOCO DE LOJA
+     * ==========================================================
+     */
+
+    function criarBlocoLoja(loja, indice) {
+
+      const produtos =
+        Array.isArray(loja.produtosLoja)
+          ? loja.produtosLoja
+          : [];
+
+
+      const logo =
+        validarURL(loja.logo)
+          ? loja.logo
+          : '';
+
+
+      if (produtos.length === 0) {
+
+        return `
+
+          <article
+            class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+
+            <div
+              class="flex items-center justify-between flex-wrap gap-4 pb-5 border-b border-slate-100">
+
+              <div class="flex items-center gap-4">
+
+                ${
+                  logo
+                  ?
+                  `
+                  <img
+                    src="${escaparHTML(logo)}"
+                    alt="${escaparHTML(loja.empresa)}"
+                    class="w-14 h-14 rounded-2xl object-cover ring-2 ring-brand-500/20 shadow-md">
+                  `
+                  :
+                  `
+                  <div
+                    class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl font-black">
+
+                    ${escaparHTML(
+                      String(loja.empresa || 'L').charAt(0).toUpperCase()
+                    )}
+
+                  </div>
+                  `
+                }
+
+                <div>
+
+                  <h3 class="text-lg font-bold text-slate-900">
+                    ${escaparHTML(loja.empresa)}
+                  </h3>
+
+                  <span class="text-xs text-slate-400">
+                    Loja Oficial Moz1Vendas
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="py-8 text-center">
+
+              <div
+                class="w-14 h-14 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-xl">
+
+                <i class="fa-solid fa-box-open"></i>
+
+              </div>
+
+              <p class="text-xs text-slate-400 mt-3">
+                Nenhum produto publicado nesta loja.
+              </p>
+
+            </div>
+
+          </article>
+
+        `;
+
+      }
+
+
+      /*
+       * Apenas um produto visível por vez.
+       */
+
+      const slides =
+        produtos.map(function(produto, produtoIndex) {
+
+          return criarSlideProduto(
+            produto,
+            indice,
+            produtoIndex
+          );
+
+        }).join('');
+
+
+      const dots =
+        produtos.map(function(produto, produtoIndex) {
+
+          return `
+
+            <button
+              type="button"
+              onclick="irParaSlide(${indice}, ${produtoIndex})"
+              class="slide-dot ${produtoIndex === 0 ? 'active' : ''}"
+              aria-label="Produto ${produtoIndex + 1}">
+            </button>
+
+          `;
+
+        }).join('');
+
+
+      return `
+
+        <article
+          class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+
+          <!-- CABEÇALHO DA LOJA -->
+
+          <div
+            class="p-5 sm:p-6 flex items-center justify-between flex-wrap gap-4 border-b border-slate-100">
+
+            <div class="flex items-center gap-4">
+
+              ${
+                logo
+                ?
+                `
+                <img
+                  src="${escaparHTML(logo)}"
+                  alt="${escaparHTML(loja.empresa)}"
+                  class="w-14 h-14 rounded-2xl object-cover ring-2 ring-brand-500/20 shadow-md">
+                `
+                :
+                `
+                <div
+                  class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl font-black">
+
+                  ${escaparHTML(
+                    String(loja.empresa || 'L').charAt(0).toUpperCase()
+                  )}
+
+                </div>
+                `
+              }
+
+              <div>
+
+                <h3
+                  class="text-lg font-bold text-slate-900">
+
+                  ${escaparHTML(loja.empresa)}
+
+                </h3>
+
+                <span class="text-xs text-slate-400">
+                  Loja Oficial Moz1Vendas
+                </span>
+
+              </div>
+
+            </div>
+
+
+            ${
+              loja.linkLoja &&
+              loja.linkLoja !== '#'
+              ?
+              `
+              <button
+                onclick="abrirLoja('${escaparHTML(loja.linkLoja)}')"
+                class="text-xs font-bold text-brand-700 bg-brand-50 hover:bg-brand-100 px-4 py-2.5 rounded-full">
+
+                <i class="fa-solid fa-store mr-1"></i>
+
+                Ver Loja
+
+              </button>
+              `
+              :
+              ''
+            }
+
+          </div>
+
+
+          <!-- SLIDESHOW -->
+
+          <div
+            class="relative bg-slate-950">
+
+            <div
+              id="slideWrapper-${indice}"
+              class="slide-wrapper">
+
+              <div
+                id="slideTrack-${indice}"
+                class="slide-track">
+
+                ${slides}
+
+              </div>
+
+              ${
+                produtos.length > 1
+                ?
+                `
+                <div
+                  id="slideDots-${indice}"
+                  class="slide-dots">
+
+                  ${dots}
+
+                </div>
+                `
+                :
+                ''
+              }
+
+            </div>
+
+
+            ${
+              produtos.length > 1
+              ?
+              `
+
+              <button
+                onclick="slideAnterior(${indice})"
+                class="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center">
+
+                <i class="fa-solid fa-chevron-left"></i>
+
+              </button>
+
+
+              <button
+                onclick="slideSeguinte(${indice})"
+                class="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center">
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+              </button>
+
+              `
+              :
+              ''
+            }
+
+          </div>
+
+
+          <!-- INFORMAÇÃO -->
+
+          <div class="px-5 sm:px-6 py-4 border-t border-slate-100">
+
+            <div class="flex items-center justify-between gap-3">
+
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">
+
+                Apresentação automática
+
+              </span>
+
+              ${
+                produtos.length > 1
+                ?
+                `
+                <span class="text-[10px] text-slate-400">
+
+                  <i class="fa-regular fa-clock mr-1"></i>
+
+                  6 segundos
+
+                </span>
+                `
+                :
+                ''
+              }
+
+            </div>
+
+          </div>
+
+        </article>
+
+      `;
+
+    }
+
+
+    /*
+     * ==========================================================
+     * CRIAR SLIDE
+     * ==========================================================
+     */
+
+    function criarSlideProduto(
+      produto,
+      lojaIndex,
+      produtoIndex
+    ) {
+
+      const imagem =
+        validarURL(produto.img)
+          ? produto.img
+          : '';
+
+
+      const nome =
+        produto.nome || 'Produto';
+
+
+      const preco =
+        formatarPreco(produto.preco);
+
+
+      const whatsapp =
+        produto.whatsapp || '';
+
+
+      const linkWhatsApp =
+        gerarLinkWhatsApp(
+          whatsapp,
+          nome
+        );
+
+
+      const downloadUrl =
+        produto.downloadUrl || '';
+
+
+      return `
+
+        <div
+          class="slide-item">
+
+          <div
+            class="grid grid-cols-1 lg:grid-cols-2 min-h-[430px]">
+
+            <!-- IMAGEM -->
+
+            <div
+              class="relative bg-slate-900 min-h-[300px] lg:min-h-[430px]">
+
+              ${
+                imagem
+                ?
+                `
+                <img
+                  src="${escaparHTML(imagem)}"
+                  alt="${escaparHTML(nome)}"
+                  class="w-full h-full min-h-[300px] lg:min-h-[430px] object-cover product-image"
+                  loading="lazy"
+                  onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+
+                <div
+                  class="hidden absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500 text-5xl">
+
+                  <i class="fa-solid fa-image"></i>
+
+                </div>
+                `
+                :
+                `
+                <div
+                  class="absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500 text-5xl">
+
+                  <i class="fa-solid fa-image"></i>
+
+                </div>
+                `
+              }
+
+
+              <!-- NÚMERO DO PRODUTO -->
+
+              <div
+                class="absolute top-4 left-4 bg-black/50 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-full">
+
+                Produto ${produtoIndex + 1}
+
+              </div>
+
+            </div>
+
+
+            <!-- INFORMAÇÃO DO PRODUTO -->
+
+            <div
+              class="bg-white p-6 sm:p-8 flex flex-col justify-center">
+
+              <span
+                class="inline-flex self-start items-center gap-1 bg-brand-50 text-brand-700 px-3 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider mb-4">
+
+                <i class="fa-solid fa-tag"></i>
+
+                ${escaparHTML(
+                  produto.tipo || 'Produto'
+                )}
+
+              </span>
+
+
+              <h2
+                class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight line-clamp-2">
+
+                ${escaparHTML(nome)}
+
+              </h2>
+
+
+              ${
+                produto.descricao
+                ?
+                `
+                <p
+                  class="text-sm text-slate-500 mt-3 line-clamp-2">
+
+                  ${escaparHTML(
+                    produto.descricao
+                  )}
+
+                </p>
+                `
+                :
+                ''
+              }
+
+
+              <!-- PREÇO -->
+
+              <div class="mt-5">
+
+                <span
+                  class="block text-[10px] uppercase tracking-widest font-bold text-slate-400">
+
+                  Preço
+
+                </span>
+
+                <span
+                  class="text-3xl font-black text-brand-700">
+
+                  ${preco}
+
+                  <small
+                    class="text-base font-bold">
+                    Mtn
+                  </small>
+
+                </span>
+
+              </div>
+
+
+              <!-- BOTÕES -->
+
+              <div
+                class="flex flex-wrap gap-2 mt-6">
+
+                ${
+                  linkWhatsApp
+                  ?
+                  `
+                  <a
+                    href="${escaparHTML(linkWhatsApp)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex-1 min-w-[130px] bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-4 py-3 rounded-xl text-center">
+
+                    <i class="fa-brands fa-whatsapp mr-1"></i>
+
+                    Contactar
+
+                  </a>
+                  `
+                  :
+                  ''
+                }
+
+
+                ${
+                  downloadUrl &&
+                  validarURL(downloadUrl)
+                  ?
+                  `
+                  <a
+                    href="${escaparHTML(downloadUrl)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex-1 min-w-[130px] bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-4 py-3 rounded-xl text-center">
+
+                    <i class="fa-solid fa-cart-shopping mr-1"></i>
+
+                    Ver Produto
+
+                  </a>
+                  `
+                  :
+                  ''
+                }
+
+
+                ${
+                  !linkWhatsApp &&
+                  !downloadUrl
+                  ?
+                  `
+                  <button
+                    type="button"
+                    onclick="mostrarToast('O contacto ou link de pagamento deste produto ainda não está disponível.', 'error')"
+                    class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold px-4 py-3 rounded-xl">
+
+                    <i class="fa-solid fa-circle-info mr-1"></i>
+
+                    Mais informações
+
+                  </button>
+                  `
+                  :
+                  ''
+                }
+
+              </div>
+
+
+              <!-- INDICADOR -->
+
+              <div
+                class="mt-5 flex items-center gap-2 text-[10px] text-slate-400">
+
+                <span
+                  class="w-2 h-2 rounded-full bg-brand-500">
+                </span>
+
+                Produto publicado no Moz1Vendas
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+
+    /*
+     * ==========================================================
+     * SLIDESHOW
+     * ==========================================================
+     */
+
+    function iniciarSlideshow(
+      lojaIndex,
+      quantidade
+    ) {
+
+      pararSlideshow(lojaIndex);
+
+
+      window.__slides =
+        window.__slides || {};
+
+      window.__slides[lojaIndex] = {
+        atual: 0,
+        total: quantidade
+      };
+
+
+      timersSlideshow[lojaIndex] =
+        setInterval(function() {
+
+          slideSeguinte(lojaIndex);
+
+        }, SLIDE_INTERVALO);
+
+    }
+
+
+    function pararSlideshow(lojaIndex) {
+
+      if (timersSlideshow[lojaIndex]) {
+
+        clearInterval(
+          timersSlideshow[lojaIndex]
+        );
+
+        delete timersSlideshow[lojaIndex];
+
+      }
+
+    }
+
+
+    function pararTodosSlideshows() {
+
+      Object.keys(timersSlideshow)
+        .forEach(function(indice) {
+
+          clearInterval(
+            timersSlideshow[indice]
+          );
+
+        });
+
+      timersSlideshow = {};
+
+    }
+
+
+    function irParaSlide(
+      lojaIndex,
+      slideIndex
+    ) {
+
+      const estado =
+        window.__slides &&
+        window.__slides[lojaIndex];
+
+
+      if (!estado) return;
+
+
+      if (slideIndex < 0) {
+        slideIndex = estado.total - 1;
+      }
+
+
+      if (slideIndex >= estado.total) {
+        slideIndex = 0;
+      }
+
+
+      estado.atual = slideIndex;
+
+
+      const track =
+        document.getElementById(
+          'slideTrack-' + lojaIndex
+        );
+
+
+      if (!track) return;
+
+
+      track.style.transform =
+        'translateX(-' +
+        (slideIndex * 100) +
+        '%)';
+
+
+      const dots =
+        document.querySelectorAll(
+          '#slideDots-' +
+          lojaIndex +
+          ' .slide-dot'
+        );
+
+
+      dots.forEach(function(dot, index) {
+
+        dot.classList.toggle(
+          'active',
+          index === slideIndex
+        );
+
+      });
+
+    }
+
+
+    function slideSeguinte(lojaIndex) {
+
+      const estado =
+        window.__slides &&
+        window.__slides[lojaIndex];
+
+
+      if (!estado) return;
+
+
+      irParaSlide(
+        lojaIndex,
+        estado.atual + 1
+      );
+
+    }
+
+
+    function slideAnterior(lojaIndex) {
+
+      const estado =
+        window.__slides &&
+        window.__slides[lojaIndex];
+
+
+      if (!estado) return;
+
+
+      irParaSlide(
+        lojaIndex,
+        estado.atual - 1
+      );
+
+    }
+
+
+    /*
+     * ==========================================================
+     * ABRIR LOJA
+     * ==========================================================
+     */
+
+    function abrirLoja(link) {
+
+      if (!link || link === '#') {
+
+        mostrarToast(
+          'Link da loja não disponível.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      /*
+       * O GAS atual gera:
+       *
+       * ?vendedor=VND-...
+       *
+       * Como esta página é o próprio marketplace,
+       * usamos esse parâmetro para localizar a loja.
+       */
+
+      const vendedor =
+        extrairVendedorDoLink(link);
+
+
+      if (vendedor) {
+
+        const elemento =
+          document.querySelector(
+            '[data-vendedor="' +
+            CSS.escape(vendedor) +
+            '"]'
+          );
+
+        if (elemento) {
+
+          elemento.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+
+          return;
+
+        }
+
+      }
+
+
+      mostrarToast(
+        'Esta loja está disponível nesta página.',
+        'success'
+      );
+
+    }
+
+
+    /*
+     * ==========================================================
+     * CADASTRO
+     * ==========================================================
+     */
+
+    async function submeterRegistro(e) {
+
+      e.preventDefault();
+
+
+      const btn =
+        document.getElementById(
+          'btnSubmitReg'
+        );
+
+
+      btn.innerText =
+        'A guardar no Google Sheets...';
+
+      btn.disabled = true;
+
+
+      const payload = {
+
+        action: 'CRIAR_LOJA',
+
+        nome:
+          document.getElementById(
+            'regNome'
+          ).value.trim(),
+
+        email:
+          document.getElementById(
+            'regEmail'
+          ).value.trim(),
+
+        telefone:
+          document.getElementById(
+            'regTelefone'
+          ).value.trim(),
+
+        empresa:
+          document.getElementById(
+            'regEmpresa'
+          ).value.trim(),
+
+        logo:
+          document.getElementById(
+            'regLogo'
+          ).value.trim(),
+
+        dataNasc:
+          document.getElementById(
+            'regDataNasc'
+          ).value,
+
+        bi:
+          document.getElementById(
+            'regBI'
+          ).value.trim(),
+
+        pin:
+          document.getElementById(
+            'regPin'
+          ).value.trim()
+
+      };
+
+
+      try {
+
+        const result =
+          await gasPost(payload);
+
+
+        if (
+          result &&
+          result.status === 'SUCCESS'
+        ) {
+
+          usuarioLogado = {
+
+            id:
+              result.vendedorId,
+
+            vendedorId:
+              result.vendedorId,
+
+            empresa:
+              payload.empresa,
+
+            logo:
+              payload.logo
+
+          };
+
+
+          atualizarEstadoSessao();
+
+
+          closeModal(
+            'modalRegistro'
+          );
+
+
+          document
+            .getElementById(
+              'formRegistro'
+            )
+            .reset();
+
+
+          mostrarToast(
+            'Loja registada com sucesso!'
+          );
+
+
+          /*
+           * Recarrega os dados reais do Sheets.
+           */
+
+          await carregarLojas(false);
+
+
+        } else {
+
+          throw new Error(
+            result && (
+              result.message ||
+              result.erro
+            )
+              ? (
+                result.message ||
+                result.erro
+              )
+              : 'Falha interna no servidor.'
+          );
+
+        }
+
+      } catch (erro) {
+
+        console.error(
+          'Erro no registo:',
+          erro
+        );
+
+
+        mostrarToast(
+          erro.message ||
+          'Falha ao registar a loja.',
+          'error'
+        );
+
+      } finally {
+
+        btn.innerText =
+          'Criar Minha Empresa';
+
+        btn.disabled = false;
+
+      }
+
+    }
+
+
+    /*
+     * ==========================================================
+     * LOGIN
+     * ==========================================================
+     */
+
+    async function submeterLogin(e) {
+
+      e.preventDefault();
+
+
+      const btn =
+        document.getElementById(
+          'btnLogin'
+        );
+
+
+      btn.innerText =
+        'A entrar...';
+
+      btn.disabled = true;
+
+
+      const payload = {
+
+        action: 'LOGIN',
+
+        telefone:
+          document.getElementById(
+            'loginTelefone'
+          ).value.trim(),
+
+        pin:
+          document.getElementById(
+            'loginPin'
+          ).value.trim()
+
+      };
+
+
+      try {
+
+        const result =
+          await gasPost(payload);
+
+
+        if (
+          result &&
+          result.status === 'SUCCESS'
+        ) {
+
+          usuarioLogado =
+            result.vendedor;
+
+
+          atualizarEstadoSessao();
+
+
+          closeModal(
+            'modalLogin'
+          );
+
+
+          mostrarToast(
+            'Sessão iniciada como ' +
+            (
+              usuarioLogado.empresa ||
+              'vendedor'
+            )
+          );
+
+
+        } else {
+
+          throw new Error(
+            'Telefone ou PIN incorretos.'
+          );
+
+        }
+
+      } catch (erro) {
+
+        console.error(
+          'Erro no login:',
+          erro
+        );
+
+
+        mostrarToast(
+          erro.message ||
+          'Erro no login.',
+          'error'
+        );
+
+      } finally {
+
+        btn.innerText =
+          'Aceder ao Painel';
+
+        btn.disabled = false;
+
+      }
+
+    }
+
+
+    /*
+     * ==========================================================
+     * CRIAR PRODUTO
+     * ==========================================================
+     */
+
+    async function submeterProduto(e) {
+
+      e.preventDefault();
+
+
+      if (!usuarioLogado) {
+
+        mostrarToast(
+          'Precisa de iniciar sessão.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      const btn =
+        document.getElementById(
+          'btnSubmitProduto'
+        );
+
+
+      const tipo =
+        document.getElementById(
+          'prodTipo'
+        ).value;
+
+
+      const linkDigital =
+        document.getElementById(
+          'prodLinkDigital'
+        ).value.trim();
+
+
+      if (
+        tipo === 'DIGITAL' &&
+        linkDigital &&
+        !validarURL(linkDigital)
+      ) {
+
+        mostrarToast(
+          'O link do produto digital não é válido.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      btn.innerText =
+        'A publicar...';
+
+      btn.disabled = true;
+
+
+      const payload = {
+
+        action: 'CRIAR_PRODUTO',
+
+        vendedorId:
+          usuarioLogado.id ||
+          usuarioLogado.vendedorId,
+
+        nome:
+          document.getElementById(
+            'prodNome'
+          ).value.trim(),
+
+        descricao:
+          document.getElementById(
+            'prodDescricao'
+          ).value.trim(),
+
+        preco:
+          Number(
+            document.getElementById(
+              'prodPreco'
+            ).value
+          ),
+
+        tipo:
+          tipo,
+
+        imagem:
+          document.getElementById(
+            'prodImagem'
+          ).value.trim(),
+
+        whatsapp:
+          document.getElementById(
+            'prodWhatsapp'
+          ).value.trim(),
+
+        linkDigital:
+          linkDigital
+
+      };
+
+
+      try {
+
+        const result =
+          await gasPost(payload);
+
+
+        if (
+          result &&
+          result.status === 'SUCCESS'
+        ) {
+
+          mostrarToast(
+            'Produto publicado com sucesso!'
+          );
+
+
+          /*
+           * Limpa formulário.
+           */
+
+          e.target.reset();
+
+          toggleLinkDigital(
+            'FISICO'
+          );
+
+
+          closeModal(
+            'modalAddProduto'
+          );
+
+
+          /*
+           * Recarrega os dados verdadeiros
+           * vindos do Google Sheets.
+           */
+
+          await carregarLojas(false);
+
+
+        } else {
+
+          throw new Error(
+            result && (
+              result.message ||
+              result.erro
+            )
+              ? (
+                result.message ||
+                result.erro
+              )
+              : 'Falha ao publicar produto.'
+          );
+
+        }
+
+      } catch (erro) {
+
+        console.error(
+          'Erro ao criar produto:',
+          erro
+        );
+
+
+        mostrarToast(
+          erro.message ||
+          'Erro ao publicar produto.',
+          'error'
+        );
+
+      } finally {
+
+        btn.innerText =
+          'Publicar Produto';
+
+        btn.disabled = false;
+
+      }
+
+    }
+
+
+    /*
+     * ==========================================================
+     * ESTADO DA SESSÃO
+     * ==========================================================
+     */
+
+    function atualizarEstadoSessao() {
+
+      const visitante =
+        document.getElementById(
+          'botoesVisitante'
+        );
+
+      const sessao =
+        document.getElementById(
+          'sessaoVendedor'
+        );
+
+      const nome =
+        document.getElementById(
+          'nomeLojaSessao'
+        );
+
+
+      if (usuarioLogado) {
+
+        visitante.classList.add(
+          'hidden'
+        );
+
+        sessao.classList.remove(
+          'hidden'
+        );
+
+        sessao.classList.add(
+          'flex'
+        );
+
+
+        nome.innerText =
+          usuarioLogado.empresa ||
+          usuarioLogado.nome ||
+          'Minha Loja';
+
+
+      } else {
+
+        visitante.classList.remove(
+          'hidden'
+        );
+
+        sessao.classList.add(
+          'hidden'
+        );
+
+        sessao.classList.remove(
+          'flex'
+        );
+
+        nome.innerText = '';
+
+      }
+
+    }
+
+
+    /*
+     * ==========================================================
+     * TERMINAR SESSÃO
+     * ==========================================================
+     */
+
+    function terminarSessao() {
+
+      usuarioLogado = null;
+
+      atualizarEstadoSessao();
+
+      mostrarToast(
+        'Sessão terminada.'
+      );
+
+    }
+
+
+    /*
+     * ==========================================================
+     * FECHAR MODAIS COM ESC
+     * ==========================================================
+     */
+
+    document.addEventListener(
+      'keydown',
+      function(event) {
+
+        if (event.key !== 'Escape') {
+          return;
+        }
+
+
+        document
+          .querySelectorAll('.modal')
+          .forEach(function(modal) {
+
+            if (
+              !modal.classList.contains(
+                'hidden'
+              )
+            ) {
+
+              closeModal(
+                modal.id
+              );
+
+            }
+
+          });
+
+      }
+    );
+
+
+    /*
+     * ==========================================================
+     * INICIALIZAÇÃO
+     * ==========================================================
+     */
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      async function() {
+
+        atualizarEstadoSessao();
+
+        toggleLinkDigital(
+          document.getElementById(
+            'prodTipo'
+          ).value
+        );
+
+
+        /*
+         * CARREGAMENTO AUTOMÁTICO
+         *
+         * Esta chamada resolve o principal problema
+         * do frontend anterior:
+         *
+         * o site agora busca as lojas já existentes
+         * no Google Sheets quando abre.
+         */
+
+        await carregarLojas(false);
+
+      }
+    );
+
+
+    /*
+     * ==========================================================
+     * RECARREGAR AUTOMATICAMENTE QUANDO A PÁGINA VOLTA
+     * ==========================================================
+     */
+
+    document.addEventListener(
+      'visibilitychange',
+      function() {
+
+        if (
+          document.visibilityState ===
+          'visible'
+        ) {
+
+          /*
+           * Não força carregamento imediatamente
+           * em todas as pequenas mudanças.
+           */
+
+        }
+
+      }
+    );
+
+
   </script>
+
 </body>
 </html>
