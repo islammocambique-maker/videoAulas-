@@ -3,224 +3,262 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SorteMoz - LOT5/45</title>
 
-<title>SorteMoz - Loto 5/45</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
-
 :root{
     --pink:#ff2f92;
     --pink2:#ff69b4;
     --gold:#ffd700;
-    --gold2:#ffec70;
+    --gold2:#ffb300;
     --blue:#2196f3;
-    --green:#00d084;
-    --red:#ff4d4d;
-    --dark:#080808;
+    --green:#00c853;
+    --red:#ff1744;
+    --dark:#070707;
     --dark2:#111;
-    --dark3:#181818;
-    --gray:#999;
-    --white:#fff;
+    --card:#171717;
+    --card2:#202020;
+    --text:#fff;
+    --muted:#aaa;
 }
 
 *{
     box-sizing:border-box;
 }
 
-html{
-    scroll-behavior:smooth;
-}
-
 body{
     margin:0;
     font-family:'Montserrat',sans-serif;
     background:
-        radial-gradient(circle at top,#241020 0%,#090909 38%,#000 100%);
-    color:#fff;
+        radial-gradient(circle at top,#281020 0,#080808 35%,#000 75%);
+    color:var(--text);
     min-height:100vh;
 }
 
-/* ================= HEADER ================= */
+button,
+input{
+    font-family:inherit;
+}
 
-header{
+button{
+    cursor:pointer;
+}
+
+.header{
     position:sticky;
     top:0;
-    z-index:1000;
-    background:rgba(0,0,0,.94);
-    backdrop-filter:blur(15px);
+    z-index:50;
+    background:rgba(0,0,0,.92);
+    backdrop-filter:blur(12px);
     border-bottom:1px solid rgba(255,47,146,.35);
 }
 
 .header-inner{
     max-width:1200px;
     margin:auto;
-    padding:14px 18px;
+    padding:15px 20px;
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
 }
 
 .logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.logo-icon{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(135deg,var(--pink),#8b0050);
-    box-shadow:0 0 20px rgba(255,47,146,.5);
-    font-size:21px;
-}
-
-.logo-text{
-    font-size:22px;
-    font-weight:800;
+    font-size:25px;
+    font-weight:900;
     letter-spacing:1px;
+    color:var(--pink2);
 }
 
-.logo-text span{
+.logo span{
     color:var(--gold);
 }
 
-.header-user{
+.user-area{
     display:none;
     align-items:center;
     gap:12px;
 }
 
-.balance-mini{
-    background:#171717;
-    border:1px solid rgba(255,215,0,.35);
-    border-radius:30px;
-    padding:9px 15px;
+.balance{
+    background:#191919;
+    border:1px solid rgba(255,215,0,.4);
+    border-radius:20px;
+    padding:8px 14px;
     color:var(--gold);
-    font-weight:700;
+    font-weight:800;
 }
 
-/* ================= HERO ================= */
+.logout{
+    border:0;
+    background:#292929;
+    color:white;
+    padding:8px 12px;
+    border-radius:20px;
+}
+
+.container{
+    width:100%;
+    max-width:1200px;
+    margin:auto;
+    padding:25px 18px 50px;
+}
 
 .hero{
-    max-width:1200px;
-    margin:0 auto;
-    padding:45px 20px 25px;
     text-align:center;
-}
-
-.hero-badge{
-    display:inline-block;
-    padding:7px 14px;
-    border:1px solid rgba(255,215,0,.4);
-    border-radius:30px;
-    color:var(--gold);
-    background:rgba(255,215,0,.06);
-    font-size:12px;
-    font-weight:700;
-    letter-spacing:1px;
+    padding:35px 15px;
 }
 
 .hero h1{
-    margin:18px 0 8px;
-    font-size:clamp(35px,7vw,70px);
-    font-weight:800;
-    line-height:1;
-}
-
-.hero h1 span{
-    color:var(--pink);
-    text-shadow:0 0 25px rgba(255,47,146,.55);
+    margin:0;
+    font-size:clamp(32px,7vw,62px);
+    font-weight:900;
+    background:linear-gradient(90deg,var(--pink2),var(--gold),var(--pink));
+    -webkit-background-clip:text;
+    color:transparent;
 }
 
 .hero p{
     color:#bbb;
-    margin:15px auto 0;
-    max-width:650px;
-    line-height:1.6;
+    margin:12px 0 0;
 }
-
-/* ================= CONTAINER ================= */
-
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:0 18px 50px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(12,1fr);
-    gap:18px;
-}
-
-.col-12{grid-column:span 12;}
-.col-8{grid-column:span 8;}
-.col-6{grid-column:span 6;}
-.col-4{grid-column:span 4;}
-
-/* ================= CARDS ================= */
 
 .card{
-    background:
-        linear-gradient(145deg,rgba(30,30,30,.96),rgba(12,12,12,.96));
-    border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(145deg,#1b1b1b,#101010);
+    border:1px solid rgba(255,255,255,.07);
     border-radius:18px;
-    padding:22px;
-    box-shadow:0 12px 35px rgba(0,0,0,.45);
+    padding:24px;
+    margin-bottom:20px;
+    box-shadow:0 15px 45px rgba(0,0,0,.35);
 }
 
-.card-title{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin:0 0 20px;
-    font-size:19px;
-    font-weight:800;
-}
-
-.card-title .icon{
-    width:36px;
-    height:36px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    border-radius:10px;
-    background:rgba(255,47,146,.12);
-    color:var(--pink);
+.card h2{
+    margin-top:0;
+    color:var(--gold);
 }
 
 .hidden{
     display:none!important;
 }
 
-/* ================= AUTH ================= */
-
-.auth-wrapper{
-    max-width:530px;
-    margin:25px auto;
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
 }
 
-.tabs{
-    display:grid;
-    grid-template-columns:1fr 1fr;
+@media(max-width:700px){
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .header-inner{
+        padding:12px;
+    }
+
+    .logo{
+        font-size:20px;
+    }
+}
+
+label{
+    display:block;
+    margin:12px 0 7px;
+    font-size:13px;
+    color:#ccc;
+    font-weight:700;
+}
+
+input{
+    width:100%;
+    padding:14px;
     background:#080808;
-    padding:4px;
-    border-radius:12px;
+    border:1px solid #333;
+    color:white;
+    border-radius:10px;
+    outline:none;
+}
+
+input:focus{
+    border-color:var(--pink);
+    box-shadow:0 0 0 2px rgba(255,47,146,.12);
+}
+
+.btn{
+    border:0;
+    border-radius:10px;
+    padding:13px 18px;
+    font-weight:800;
+    color:white;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.1);
+}
+
+.btn-pink{
+    background:linear-gradient(135deg,#ff2f92,#d90065);
+}
+
+.btn-blue{
+    background:linear-gradient(135deg,#2196f3,#1565c0);
+}
+
+.btn-green{
+    background:linear-gradient(135deg,#00c853,#009624);
+}
+
+.btn-gold{
+    background:linear-gradient(135deg,#ffd700,#ff9800);
+    color:#111;
+}
+
+.btn-red{
+    background:linear-gradient(135deg,#ff1744,#b00020);
+}
+
+.actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.message{
+    margin-top:15px;
+    padding:12px;
+    border-radius:10px;
+    background:#242424;
+    color:#ddd;
+    min-height:20px;
+}
+
+.message.success{
+    border-left:4px solid var(--green);
+}
+
+.message.error{
+    border-left:4px solid var(--red);
+}
+
+.auth-tabs{
+    display:flex;
+    gap:8px;
     margin-bottom:20px;
 }
 
 .tab{
+    flex:1;
+    border:0;
     padding:12px;
-    text-align:center;
     border-radius:9px;
-    cursor:pointer;
-    font-weight:700;
-    color:#888;
+    background:#292929;
+    color:#aaa;
+    font-weight:800;
 }
 
 .tab.active{
@@ -228,1332 +266,616 @@ header{
     color:white;
 }
 
-.form-group{
-    margin-bottom:15px;
-}
-
-label{
-    display:block;
-    margin-bottom:7px;
-    font-size:13px;
-    color:#bbb;
-    font-weight:600;
-}
-
-input,
-select{
-    width:100%;
-    padding:13px 14px;
-    border-radius:10px;
-    border:1px solid #333;
-    outline:none;
-    background:#080808;
-    color:#fff;
-    font-family:inherit;
-    font-size:14px;
-}
-
-input:focus,
-select:focus{
-    border-color:var(--pink);
-    box-shadow:0 0 0 2px rgba(255,47,146,.1);
-}
-
-input::placeholder{
-    color:#666;
-}
-
-.btn{
-    width:100%;
-    padding:14px 18px;
-    border:0;
-    border-radius:11px;
-    cursor:pointer;
-    font-family:inherit;
-    font-weight:800;
-    font-size:14px;
-    transition:.2s;
-}
-
-.btn:hover{
-    transform:translateY(-1px);
-}
-
-.btn-primary{
-    background:linear-gradient(135deg,var(--pink),#d6006d);
-    color:white;
-    box-shadow:0 6px 18px rgba(255,47,146,.22);
-}
-
-.btn-gold{
-    background:linear-gradient(135deg,var(--gold),#f0ad00);
-    color:#111;
-}
-
-.btn-blue{
-    background:linear-gradient(135deg,#2196f3,#0066d6);
-    color:white;
-}
-
-.btn-green{
-    background:linear-gradient(135deg,#00d084,#00a96b);
-    color:#06120d;
-}
-
-.btn-red{
-    background:linear-gradient(135deg,#ff5555,#c90000);
-    color:white;
-}
-
-.message{
-    margin-top:14px;
-    padding:12px;
-    border-radius:10px;
-    display:none;
-    font-size:13px;
-    line-height:1.5;
-}
-
-.message.show{
-    display:block;
-}
-
-.message.success{
-    background:rgba(0,208,132,.1);
-    border:1px solid rgba(0,208,132,.3);
-    color:#62e9b0;
-}
-
-.message.error{
-    background:rgba(255,77,77,.1);
-    border:1px solid rgba(255,77,77,.3);
-    color:#ff9292;
-}
-
-/* ================= DASHBOARD ================= */
-
-.balance-card{
-    background:
-        radial-gradient(circle at top right,rgba(255,47,146,.25),transparent 45%),
-        linear-gradient(145deg,#1b0713,#090909);
-    border:1px solid rgba(255,47,146,.25);
-}
-
-.balance-label{
-    color:#999;
-    font-size:13px;
-}
-
-.balance-value{
-    font-size:38px;
-    font-weight:800;
-    color:var(--gold);
-    margin:8px 0 18px;
-}
-
-.user-name{
-    color:#ddd;
-    font-size:14px;
-}
-
-/* ================= SORTEIOS ================= */
-
-.draw-list{
+.stats{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    grid-template-columns:repeat(3,1fr);
     gap:12px;
+    margin-bottom:20px;
 }
 
-.draw-card{
-    background:#090909;
-    border:1px solid #2b2b2b;
+@media(max-width:600px){
+    .stats{
+        grid-template-columns:1fr;
+    }
+}
+
+.stat{
+    background:#0b0b0b;
+    border:1px solid #292929;
+    padding:18px;
     border-radius:14px;
-    padding:17px;
-    cursor:pointer;
-    transition:.2s;
 }
 
-.draw-card:hover{
-    border-color:var(--pink);
+.stat small{
+    color:#888;
 }
 
-.draw-card.selected{
-    border-color:var(--gold);
-    box-shadow:0 0 20px rgba(255,215,0,.1);
-}
-
-.draw-id{
-    font-size:12px;
-    color:#777;
-}
-
-.draw-time{
+.stat strong{
+    display:block;
     font-size:25px;
+    color:var(--gold);
+    margin-top:5px;
+}
+
+.draw{
+    background:#0c0c0c;
+    border:1px solid #292929;
+    padding:15px;
+    border-radius:13px;
+    margin-bottom:10px;
+}
+
+.draw-title{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
     font-weight:800;
-    color:white;
-    margin:6px 0;
 }
 
-.draw-status{
-    display:inline-block;
-    padding:5px 8px;
-    border-radius:20px;
-    font-size:10px;
-    font-weight:800;
+.status{
+    color:var(--green);
 }
 
-.status-open{
-    color:#00d084;
-    background:rgba(0,208,132,.1);
-}
-
-.status-closed{
-    color:#ff5555;
-    background:rgba(255,85,85,.1);
-}
-
-.status-done{
-    color:#aaa;
-    background:#202020;
-}
-
-/* ================= LOTTERY BALLS ================= */
-
-.selected-draw{
-    margin-bottom:15px;
-    padding:12px;
-    background:#0a0a0a;
-    border-radius:10px;
-    border:1px solid #252525;
-    font-size:13px;
+.closed{
+    color:#888;
 }
 
 .number-grid{
     display:grid;
     grid-template-columns:repeat(9,1fr);
-    gap:8px;
+    gap:7px;
+    margin-top:18px;
+}
+
+@media(max-width:500px){
+    .number-grid{
+        grid-template-columns:repeat(5,1fr);
+    }
 }
 
 .number{
     aspect-ratio:1;
     border-radius:50%;
-    border:1px solid #353535;
-    background:#101010;
-    color:#ddd;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-weight:700;
-    font-size:13px;
-    transition:.15s;
-}
-
-.number:hover{
-    border-color:var(--pink);
+    border:1px solid #444;
+    background:#181818;
     color:white;
+    font-weight:800;
+    font-size:14px;
 }
 
 .number.selected{
-    background:linear-gradient(135deg,var(--pink),#b90060);
-    border-color:#ff79b5;
-    color:white;
-    box-shadow:0 0 14px rgba(255,47,146,.45);
+    background:linear-gradient(135deg,var(--pink),#b0005a);
+    border-color:var(--pink2);
+    box-shadow:0 0 15px rgba(255,47,146,.45);
 }
 
-.bet-info{
-    margin:18px 0;
-    display:flex;
-    justify-content:space-between;
-    padding:13px;
-    border-radius:10px;
-    background:#080808;
+.selected-info{
+    margin-top:15px;
+    color:#bbb;
 }
 
-.bet-info span:last-child{
+.selected-info strong{
     color:var(--gold);
-    font-weight:800;
 }
 
-/* ================= ACTIONS ================= */
-
-.action-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
+.table-wrap{
+    overflow:auto;
 }
 
-.action-btn{
-    padding:14px 10px;
-    background:#101010;
-    border:1px solid #292929;
-    color:#ddd;
-    border-radius:12px;
-    cursor:pointer;
-    font-family:inherit;
-    font-weight:700;
-}
-
-.action-btn:hover{
-    border-color:var(--pink);
-    color:white;
-}
-
-/* ================= LISTAS ================= */
-
-.list{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.list-item{
-    padding:13px;
-    border-radius:11px;
-    background:#090909;
-    border:1px solid #242424;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-}
-
-.list-main{
-    min-width:0;
-}
-
-.list-title{
-    font-size:13px;
-    font-weight:700;
-}
-
-.list-sub{
-    color:#777;
-    font-size:11px;
-    margin-top:4px;
-}
-
-.amount{
-    font-weight:800;
-    color:var(--gold);
-    white-space:nowrap;
-}
-
-.empty{
-    padding:25px;
-    text-align:center;
-    color:#777;
-    font-size:13px;
-}
-
-/* ================= MODAL ================= */
-
-.modal{
-    position:fixed;
-    inset:0;
-    z-index:2000;
-    background:rgba(0,0,0,.78);
-    backdrop-filter:blur(8px);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modal-box{
+table{
     width:100%;
-    max-width:440px;
-    background:#151515;
-    border:1px solid #333;
-    border-radius:18px;
-    padding:23px;
-    box-shadow:0 20px 60px rgba(0,0,0,.7);
+    border-collapse:collapse;
+    min-width:500px;
 }
 
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
+th,
+td{
+    padding:11px;
+    border-bottom:1px solid #292929;
+    text-align:left;
+    font-size:13px;
 }
 
-.modal-header h3{
-    margin:0;
+th{
+    color:var(--gold);
 }
 
-.close{
-    width:34px;
-    height:34px;
-    border:0;
-    border-radius:50%;
-    background:#292929;
-    color:#fff;
-    cursor:pointer;
+.loading{
+    text-align:center;
+    padding:20px;
+    color:#aaa;
 }
-
-/* ================= NAV ================= */
-
-.bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    z-index:1500;
-    background:rgba(5,5,5,.96);
-    backdrop-filter:blur(15px);
-    border-top:1px solid #242424;
-    display:none;
-}
-
-.nav-inner{
-    max-width:700px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-}
-
-.nav-btn{
-    padding:10px 5px;
-    border:0;
-    background:transparent;
-    color:#777;
-    font-family:inherit;
-    font-size:10px;
-    cursor:pointer;
-}
-
-.nav-btn .nav-icon{
-    display:block;
-    font-size:19px;
-    margin-bottom:4px;
-}
-
-.nav-btn.active{
-    color:var(--pink);
-}
-
-/* ================= FOOTER ================= */
 
 footer{
-    margin-top:30px;
-    padding:30px 20px 80px;
     text-align:center;
+    color:#777;
+    padding:30px 15px;
     border-top:1px solid #222;
-    color:#666;
-    font-size:11px;
-    line-height:1.7;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:800px){
-
-    .col-8,
-    .col-6,
-    .col-4{
-        grid-column:span 12;
-    }
-
-    .number-grid{
-        grid-template-columns:repeat(9,1fr);
-        gap:6px;
-    }
-
-    .number{
-        font-size:11px;
-    }
-
-    .hero{
-        padding-top:32px;
-    }
-
-    .bottom-nav{
-        display:block;
-    }
-
-    footer{
-        padding-bottom:100px;
-    }
-
-    .header-user{
-        display:flex;
-    }
-
-    .balance-mini{
-        font-size:11px;
-        padding:7px 10px;
-    }
-}
-
-@media(max-width:430px){
-
-    .number-grid{
-        grid-template-columns:repeat(9,1fr);
-        gap:4px;
-    }
-
-    .number{
-        font-size:10px;
-    }
-
-    .card{
-        padding:17px;
-    }
-
-    .balance-value{
-        font-size:31px;
-    }
+    font-size:12px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
-
-<header>
+<header class="header">
     <div class="header-inner">
+        <div class="logo">Sorte<span>Moz</span> 🎰</div>
 
-        <div class="logo">
-            <div class="logo-icon">★</div>
-            <div class="logo-text">
-                Sorte<span>Moz</span>
+        <div class="user-area" id="userArea">
+            <div class="balance">
+                <span id="headerBalance">0</span> MT
             </div>
+            <button class="logout" onclick="logout()">Sair</button>
         </div>
-
-        <div class="header-user" id="header-user">
-            <div class="balance-mini" id="mini-balance">
-                0 MT
-            </div>
-        </div>
-
     </div>
 </header>
 
+<div class="container">
 
-<!-- ================= HERO ================= -->
-
-<section class="hero">
-
-    <div class="hero-badge">
-        LOTO 5/45
-    </div>
-
-    <h1>
-        Sua sorte.<br>
-        Seu <span>momento.</span>
-    </h1>
-
-    <p>
-        Escolha 5 números, participe dos sorteios
-        e acompanhe seus bilhetes e resultados.
-    </p>
-
-</section>
+    <section class="hero">
+        <h1>SorteMoz</h1>
+        <p>LOT5/45 • Escolha 5 números • Boa sorte!</p>
+    </section>
 
 
-<!-- ================= AUTENTICAÇÃO ================= -->
+    <!-- AUTENTICAÇÃO -->
+    <section id="authSection" class="card">
 
-<section id="auth-screen" class="container">
+        <div class="auth-tabs">
+            <button id="tabLogin"
+                    class="tab active"
+                    onclick="mostrarLogin()">
+                LOGIN
+            </button>
 
-    <div class="auth-wrapper">
+            <button id="tabRegistro"
+                    class="tab"
+                    onclick="mostrarRegistro()">
+                REGISTAR
+            </button>
+        </div>
 
+
+        <!-- LOGIN -->
+        <div id="loginBox">
+
+            <h2>Entrar na conta</h2>
+
+            <label>Número de telefone</label>
+            <input id="loginNumero"
+                   type="text"
+                   placeholder="Seu número">
+
+            <label>PIN de 6 dígitos</label>
+            <input id="loginPin"
+                   type="password"
+                   maxlength="6"
+                   inputmode="numeric"
+                   placeholder="••••••">
+
+            <br><br>
+
+            <button class="btn btn-pink"
+                    onclick="login()">
+                ENTRAR
+            </button>
+
+        </div>
+
+
+        <!-- REGISTRO -->
+        <div id="registroBox" class="hidden">
+
+            <h2>Criar conta</h2>
+
+            <label>Nome completo</label>
+            <input id="regNome"
+                   type="text"
+                   placeholder="Seu nome">
+
+            <label>Email</label>
+            <input id="regEmail"
+                   type="email"
+                   placeholder="seuemail@gmail.com">
+
+            <label>Número de telefone</label>
+            <input id="regNumero"
+                   type="text"
+                   placeholder="Seu número">
+
+            <label>PIN de 6 dígitos</label>
+            <input id="regPin"
+                   type="password"
+                   maxlength="6"
+                   inputmode="numeric"
+                   placeholder="••••••">
+
+            <label>Idade</label>
+            <input id="regIdade"
+                   type="number"
+                   min="18"
+                   placeholder="18">
+
+            <br><br>
+
+            <button class="btn btn-pink"
+                    onclick="registrar()">
+                CRIAR CONTA
+            </button>
+
+        </div>
+
+        <div id="authMessage" class="message"></div>
+
+    </section>
+
+
+    <!-- ÁREA PRINCIPAL -->
+    <section id="appSection" class="hidden">
+
+        <div class="stats">
+
+            <div class="stat">
+                <small>Saldo disponível</small>
+                <strong>
+                    <span id="saldo">0</span> MT
+                </strong>
+            </div>
+
+            <div class="stat">
+                <small>Custo por aposta</small>
+                <strong>10 MT</strong>
+            </div>
+
+            <div class="stat">
+                <small>Jogo</small>
+                <strong>5/45</strong>
+            </div>
+
+        </div>
+
+
+        <!-- MENU -->
         <div class="card">
 
-            <div class="tabs">
+            <h2>Minha conta</h2>
 
-                <div class="tab active"
-                     id="tab-register"
-                     onclick="mostrarAuth('register')">
-                    Criar conta
-                </div>
+            <div class="actions">
 
-                <div class="tab"
-                     id="tab-login"
-                     onclick="mostrarAuth('login')">
-                    Entrar
-                </div>
-
-            </div>
-
-
-            <!-- REGISTRO -->
-
-            <form id="register-form">
-
-                <div class="form-group">
-                    <label>Nome completo</label>
-                    <input
-                        type="text"
-                        id="reg-nome"
-                        placeholder="Seu nome"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label>Email</label>
-                    <input
-                        type="email"
-                        id="reg-email"
-                        placeholder="seu@email.com"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label>Número de telefone</label>
-                    <input
-                        type="text"
-                        id="reg-numero"
-                        placeholder="84xxxxxxx"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label>PIN de 6 dígitos</label>
-                    <input
-                        type="password"
-                        id="reg-pin"
-                        maxlength="6"
-                        inputmode="numeric"
-                        pattern="[0-9]{6}"
-                        placeholder="••••••"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label>Idade</label>
-                    <input
-                        type="number"
-                        id="reg-idade"
-                        min="18"
-                        placeholder="18"
-                        required>
-                </div>
-
-                <button class="btn btn-primary"
-                        type="submit">
-                    CRIAR MINHA CONTA
+                <button class="btn btn-gold"
+                        onclick="atualizarSaldo()">
+                    💰 Atualizar saldo
                 </button>
 
-            </form>
-
-
-            <!-- LOGIN -->
-
-            <form id="login-form" class="hidden">
-
-                <div class="form-group">
-                    <label>Número de telefone</label>
-                    <input
-                        type="text"
-                        id="login-numero"
-                        placeholder="Seu número"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label>PIN de 6 dígitos</label>
-                    <input
-                        type="password"
-                        id="login-pin"
-                        maxlength="6"
-                        inputmode="numeric"
-                        placeholder="••••••"
-                        required>
-                </div>
-
-                <button class="btn btn-primary"
-                        type="submit">
-                    ENTRAR NO SORTE MOZ
+                <button class="btn btn-green"
+                        onclick="mostrarDeposito()">
+                    ➕ Depositar
                 </button>
 
-            </form>
+                <button class="btn btn-blue"
+                        onclick="mostrarLevantamento()">
+                    💸 Levantar
+                </button>
 
-            <div id="auth-message" class="message"></div>
+                <button class="btn btn-pink"
+                        onclick="carregarBilhetes()">
+                    🎟️ Meus bilhetes
+                </button>
 
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================= APP ================= -->
-
-<section id="app-screen" class="container hidden">
-
-    <div class="grid">
-
-
-        <!-- SALDO -->
-
-        <div class="col-4">
-
-            <div class="card balance-card">
-
-                <div class="card-title">
-                    <div class="icon">💰</div>
-                    Minha carteira
-                </div>
-
-                <div class="balance-label">
-                    Saldo disponível
-                </div>
-
-                <div class="balance-value"
-                     id="balance">
-                    0 MT
-                </div>
-
-                <div class="user-name"
-                     id="welcome-name">
-                    Bem-vindo!
-                </div>
+                <button class="btn btn-blue"
+                        onclick="carregarMovimentos()">
+                    📜 Movimentos
+                </button>
 
             </div>
 
         </div>
 
 
-        <!-- AÇÕES -->
+        <!-- DEPÓSITO -->
+        <div id="depositoBox" class="card hidden">
 
-        <div class="col-8">
+            <h2>Depositar saldo</h2>
 
-            <div class="card">
+            <p>
+                Informe o valor que deseja depositar.
+                O pedido será enviado ao administrador para
+                processamento manual.
+            </p>
 
-                <div class="card-title">
-                    <div class="icon">⚡</div>
-                    Minha conta
-                </div>
+            <label>Valor em MT</label>
 
-                <div class="action-grid">
+            <input id="depositoValor"
+                   type="number"
+                   min="1"
+                   placeholder="Ex: 100">
 
-                    <button class="action-btn"
-                            onclick="abrirDeposito()">
-                        💳 Depositar
-                    </button>
+            <br><br>
 
-                    <button class="action-btn"
-                            onclick="abrirLevantamento()">
-                        💸 Levantar
-                    </button>
+            <button class="btn btn-green"
+                    onclick="solicitarDeposito()">
+                SOLICITAR DEPÓSITO
+            </button>
 
-                    <button class="action-btn"
-                            onclick="carregarBilhetes()">
-                        🎟️ Meus bilhetes
-                    </button>
+            <div id="depositoMessage" class="message"></div>
 
-                    <button class="action-btn"
-                            onclick="carregarMovimentos()">
-                        📋 Movimentos
-                    </button>
+        </div>
 
-                    <button class="action-btn"
-                            onclick="carregarVencedores()">
-                        🏆 Vencedores
-                    </button>
 
-                    <button class="action-btn"
-                            onclick="atualizarTudo()">
-                        🔄 Atualizar
-                    </button>
+        <!-- LEVANTAMENTO -->
+        <div id="levantamentoBox" class="card hidden">
 
-                </div>
+            <h2>Solicitar levantamento</h2>
 
-            </div>
+            <p>
+                O valor será retirado do saldo e ficará
+                pendente até aprovação do administrador.
+            </p>
+
+            <label>Valor em MT</label>
+
+            <input id="levantamentoValor"
+                   type="number"
+                   min="1"
+                   placeholder="Ex: 100">
+
+            <br><br>
+
+            <button class="btn btn-blue"
+                    onclick="solicitarLevantamento()">
+                SOLICITAR LEVANTAMENTO
+            </button>
+
+            <div id="levantamentoMessage" class="message"></div>
 
         </div>
 
 
         <!-- SORTEIOS -->
+        <div class="card">
 
-        <div class="col-12">
+            <h2>🎯 Sorteios</h2>
 
-            <div class="card">
-
-                <div class="card-title">
-                    <div class="icon">🎰</div>
-                    Sorteios
+            <div id="sorteios">
+                <div class="loading">
+                    Carregando sorteios...
                 </div>
-
-                <div id="draw-list"
-                     class="draw-list">
-
-                    <div class="empty">
-                        Carregando sorteios...
-                    </div>
-
-                </div>
-
             </div>
 
         </div>
 
 
         <!-- APOSTA -->
+        <div class="card">
 
-        <div class="col-8">
+            <h2>🎟️ Fazer aposta</h2>
 
-            <div class="card">
+            <label>Escolha o sorteio</label>
 
-                <div class="card-title">
-                    <div class="icon">🎯</div>
-                    Faça sua aposta
-                </div>
+            <select id="sorteioSelect"
+                    style="width:100%;padding:13px;border-radius:10px;background:#080808;color:white;border:1px solid #333;">
+            </select>
 
-                <div id="selected-draw"
-                     class="selected-draw">
-                    Selecione um sorteio acima.
-                </div>
+            <p class="selected-info">
+                Escolha exatamente <strong>5 números</strong>.
+                Cada aposta custa <strong>10 MT</strong>.
+            </p>
 
-                <div class="number-grid"
-                     id="number-grid">
-                </div>
+            <div id="numberGrid" class="number-grid"></div>
 
-                <div class="bet-info">
-
-                    <span>
-                        Números:
-                        <strong id="selected-count">0</strong>/5
-                    </span>
-
-                    <span>
-                        Custo: <strong>10 MT</strong>
-                    </span>
-
-                </div>
-
-                <button
-                    class="btn btn-gold"
-                    onclick="fazerAposta()">
-                    CONFIRMAR APOSTA — 10 MT
-                </button>
-
-                <div id="bet-message"
-                     class="message">
-                </div>
-
+            <div class="selected-info">
+                Números selecionados:
+                <strong id="selectedNumbers">Nenhum</strong>
             </div>
+
+            <br>
+
+            <button class="btn btn-pink"
+                    onclick="fazerAposta()">
+                🎟️ CONFIRMAR APOSTA — 10 MT
+            </button>
+
+            <div id="apostaMessage" class="message"></div>
 
         </div>
 
 
-        <!-- PRÊMIOS -->
+        <!-- RESULTADOS -->
+        <div class="card">
 
-        <div class="col-4">
+            <h2>🏆 Vencedores</h2>
 
-            <div class="card">
+            <button class="btn btn-gold"
+                    onclick="carregarVencedores()">
+                Ver vencedores
+            </button>
 
-                <div class="card-title">
-                    <div class="icon">🏆</div>
-                    Prêmios
-                </div>
-
-                <div class="list">
-
-                    <div class="list-item">
-                        <div class="list-main">
-                            <div class="list-title">
-                                3 acertos
-                            </div>
-                            <div class="list-sub">
-                                Prêmio
-                            </div>
-                        </div>
-                        <div class="amount">
-                            50 MT
-                        </div>
-                    </div>
-
-                    <div class="list-item">
-                        <div class="list-main">
-                            <div class="list-title">
-                                4 acertos
-                            </div>
-                            <div class="list-sub">
-                                Prêmio
-                            </div>
-                        </div>
-                        <div class="amount">
-                            500 MT
-                        </div>
-                    </div>
-
-                    <div class="list-item">
-                        <div class="list-main">
-                            <div class="list-title">
-                                5 acertos
-                            </div>
-                            <div class="list-sub">
-                                Jackpot
-                            </div>
-                        </div>
-                        <div class="amount">
-                            5.000 MT
-                        </div>
-                    </div>
-
-                </div>
-
+            <div id="vencedores"
+                 style="margin-top:15px;">
             </div>
 
         </div>
 
 
         <!-- BILHETES -->
+        <div id="bilhetesBox" class="card hidden">
 
-        <div class="col-6">
+            <h2>🎟️ Meus bilhetes</h2>
 
-            <div class="card">
-
-                <div class="card-title">
-                    <div class="icon">🎟️</div>
-                    Meus bilhetes
-                </div>
-
-                <div id="tickets-list"
-                     class="list">
-
-                    <div class="empty">
-                        Faça uma aposta para ver seus bilhetes.
-                    </div>
-
-                </div>
-
-            </div>
+            <div id="bilhetes"></div>
 
         </div>
 
 
         <!-- MOVIMENTOS -->
+        <div id="movimentosBox" class="card hidden">
 
-        <div class="col-6">
+            <h2>📜 Meus movimentos</h2>
 
-            <div class="card">
-
-                <div class="card-title">
-                    <div class="icon">💰</div>
-                    Movimentos
-                </div>
-
-                <div id="movements-list"
-                     class="list">
-
-                    <div class="empty">
-                        Nenhum movimento encontrado.
-                    </div>
-
-                </div>
-
-            </div>
+            <div id="movimentos"></div>
 
         </div>
 
-
-        <!-- VENCEDORES -->
-
-        <div class="col-12">
-
-            <div class="card">
-
-                <div class="card-title">
-                    <div class="icon">🏆</div>
-                    Últimos vencedores
-                </div>
-
-                <div id="winners-list"
-                     class="list">
-
-                    <div class="empty">
-                        Carregando...
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================= MODAL DEPÓSITO ================= -->
-
-<div class="modal" id="deposit-modal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <h3>💳 Solicitar depósito</h3>
-
-            <button class="close"
-                    onclick="fecharModal('deposit-modal')">
-                ×
-            </button>
-
-        </div>
-
-        <p style="color:#999;font-size:13px;line-height:1.6">
-            Informe o valor que deseja adicionar à sua conta.
-            O pedido será enviado ao administrador para processamento.
-        </p>
-
-        <div class="form-group">
-
-            <label>Valor do depósito (MT)</label>
-
-            <input
-                type="number"
-                id="deposit-value"
-                min="1"
-                step="1"
-                placeholder="Ex.: 100">
-
-        </div>
-
-        <button class="btn btn-primary"
-                onclick="solicitarDeposito()">
-            SOLICITAR DEPÓSITO
-        </button>
-
-        <div id="deposit-message"
-             class="message">
-        </div>
-
-    </div>
+    </section>
 
 </div>
-
-
-<!-- ================= MODAL LEVANTAMENTO ================= -->
-
-<div class="modal" id="withdraw-modal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <h3>💸 Solicitar levantamento</h3>
-
-            <button class="close"
-                    onclick="fecharModal('withdraw-modal')">
-                ×
-            </button>
-
-        </div>
-
-        <p style="color:#999;font-size:13px;line-height:1.6">
-            Informe o valor que deseja levantar.
-            O valor será reservado do seu saldo enquanto o pedido
-            aguarda aprovação do administrador.
-        </p>
-
-        <div class="form-group">
-
-            <label>Valor do levantamento (MT)</label>
-
-            <input
-                type="number"
-                id="withdraw-value"
-                min="1"
-                step="1"
-                placeholder="Ex.: 100">
-
-        </div>
-
-        <button class="btn btn-primary"
-                onclick="solicitarLevantamento()">
-            SOLICITAR LEVANTAMENTO
-        </button>
-
-        <div id="withdraw-message"
-             class="message">
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ================= NAVEGAÇÃO MOBILE ================= -->
-
-<nav class="bottom-nav">
-
-    <div class="nav-inner">
-
-        <button class="nav-btn active"
-                onclick="irPara('app-screen')">
-            <span class="nav-icon">🏠</span>
-            Início
-        </button>
-
-        <button class="nav-btn"
-                onclick="irPara('draw-list')">
-            <span class="nav-icon">🎰</span>
-            Sorteios
-        </button>
-
-        <button class="nav-btn"
-                onclick="irPara('number-grid')">
-            <span class="nav-icon">🎯</span>
-            Apostar
-        </button>
-
-        <button class="nav-btn"
-                onclick="carregarBilhetes()">
-            <span class="nav-icon">🎟️</span>
-            Bilhetes
-        </button>
-
-        <button class="nav-btn"
-                onclick="logout()">
-            <span class="nav-icon">🚪</span>
-            Sair
-        </button>
-
-    </div>
-
-</nav>
 
 
 <footer>
-
-    <strong>SorteMoz</strong> — Loto 5/45<br>
-
-    Jogo destinado exclusivamente a maiores de 18 anos.<br>
-
-    Jogue com responsabilidade.
-
+    © 2026 SorteMoz • LOT5/45<br>
+    Jogue com responsabilidade. Apenas maiores de 18 anos.
 </footer>
 
 
 <script>
 
-/* ==========================================================
+/* =========================================================
    CONFIGURAÇÃO
-   ========================================================== */
+========================================================= */
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbxox3M6ja3yKp2C0U9UKwo7U_N_A_DOLbhtaYnONOkLYERMAgGpRqabL_kF58mN8J70tw/exec';
+const API_URL =
+'https://script.google.com/macros/s/AKfycbxox3M6ja3yKp2C0U9UKwo7U_N_A_DOLbhtaYnONOkLYERMAgGpRqabL_kF58mN8J70tw/exec';
 
-
-/* ==========================================================
-   ESTADO DA APLICAÇÃO
-   ========================================================== */
+const CONFIG = {
+    custoAposta: 10,
+    bolasPorAposta: 5,
+    numeroMinimo: 1,
+    numeroMaximo: 45
+};
 
 let token = localStorage.getItem('sortemoz_token') || '';
 
-let usuario = JSON.parse(
-    localStorage.getItem('sortemoz_usuario') || 'null'
-);
-
 let sorteios = [];
-
-let sorteioSelecionado = null;
 
 let numerosSelecionados = [];
 
 
-/* ==========================================================
-   INICIALIZAÇÃO
-   ========================================================== */
+/* =========================================================
+   COMUNICAÇÃO COM GAS
+========================================================= */
 
-document.addEventListener('DOMContentLoaded', function(){
-
-    criarNumeros();
-
-    document
-        .getElementById('register-form')
-        .addEventListener('submit', function(e){
-
-            e.preventDefault();
-
-            registrarUsuario();
-
-        });
-
-
-    document
-        .getElementById('login-form')
-        .addEventListener('submit', function(e){
-
-            e.preventDefault();
-
-            login();
-
-        });
-
-
-    if(token && usuario){
-
-        mostrarApp();
-
-    }
-
-});
-
-
-/* ==========================================================
-   API
-   ========================================================== */
-
-async function apiPost(dados){
-
-    if(!API_URL ||
-       API_URL === 'COLOQUE_AQUI_A_URL_DO_SEU_WEB_APP_GAS'){
-
-        throw new Error(
-            'Configure primeiro a URL do Web App do GAS.'
-        );
-
-    }
-
-    const response = await fetch(API_URL, {
-
-        method:'POST',
-
-        headers:{
-            'Content-Type':'text/plain;charset=utf-8'
-        },
-
-        body:JSON.stringify(dados)
-
-    });
-
-    const texto = await response.text();
-
-    let data;
+async function chamarAPI(dados){
 
     try{
 
-        data = JSON.parse(texto);
+        const resposta = await fetch(API_URL, {
+            method:'POST',
+            headers:{
+                'Content-Type':'text/plain;charset=utf-8'
+            },
+            body:JSON.stringify(dados)
+        });
 
-    }catch(e){
+        const texto = await resposta.text();
 
-        throw new Error(
-            'O GAS não devolveu uma resposta JSON válida.'
-        );
+        console.log('Resposta GAS:',texto);
 
+        try{
+            return JSON.parse(texto);
+        }catch(e){
+
+            return {
+                ok:false,
+                mensagem:'O servidor devolveu uma resposta inválida.'
+            };
+        }
+
+    }catch(erro){
+
+        console.error(erro);
+
+        return {
+            ok:false,
+            mensagem:'Não foi possível conectar ao servidor.'
+        };
     }
-
-    return data;
-
 }
 
 
-async function apiGet(acao){
+/* =========================================================
+   MENSAGENS
+========================================================= */
 
-    if(!API_URL ||
-       API_URL === 'COLOQUE_AQUI_A_URL_DO_SEU_WEB_APP_GAS'){
+function mensagem(id,texto,tipo=''){
 
-        throw new Error(
-            'Configure primeiro a URL do Web App do GAS.'
-        );
+    const el=document.getElementById(id);
 
-    }
+    if(!el)return;
 
-    const separador =
-        API_URL.includes('?') ? '&' : '?';
+    el.innerText=texto;
 
-    const response = await fetch(
-        API_URL + separador +
-        'acao=' + encodeURIComponent(acao)
-    );
-
-    const texto = await response.text();
-
-    let data;
-
-    try{
-
-        data = JSON.parse(texto);
-
-    }catch(e){
-
-        throw new Error(
-            'O GAS não devolveu uma resposta JSON válida.'
-        );
-
-    }
-
-    return data;
-
+    el.className='message '+tipo;
 }
 
 
-/* ==========================================================
-   AUTENTICAÇÃO
-   ========================================================== */
+/* =========================================================
+   TABS
+========================================================= */
 
-function mostrarAuth(tipo){
+function mostrarLogin(){
 
-    const registerForm =
-        document.getElementById('register-form');
+    document.getElementById('loginBox')
+        .classList.remove('hidden');
 
-    const loginForm =
-        document.getElementById('login-form');
+    document.getElementById('registroBox')
+        .classList.add('hidden');
 
-    const tabRegister =
-        document.getElementById('tab-register');
+    document.getElementById('tabLogin')
+        .classList.add('active');
 
-    const tabLogin =
-        document.getElementById('tab-login');
+    document.getElementById('tabRegistro')
+        .classList.remove('active');
 
-
-    if(tipo === 'register'){
-
-        registerForm.classList.remove('hidden');
-        loginForm.classList.add('hidden');
-
-        tabRegister.classList.add('active');
-        tabLogin.classList.remove('active');
-
-    }else{
-
-        registerForm.classList.add('hidden');
-        loginForm.classList.remove('hidden');
-
-        tabRegister.classList.remove('active');
-        tabLogin.classList.add('active');
-
-    }
-
-    limparMensagem('auth-message');
-
+    mensagem('authMessage','');
 }
 
 
-async function registrarUsuario(){
+function mostrarRegistro(){
 
-    const nome =
-        document.getElementById('reg-nome').value.trim();
+    document.getElementById('loginBox')
+        .classList.add('hidden');
 
-    const email =
-        document.getElementById('reg-email').value.trim();
+    document.getElementById('registroBox')
+        .classList.remove('hidden');
 
-    const numero =
-        document.getElementById('reg-numero').value.trim();
+    document.getElementById('tabLogin')
+        .classList.remove('active');
 
-    const pin =
-        document.getElementById('reg-pin').value.trim();
+    document.getElementById('tabRegistro')
+        .classList.add('active');
 
-    const idade =
-        parseInt(
-            document.getElementById('reg-idade').value
-        );
+    mensagem('authMessage','');
+}
 
 
-    if(!/^\d{6}$/.test(pin)){
+/* =========================================================
+   REGISTRO
+========================================================= */
 
-        mostrarMensagem(
-            'auth-message',
-            'O PIN deve conter exatamente 6 dígitos.',
+async function registrar(){
+
+    const nome=
+        document.getElementById('regNome').value.trim();
+
+    const email=
+        document.getElementById('regEmail').value.trim();
+
+    const numero=
+        document.getElementById('regNumero').value.trim();
+
+    const pin=
+        document.getElementById('regPin').value.trim();
+
+    const idade=
+        Number(document.getElementById('regIdade').value);
+
+
+    if(!nome || !email || !numero || !pin || !idade){
+
+        mensagem(
+            'authMessage',
+            'Preencha todos os campos.',
             'error'
         );
 
@@ -1561,10 +883,10 @@ async function registrarUsuario(){
     }
 
 
-    if(idade < 18){
+    if(idade<18){
 
-        mostrarMensagem(
-            'auth-message',
+        mensagem(
+            'authMessage',
             'Apenas maiores de 18 anos podem se cadastrar.',
             'error'
         );
@@ -1573,82 +895,93 @@ async function registrarUsuario(){
     }
 
 
-    mostrarMensagem(
-        'auth-message',
-        'Processando cadastro...',
-        'success'
-    );
+    if(!/^\d{6}$/.test(pin)){
 
-
-    try{
-
-        const data = await apiPost({
-
-            acao:'registar',
-
-            nome:nome,
-
-            email:email,
-
-            numero:numero,
-
-            pin:pin,
-
-            idade:idade
-
-        });
-
-
-        mostrarMensagem(
-            'auth-message',
-            data.mensagem || 'Operação concluída.',
-            data.ok ? 'success' : 'error'
-        );
-
-
-        if(data.ok){
-
-            document.getElementById('register-form').reset();
-
-            setTimeout(function(){
-
-                mostrarAuth('login');
-
-                document.getElementById(
-                    'login-numero'
-                ).value = numero;
-
-            },1200);
-
-        }
-
-    }catch(error){
-
-        mostrarMensagem(
-            'auth-message',
-            error.message,
+        mensagem(
+            'authMessage',
+            'O PIN deve conter exatamente 6 dígitos.',
             'error'
         );
 
+        return;
+    }
+
+
+    mensagem(
+        'authMessage',
+        'A registar a conta, aguarde...'
+    );
+
+
+    const data=await chamarAPI({
+
+        acao:'registar',
+
+        nome:nome,
+
+        email:email,
+
+        numero:numero,
+
+        pin:pin,
+
+        idade:idade
+
+    });
+
+
+    if(data.ok){
+
+        mensagem(
+            'authMessage',
+            data.mensagem ||
+            'Conta criada com sucesso.',
+            'success'
+        );
+
+        document.getElementById('regPin').value='';
+
+        setTimeout(()=>{
+            mostrarLogin();
+
+            document.getElementById('loginNumero')
+                .value=numero;
+
+        },1000);
+
+    }else{
+
+        mensagem(
+            'authMessage',
+            data.mensagem ||
+            'Não foi possível realizar o registo.',
+            'error'
+        );
     }
 
 }
 
 
+/* =========================================================
+   LOGIN
+========================================================= */
+
 async function login(){
 
-    const numero =
-        document.getElementById('login-numero').value.trim();
+    const numero=
+        document.getElementById('loginNumero')
+        .value.trim();
 
-    const pin =
-        document.getElementById('login-pin').value.trim();
+    const pin=
+        document.getElementById('loginPin')
+        .value.trim();
 
 
     if(!numero || !pin){
 
-        mostrarMensagem(
-            'auth-message',
-            'Informe o número e o PIN.',
+        mensagem(
+            'authMessage',
+            'Digite o número e o PIN.',
             'error'
         );
 
@@ -1656,482 +989,488 @@ async function login(){
     }
 
 
-    mostrarMensagem(
-        'auth-message',
-        'Entrando...',
-        'success'
+    mensagem(
+        'authMessage',
+        'A entrar na sua conta...'
     );
 
 
-    try{
+    const data=await chamarAPI({
 
-        const data = await apiPost({
+        acao:'login',
 
-            acao:'login',
+        numero:numero,
 
-            numero:numero,
+        pin:pin
 
-            pin:pin
-
-        });
+    });
 
 
-        if(!data.ok){
+    if(!data.ok){
 
-            mostrarMensagem(
-                'auth-message',
-                data.mensagem || 'Falha no login.',
-                'error'
-            );
-
-            return;
-        }
-
-
-        token = data.dados.token;
-
-        usuario = {
-
-            usuariold:data.dados.usuariold,
-
-            nome:data.dados.nome,
-
-            saldo:data.dados.saldo
-
-        };
-
-
-        localStorage.setItem(
-            'sortemoz_token',
-            token
-        );
-
-        localStorage.setItem(
-            'sortemoz_usuario',
-            JSON.stringify(usuario)
-        );
-
-
-        mostrarApp();
-
-    }catch(error){
-
-        mostrarMensagem(
-            'auth-message',
-            error.message,
+        mensagem(
+            'authMessage',
+            data.mensagem ||
+            'Número ou PIN incorretos.',
             'error'
         );
 
+        return;
     }
 
-}
+
+    token=data.dados.token;
+
+    localStorage.setItem(
+        'sortemoz_token',
+        token
+    );
+
+    localStorage.setItem(
+        'sortemoz_usuario',
+        data.dados.usuariold
+    );
+
+    localStorage.setItem(
+        'sortemoz_nome',
+        data.dados.nome
+    );
 
 
-/* ==========================================================
-   MOSTRAR APP
-   ========================================================== */
-
-function mostrarApp(){
-
-    document
-        .getElementById('auth-screen')
+    document.getElementById('authSection')
         .classList.add('hidden');
 
-    document
-        .getElementById('app-screen')
+    document.getElementById('appSection')
         .classList.remove('hidden');
 
-    document
-        .getElementById('header-user')
-        .style.display = 'flex';
+    document.getElementById('userArea')
+        .style.display='flex';
 
 
-    document
-        .getElementById('welcome-name')
-        .innerText =
-            'Olá, ' +
-            (usuario?.nome || 'Jogador');
+    atualizarSaldo();
+
+    carregarSorteios();
+
+    criarNumeros();
 
 
-    atualizarTudo();
+    mensagem('authMessage','');
 
 }
 
 
-/* ==========================================================
+/* =========================================================
    LOGOUT
-   ========================================================== */
+========================================================= */
 
 function logout(){
 
-    token = '';
+    token='';
 
-    usuario = null;
+    localStorage.removeItem('sortemoz_token');
+    localStorage.removeItem('sortemoz_usuario');
+    localStorage.removeItem('sortemoz_nome');
 
-    localStorage.removeItem(
-        'sortemoz_token'
-    );
-
-    localStorage.removeItem(
-        'sortemoz_usuario'
-    );
-
-
-    document
-        .getElementById('app-screen')
+    document.getElementById('appSection')
         .classList.add('hidden');
 
-    document
-        .getElementById('auth-screen')
+    document.getElementById('authSection')
         .classList.remove('hidden');
 
-    document
-        .getElementById('header-user')
-        .style.display = 'none';
-
-
-    mostrarAuth('login');
+    document.getElementById('userArea')
+        .style.display='none';
 
 }
 
 
-/* ==========================================================
+/* =========================================================
    SALDO
-   ========================================================== */
+========================================================= */
 
-async function carregarSaldo(){
+async function atualizarSaldo(){
 
-    try{
-
-        const data = await apiPost({
-
-            acao:'saldo',
-
-            token:token
-
-        });
+    if(!token)return;
 
 
-        if(!data.ok){
+    const data=await chamarAPI({
 
-            if(
-                data.mensagem &&
-                data.mensagem.toLowerCase().includes('sessão')
-            ){
+        acao:'saldo',
 
-                logout();
+        token:token
 
-            }
-
-            return;
-
-        }
+    });
 
 
-        const saldo =
+    if(data.ok){
+
+        const saldo=
             Number(data.dados.saldo || 0);
 
 
-        usuario.saldo = saldo;
+        document.getElementById('saldo')
+            .innerText=saldo.toFixed(2);
 
+        document.getElementById('headerBalance')
+            .innerText=saldo.toFixed(2);
 
-        localStorage.setItem(
-            'sortemoz_usuario',
-            JSON.stringify(usuario)
-        );
+    }else{
 
+        if(data.mensagem &&
+           data.mensagem.toLowerCase().includes('sessão')){
 
-        document
-            .getElementById('balance')
-            .innerText =
-                formatarMoeda(saldo);
-
-
-        document
-            .getElementById('mini-balance')
-            .innerText =
-                formatarMoeda(saldo);
-
-    }catch(error){
-
-        console.error(error);
-
+            logout();
+        }
     }
 
 }
 
 
-/* ==========================================================
+/* =========================================================
+   DEPÓSITO
+========================================================= */
+
+function mostrarDeposito(){
+
+    document.getElementById('depositoBox')
+        .classList.toggle('hidden');
+
+    document.getElementById('levantamentoBox')
+        .classList.add('hidden');
+}
+
+
+async function solicitarDeposito(){
+
+    const valor=
+        Number(
+            document.getElementById('depositoValor')
+            .value
+        );
+
+
+    if(!valor || valor<=0){
+
+        mensagem(
+            'depositoMessage',
+            'Informe um valor válido.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    mensagem(
+        'depositoMessage',
+        'A enviar o pedido...'
+    );
+
+
+    const data=await chamarAPI({
+
+        acao:'deposito',
+
+        token:token,
+
+        valor:valor
+
+    });
+
+
+    if(data.ok){
+
+        mensagem(
+            'depositoMessage',
+            data.mensagem ||
+            'Seu pedido encontra-se em processamento. Aguarde a aprovação do depósito.',
+            'success'
+        );
+
+        document.getElementById('depositoValor')
+            .value='';
+
+    }else{
+
+        mensagem(
+            'depositoMessage',
+            data.mensagem,
+            'error'
+        );
+    }
+
+}
+
+
+/* =========================================================
+   LEVANTAMENTO
+========================================================= */
+
+function mostrarLevantamento(){
+
+    document.getElementById('levantamentoBox')
+        .classList.toggle('hidden');
+
+    document.getElementById('depositoBox')
+        .classList.add('hidden');
+}
+
+
+async function solicitarLevantamento(){
+
+    const valor=
+        Number(
+            document.getElementById('levantamentoValor')
+            .value
+        );
+
+
+    if(!valor || valor<=0){
+
+        mensagem(
+            'levantamentoMessage',
+            'Informe um valor válido.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    mensagem(
+        'levantamentoMessage',
+        'A enviar o pedido...'
+    );
+
+
+    const data=await chamarAPI({
+
+        acao:'levantamento',
+
+        token:token,
+
+        valor:valor
+
+    });
+
+
+    if(data.ok){
+
+        mensagem(
+            'levantamentoMessage',
+            data.mensagem ||
+            'Aguarde a aprovação do administrador.',
+            'success'
+        );
+
+        document.getElementById(
+            'levantamentoValor'
+        ).value='';
+
+        atualizarSaldo();
+
+    }else{
+
+        mensagem(
+            'levantamentoMessage',
+            data.mensagem,
+            'error'
+        );
+    }
+
+}
+
+
+/* =========================================================
    SORTEIOS
-   ========================================================== */
+========================================================= */
 
 async function carregarSorteios(){
 
-    const container =
-        document.getElementById('draw-list');
-
-
     try{
 
-        const data =
-            await apiGet('sorteios');
+        const resposta=
+            await fetch(
+                API_URL+'?acao=sorteios'
+            );
+
+        const data=
+            await resposta.json();
 
 
         if(!data.ok){
 
-            container.innerHTML =
-                '<div class="empty">' +
-                'Não foi possível carregar os sorteios.' +
+            document.getElementById('sorteios')
+                .innerHTML=
+                '<div class="message error">'+
+                data.mensagem+
                 '</div>';
 
             return;
         }
 
 
-        sorteios = data.dados || [];
+        sorteios=data.dados || [];
 
+        renderizarSorteios();
 
-        if(sorteios.length === 0){
+    }catch(e){
 
-            container.innerHTML =
-                '<div class="empty">' +
-                'Nenhum sorteio disponível.' +
-                '</div>';
-
-            return;
-        }
-
-
-        container.innerHTML =
-            sorteios.map(function(sorteio,index){
-
-                const status =
-                    String(
-                        sorteio.status || ''
-                    ).toUpperCase();
-
-
-                let classe = 'status-closed';
-
-                let texto = status;
-
-
-                if(status === 'ABERTO'){
-
-                    classe = 'status-open';
-
-                    texto = 'ABERTO';
-
-                }
-
-                if(status === 'CONCLUIDO'){
-
-                    classe = 'status-done';
-
-                    texto = 'CONCLUÍDO';
-
-                }
-
-
-                return `
-
-                    <div
-                        class="draw-card"
-                        data-index="${index}"
-                        onclick="selecionarSorteio(${index})"
-                    >
-
-                        <div class="draw-id">
-                            ${escapeHtml(sorteio.id)}
-                        </div>
-
-                        <div class="draw-time">
-                            ${escapeHtml(sorteio.hora)}
-                        </div>
-
-                        <div>
-                            <span class="draw-status ${classe}">
-                                ${texto}
-                            </span>
-                        </div>
-
-                        <div
-                            style="
-                            color:#666;
-                            font-size:10px;
-                            margin-top:8px;
-                            "
-                        >
-                            Fecha às
-                            ${escapeHtml(sorteio.fechamento || '--')}
-                        </div>
-
-                    </div>
-
-                `;
-
-            }).join('');
-
-
-        const primeiroAberto =
-            sorteios.findIndex(
-                s =>
-                    String(s.status).toUpperCase()
-                    === 'ABERTO'
-            );
-
-
-        if(primeiroAberto >= 0){
-
-            selecionarSorteio(primeiroAberto);
-
-        }
-
-    }catch(error){
-
-        container.innerHTML =
-            '<div class="empty">' +
-            escapeHtml(error.message) +
+        document.getElementById('sorteios')
+            .innerHTML=
+            '<div class="message error">'+
+            'Não foi possível carregar os sorteios.'+
             '</div>';
-
     }
 
 }
 
 
-/* ==========================================================
-   SELECIONAR SORTEIO
-   ========================================================== */
+function renderizarSorteios(){
 
-function selecionarSorteio(index){
+    const box=
+        document.getElementById('sorteios');
 
-    if(!sorteios[index]) return;
-
-
-    const sorteio =
-        sorteios[index];
+    const select=
+        document.getElementById('sorteioSelect');
 
 
-    if(
-        String(sorteio.status).toUpperCase()
-        !== 'ABERTO'
-    ){
+    box.innerHTML='';
 
-        mostrarMensagem(
-            'bet-message',
-            'Este sorteio não está aberto para apostas.',
-            'error'
-        );
+    select.innerHTML='';
+
+
+    if(!sorteios.length){
+
+        box.innerHTML=
+            '<div class="message">Nenhum sorteio disponível.</div>';
 
         return;
     }
 
 
-    sorteioSelecionado = sorteio;
+    sorteios.forEach((sorteio,index)=>{
+
+        const status=
+            String(sorteio.status || '')
+            .toUpperCase();
 
 
-    document
-        .querySelectorAll('.draw-card')
-        .forEach(
-            card => card.classList.remove('selected')
-        );
+        const div=
+            document.createElement('div');
+
+        div.className='draw';
 
 
-    const card =
-        document.querySelector(
-            `.draw-card[data-index="${index}"]`
-        );
+        div.innerHTML=`
+
+            <div class="draw-title">
+
+                <span>
+                    🎯 ${sorteio.id}
+                </span>
+
+                <span class="${
+                    status==='ABERTO'
+                    ? 'status'
+                    : 'closed'
+                }">
+                    ${status}
+                </span>
+
+            </div>
+
+            <div style="margin-top:7px;color:#aaa">
+
+                Horário:
+                <strong style="color:white">
+                    ${sorteio.hora}
+                </strong>
+
+                &nbsp; • &nbsp;
+
+                Fechamento:
+                <strong style="color:white">
+                    ${sorteio.fechamento}
+                </strong>
+
+            </div>
+        `;
 
 
-    if(card){
-
-        card.classList.add('selected');
-
-    }
+        box.appendChild(div);
 
 
-    document
-        .getElementById('selected-draw')
-        .innerHTML =
-            'Sorteio selecionado: <strong>' +
-            escapeHtml(sorteio.id) +
-            '</strong> — ' +
-            escapeHtml(sorteio.hora);
+        if(status==='ABERTO'){
 
+            const option=
+                document.createElement('option');
 
-    limparNumeros();
+            option.value=sorteio.id;
+
+            option.textContent=
+                `${sorteio.id} — ${sorteio.hora}`;
+
+            select.appendChild(option);
+        }
+
+    });
 
 }
 
 
-/* ==========================================================
+/* =========================================================
    NÚMEROS
-   ========================================================== */
+========================================================= */
 
 function criarNumeros(){
 
-    const grid =
-        document.getElementById('number-grid');
+    const grid=
+        document.getElementById('numberGrid');
+
+    grid.innerHTML='';
 
 
-    let html = '';
+    for(
+        let n=CONFIG.numeroMinimo;
+        n<=CONFIG.numeroMaximo;
+        n++
+    ){
 
+        const button=
+            document.createElement('button');
 
-    for(let i=1;i<=45;i++){
+        button.className='number';
 
-        html += `
+        button.innerText=n;
 
-            <button
-                type="button"
-                class="number"
-                id="number-${i}"
-                onclick="selecionarNumero(${i})"
-            >
-                ${i}
-            </button>
+        button.onclick=
+            ()=>selecionarNumero(n,button);
 
-        `;
-
+        grid.appendChild(button);
     }
-
-
-    grid.innerHTML = html;
 
 }
 
 
-function selecionarNumero(numero){
+function selecionarNumero(numero,button){
 
-    if(!sorteioSelecionado){
-
-        mostrarMensagem(
-            'bet-message',
-            'Primeiro selecione um sorteio aberto.',
-            'error'
-        );
-
-        return;
-    }
+    const index=
+        numerosSelecionados.indexOf(numero);
 
 
-    if(numerosSelecionados.includes(numero)){
+    if(index!==-1){
 
-        numerosSelecionados =
-            numerosSelecionados.filter(
-                n => n !== numero
-            );
+        numerosSelecionados.splice(index,1);
 
-        document
-            .getElementById('number-' + numero)
-            .classList.remove('selected');
+        button.classList.remove('selected');
 
     }else{
 
-        if(numerosSelecionados.length >= 5){
+        if(numerosSelecionados.length>=5){
 
-            mostrarMensagem(
-                'bet-message',
-                'Você pode escolher exatamente 5 números.',
+            mensagem(
+                'apostaMessage',
+                'Você só pode escolher 5 números.',
                 'error'
             );
 
@@ -2141,70 +1480,34 @@ function selecionarNumero(numero){
 
         numerosSelecionados.push(numero);
 
-        numerosSelecionados.sort(
-            (a,b)=>a-b
-        );
-
-
-        document
-            .getElementById('number-' + numero)
-            .classList.add('selected');
-
+        button.classList.add('selected');
     }
 
 
-    document
-        .getElementById('selected-count')
-        .innerText =
-            numerosSelecionados.length;
+    numerosSelecionados.sort(
+        (a,b)=>a-b
+    );
 
 
-    limparMensagem('bet-message');
-
-}
-
-
-function limparNumeros(){
-
-    numerosSelecionados = [];
-
-
-    document
-        .querySelectorAll('.number')
-        .forEach(
-            btn => btn.classList.remove('selected')
-        );
-
-
-    document
-        .getElementById('selected-count')
-        .innerText = '0';
+    document.getElementById('selectedNumbers')
+        .innerText=
+        numerosSelecionados.length
+        ? numerosSelecionados.join(' • ')
+        : 'Nenhum';
 
 }
 
 
-/* ==========================================================
-   APOSTAR
-   ========================================================== */
+/* =========================================================
+   APOSTA
+========================================================= */
 
 async function fazerAposta(){
 
-    if(!sorteioSelecionado){
+    if(numerosSelecionados.length!==5){
 
-        mostrarMensagem(
-            'bet-message',
-            'Selecione um sorteio aberto.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    if(numerosSelecionados.length !== 5){
-
-        mostrarMensagem(
-            'bet-message',
+        mensagem(
+            'apostaMessage',
             'Escolha exatamente 5 números.',
             'error'
         );
@@ -2213,96 +1516,17 @@ async function fazerAposta(){
     }
 
 
-    mostrarMensagem(
-        'bet-message',
-        'Processando sua aposta...',
-        'success'
-    );
+    const sorteioId=
+        document.getElementById(
+            'sorteioSelect'
+        ).value;
 
 
-    try{
+    if(!sorteioId){
 
-        const data =
-            await apiPost({
-
-                acao:'apostar',
-
-                token:token,
-
-                sorteiold:
-                    sorteioSelecionado.id,
-
-                apostas:[
-                    numerosSelecionados
-                ]
-
-            });
-
-
-        mostrarMensagem(
-            'bet-message',
-            data.mensagem ||
-            'Operação concluída.',
-            data.ok ? 'success' : 'error'
-        );
-
-
-        if(data.ok){
-
-            limparNumeros();
-
-            await carregarSaldo();
-
-            await carregarBilhetes();
-
-            setTimeout(
-                ()=>limparMensagem('bet-message'),
-                5000
-            );
-
-        }
-
-    }catch(error){
-
-        mostrarMensagem(
-            'bet-message',
-            error.message,
-            'error'
-        );
-
-    }
-
-}
-
-
-/* ==========================================================
-   DEPÓSITO
-   ========================================================== */
-
-function abrirDeposito(){
-
-    document
-        .getElementById('deposit-modal')
-        .classList.add('show');
-
-}
-
-
-async function solicitarDeposito(){
-
-    const valor =
-        Number(
-            document.getElementById(
-                'deposit-value'
-            ).value
-        );
-
-
-    if(!valor || valor <= 0){
-
-        mostrarMensagem(
-            'deposit-message',
-            'Informe um valor válido.',
+        mensagem(
+            'apostaMessage',
+            'Selecione um sorteio.',
             'error'
         );
 
@@ -2310,594 +1534,409 @@ async function solicitarDeposito(){
     }
 
 
-    mostrarMensagem(
-        'deposit-message',
-        'Enviando pedido...',
-        'success'
+    mensagem(
+        'apostaMessage',
+        'A processar a aposta...'
     );
 
 
-    try{
+    const data=await chamarAPI({
 
-        const data =
-            await apiPost({
+        acao:'apostar',
 
-                acao:'deposito',
+        token:token,
 
-                token:token,
+        sorteiold:sorteioId,
 
-                valor:valor
+        apostas:[
+            numerosSelecionados
+        ]
 
-            });
+    });
 
 
-        mostrarMensagem(
-            'deposit-message',
-            data.mensagem ||
-            'Pedido enviado.',
-            data.ok ? 'success' : 'error'
+    if(data.ok){
+
+        mensagem(
+            'apostaMessage',
+            data.mensagem+
+            (data.bilheteld
+                ? ' Bilhete: '+data.bilheteld
+                : ''),
+            'success'
         );
 
 
-        if(data.ok){
-
-            document
-                .getElementById(
-                    'deposit-value'
-                )
-                .value = '';
+        atualizarSaldo();
 
 
-            /*
-             * IMPORTANTE:
-             * O GAS não adiciona o saldo automaticamente.
-             * O pedido fica PENDENTE e envia email
-             * ao administrador.
-             */
+        numerosSelecionados=[];
 
-        }
 
-    }catch(error){
+        document.querySelectorAll(
+            '.number.selected'
+        ).forEach(el=>{
+            el.classList.remove('selected');
+        });
 
-        mostrarMensagem(
-            'deposit-message',
-            error.message,
+
+        document.getElementById(
+            'selectedNumbers'
+        ).innerText='Nenhum';
+
+    }else{
+
+        mensagem(
+            'apostaMessage',
+            data.mensagem,
             'error'
         );
-
     }
 
 }
 
 
-/* ==========================================================
-   LEVANTAMENTO
-   ========================================================== */
-
-function abrirLevantamento(){
-
-    document
-        .getElementById('withdraw-modal')
-        .classList.add('show');
-
-}
-
-
-async function solicitarLevantamento(){
-
-    const valor =
-        Number(
-            document.getElementById(
-                'withdraw-value'
-            ).value
-        );
-
-
-    if(!valor || valor <= 0){
-
-        mostrarMensagem(
-            'withdraw-message',
-            'Informe um valor válido.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    mostrarMensagem(
-        'withdraw-message',
-        'Enviando pedido...',
-        'success'
-    );
-
-
-    try{
-
-        const data =
-            await apiPost({
-
-                acao:'levantamento',
-
-                token:token,
-
-                valor:valor
-
-            });
-
-
-        mostrarMensagem(
-            'withdraw-message',
-            data.mensagem ||
-            'Pedido enviado.',
-            data.ok ? 'success' : 'error'
-        );
-
-
-        if(data.ok){
-
-            document
-                .getElementById(
-                    'withdraw-value'
-                )
-                .value = '';
-
-
-            await carregarSaldo();
-
-            await carregarMovimentos();
-
-        }
-
-    }catch(error){
-
-        mostrarMensagem(
-            'withdraw-message',
-            error.message,
-            'error'
-        );
-
-    }
-
-}
-
-
-/* ==========================================================
+/* =========================================================
    BILHETES
-   ========================================================== */
+========================================================= */
 
 async function carregarBilhetes(){
 
-    const container =
-        document.getElementById('tickets-list');
+    document.getElementById('bilhetesBox')
+        .classList.remove('hidden');
 
 
-    try{
+    const box=
+        document.getElementById('bilhetes');
 
-        const data =
-            await apiPost({
-
-                acao:'meusBilhetes',
-
-                token:token
-
-            });
+    box.innerHTML=
+        '<div class="loading">A carregar...</div>';
 
 
-        if(!data.ok){
+    const data=await chamarAPI({
 
-            container.innerHTML =
-                `<div class="empty">
-                    ${escapeHtml(data.mensagem || 'Erro.')}
-                </div>`;
+        acao:'meusBilhetes',
 
-            return;
-        }
+        token:token
+
+    });
 
 
-        const bilhetes =
-            data.dados || [];
+    if(!data.ok){
 
+        box.innerHTML=
+            '<div class="message error">'+
+            data.mensagem+
+            '</div>';
 
-        if(bilhetes.length === 0){
-
-            container.innerHTML =
-                '<div class="empty">' +
-                'Você ainda não possui bilhetes.' +
-                '</div>';
-
-            return;
-        }
-
-
-        container.innerHTML =
-            bilhetes.slice().reverse()
-            .map(function(b){
-
-                return `
-
-                    <div class="list-item">
-
-                        <div class="list-main">
-
-                            <div class="list-title">
-                                🎟️ ${escapeHtml(b.bilheteld)}
-                            </div>
-
-                            <div class="list-sub">
-                                Sorteio:
-                                ${escapeHtml(b.jogo)}
-                                · ${b.quantidade} aposta(s)
-                                · ${escapeHtml(b.status)}
-                            </div>
-
-                        </div>
-
-                        <div class="amount">
-                            ${formatarMoeda(b.valor)}
-                        </div>
-
-                    </div>
-
-                `;
-
-            }).join('');
-
-
-    }catch(error){
-
-        container.innerHTML =
-            `<div class="empty">
-                ${escapeHtml(error.message)}
-            </div>`;
-
+        return;
     }
+
+
+    if(!data.dados.length){
+
+        box.innerHTML=
+            '<div class="message">'+
+            'Você ainda não possui bilhetes.'+
+            '</div>';
+
+        return;
+    }
+
+
+    let html=`
+
+        <div class="table-wrap">
+
+        <table>
+
+        <thead>
+
+        <tr>
+            <th>Bilhete</th>
+            <th>Sorteio</th>
+            <th>Qtd.</th>
+            <th>Valor</th>
+            <th>Status</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+    `;
+
+
+    data.dados.forEach(item=>{
+
+        html+=`
+
+            <tr>
+
+                <td>${item.bilheteld}</td>
+
+                <td>${item.jogo}</td>
+
+                <td>${item.quantidade}</td>
+
+                <td>${item.valor} MT</td>
+
+                <td>${item.status}</td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html+=`
+        </tbody>
+        </table>
+        </div>
+    `;
+
+
+    box.innerHTML=html;
 
 }
 
 
-/* ==========================================================
+/* =========================================================
    MOVIMENTOS
-   ========================================================== */
+========================================================= */
 
 async function carregarMovimentos(){
 
-    const container =
-        document.getElementById('movements-list');
+    document.getElementById('movimentosBox')
+        .classList.remove('hidden');
 
 
-    try{
+    const box=
+        document.getElementById('movimentos');
 
-        const data =
-            await apiPost({
-
-                acao:'meusMovimentos',
-
-                token:token
-
-            });
+    box.innerHTML=
+        '<div class="loading">A carregar...</div>';
 
 
-        if(!data.ok){
+    const data=await chamarAPI({
 
-            container.innerHTML =
-                `<div class="empty">
-                    ${escapeHtml(data.mensagem || 'Erro.')}
-                </div>`;
+        acao:'meusMovimentos',
 
-            return;
-        }
+        token:token
+
+    });
 
 
-        const movimentos =
-            data.dados || [];
+    if(!data.ok){
 
+        box.innerHTML=
+            '<div class="message error">'+
+            data.mensagem+
+            '</div>';
 
-        if(movimentos.length === 0){
-
-            container.innerHTML =
-                '<div class="empty">' +
-                'Nenhum movimento encontrado.' +
-                '</div>';
-
-            return;
-        }
-
-
-        container.innerHTML =
-            movimentos.slice().reverse()
-            .map(function(m){
-
-                const valor =
-                    Number(m.valor || 0);
-
-
-                const positivo =
-                    valor >= 0;
-
-
-                return `
-
-                    <div class="list-item">
-
-                        <div class="list-main">
-
-                            <div class="list-title">
-                                ${iconeMovimento(m.tipo)}
-                                ${escapeHtml(m.tipo)}
-                            </div>
-
-                            <div class="list-sub">
-                                ${escapeHtml(m.status)}
-                                ·
-                                ${escapeHtml(m.descricao || '')}
-                            </div>
-
-                        </div>
-
-                        <div
-                            class="amount"
-                            style="color:${positivo ? '#00d084' : '#ff7777'}"
-                        >
-                            ${positivo ? '+' : ''}
-                            ${formatarMoeda(valor)}
-                        </div>
-
-                    </div>
-
-                `;
-
-            }).join('');
-
-
-    }catch(error){
-
-        container.innerHTML =
-            `<div class="empty">
-                ${escapeHtml(error.message)}
-            </div>`;
-
+        return;
     }
+
+
+    if(!data.dados.length){
+
+        box.innerHTML=
+            '<div class="message">'+
+            'Nenhum movimento encontrado.'+
+            '</div>';
+
+        return;
+    }
+
+
+    let html=`
+
+        <div class="table-wrap">
+
+        <table>
+
+        <thead>
+
+        <tr>
+            <th>Tipo</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Descrição</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+    `;
+
+
+    data.dados.forEach(item=>{
+
+        html+=`
+
+            <tr>
+
+                <td>${item.tipo}</td>
+
+                <td>${item.valor} MT</td>
+
+                <td>${item.status}</td>
+
+                <td>${item.descricao}</td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html+=`
+        </tbody>
+        </table>
+        </div>
+    `;
+
+
+    box.innerHTML=html;
 
 }
 
 
-/* ==========================================================
+/* =========================================================
    VENCEDORES
-   ========================================================== */
+========================================================= */
 
 async function carregarVencedores(){
 
-    const container =
-        document.getElementById('winners-list');
+    const box=
+        document.getElementById('vencedores');
+
+    box.innerHTML=
+        '<div class="loading">A carregar vencedores...</div>';
 
 
     try{
 
-        const data =
-            await apiGet('vencedores');
+        const resposta=
+            await fetch(
+                API_URL+'?acao=vencedores'
+            );
+
+        const data=
+            await resposta.json();
 
 
         if(!data.ok){
 
-            container.innerHTML =
-                `<div class="empty">
-                    ${escapeHtml(data.mensagem || 'Erro.')}
-                </div>`;
-
-            return;
-        }
-
-
-        const vencedores =
-            data.dados || [];
-
-
-        if(vencedores.length === 0){
-
-            container.innerHTML =
-                '<div class="empty">' +
-                'Ainda não existem vencedores registrados.' +
+            box.innerHTML=
+                '<div class="message error">'+
+                data.mensagem+
                 '</div>';
 
             return;
         }
 
 
-        container.innerHTML =
-            vencedores.slice().reverse()
-            .map(function(v){
+        if(!data.dados.length){
 
-                return `
+            box.innerHTML=
+                '<div class="message">'+
+                'Ainda não existem vencedores registados.'+
+                '</div>';
 
-                    <div class="list-item">
-
-                        <div class="list-main">
-
-                            <div class="list-title">
-                                🏆 ${escapeHtml(v.jogo)}
-                            </div>
-
-                            <div class="list-sub">
-                                ${escapeHtml(v.acertos)}
-                                acertos
-                            </div>
-
-                        </div>
-
-                        <div class="amount">
-                            ${formatarMoeda(v.premio)}
-                        </div>
-
-                    </div>
-
-                `;
-
-            }).join('');
+            return;
+        }
 
 
-    }catch(error){
+        let html=`
 
-        container.innerHTML =
-            `<div class="empty">
-                ${escapeHtml(error.message)}
-            </div>`;
+            <div class="table-wrap">
 
+            <table>
+
+            <thead>
+
+            <tr>
+                <th>Jogo</th>
+                <th>Acertos</th>
+                <th>Prémio</th>
+                <th>Data</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+        `;
+
+
+        data.dados.forEach(item=>{
+
+            html+=`
+
+                <tr>
+
+                    <td>${item.jogo || ''}</td>
+
+                    <td>${item.acertos || ''}</td>
+
+                    <td>${item.premio || 0} MT</td>
+
+                    <td>${item.data || ''}</td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+        html+=`
+            </tbody>
+            </table>
+            </div>
+        `;
+
+
+        box.innerHTML=html;
+
+
+    }catch(e){
+
+        box.innerHTML=
+            '<div class="message error">'+
+            'Erro ao carregar vencedores.'+
+            '</div>';
     }
 
 }
 
 
-/* ==========================================================
-   ATUALIZAR TUDO
-   ========================================================== */
+/* =========================================================
+   RESTAURAR SESSÃO
+========================================================= */
 
-async function atualizarTudo(){
+window.addEventListener('load',()=>{
 
-    await carregarSaldo();
+    if(token){
 
-    await carregarSorteios();
+        document.getElementById('authSection')
+            .classList.add('hidden');
 
-    await carregarBilhetes();
+        document.getElementById('appSection')
+            .classList.remove('hidden');
 
-    await carregarMovimentos();
+        document.getElementById('userArea')
+            .style.display='flex';
 
-    await carregarVencedores();
+        criarNumeros();
 
-}
+        atualizarSaldo();
 
-
-/* ==========================================================
-   MODAIS
-   ========================================================== */
-
-function fecharModal(id){
-
-    document
-        .getElementById(id)
-        .classList.remove('show');
-
-}
-
-
-document.addEventListener('click',function(e){
-
-    if(e.target.classList.contains('modal')){
-
-        e.target.classList.remove('show');
-
+        carregarSorteios();
     }
 
 });
-
-
-/* ==========================================================
-   NAVEGAÇÃO
-   ========================================================== */
-
-function irPara(id){
-
-    const elemento =
-        document.getElementById(id);
-
-
-    if(elemento){
-
-        elemento.scrollIntoView({
-            behavior:'smooth',
-            block:'center'
-        });
-
-    }
-
-}
-
-
-/* ==========================================================
-   MENSAGENS
-   ========================================================== */
-
-function mostrarMensagem(id,texto,tipo){
-
-    const el =
-        document.getElementById(id);
-
-
-    el.innerText = texto;
-
-    el.className =
-        'message show ' +
-        (tipo === 'success'
-            ? 'success'
-            : 'error');
-
-}
-
-
-function limparMensagem(id){
-
-    const el =
-        document.getElementById(id);
-
-
-    if(!el) return;
-
-
-    el.innerText = '';
-
-    el.className = 'message';
-
-}
-
-
-/* ==========================================================
-   UTILITÁRIOS
-   ========================================================== */
-
-function formatarMoeda(valor){
-
-    return Number(valor || 0)
-        .toLocaleString(
-            'pt-MZ',
-            {
-                minimumFractionDigits:0,
-                maximumFractionDigits:2
-            }
-        ) + ' MT';
-
-}
-
-
-function iconeMovimento(tipo){
-
-    const t =
-        String(tipo || '').toUpperCase();
-
-
-    if(t === 'DEPOSITO')
-        return '💳';
-
-    if(t === 'LEVANTAMENTO')
-        return '💸';
-
-    if(t === 'APOSTA')
-        return '🎯';
-
-    return '💰';
-
-}
-
-
-function escapeHtml(valor){
-
-    return String(valor ?? '')
-        .replace(/&/g,'&')
-        .replace(/</g,'<')
-        .replace(/>/g,'>')
-        .replace(/"/g,'"')
-        .replace(/'/g,''');
-
-}
 
 </script>
 
