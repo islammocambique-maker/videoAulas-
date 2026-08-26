@@ -1,1048 +1,2905 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moz1Vendas - Marketplace de Moçambique</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif']
-          },
-          colors: {
-            brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              900: '#14532d'
-            },
-            accent: {
-              500: '#f59e0b',
-              600: '#d97706'
-            }
-          }
-        }
-      }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SorteMoz - Loto 5/45</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+:root{
+    --pink:#ff2f92;
+    --pink2:#ff69b4;
+    --gold:#ffd700;
+    --gold2:#ffec70;
+    --blue:#2196f3;
+    --green:#00d084;
+    --red:#ff4d4d;
+    --dark:#080808;
+    --dark2:#111;
+    --dark3:#181818;
+    --gray:#999;
+    --white:#fff;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:'Montserrat',sans-serif;
+    background:
+        radial-gradient(circle at top,#241020 0%,#090909 38%,#000 100%);
+    color:#fff;
+    min-height:100vh;
+}
+
+/* ================= HEADER ================= */
+
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:rgba(0,0,0,.94);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid rgba(255,47,146,.35);
+}
+
+.header-inner{
+    max-width:1200px;
+    margin:auto;
+    padding:14px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--pink),#8b0050);
+    box-shadow:0 0 20px rgba(255,47,146,.5);
+    font-size:21px;
+}
+
+.logo-text{
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.logo-text span{
+    color:var(--gold);
+}
+
+.header-user{
+    display:none;
+    align-items:center;
+    gap:12px;
+}
+
+.balance-mini{
+    background:#171717;
+    border:1px solid rgba(255,215,0,.35);
+    border-radius:30px;
+    padding:9px 15px;
+    color:var(--gold);
+    font-weight:700;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+    max-width:1200px;
+    margin:0 auto;
+    padding:45px 20px 25px;
+    text-align:center;
+}
+
+.hero-badge{
+    display:inline-block;
+    padding:7px 14px;
+    border:1px solid rgba(255,215,0,.4);
+    border-radius:30px;
+    color:var(--gold);
+    background:rgba(255,215,0,.06);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+.hero h1{
+    margin:18px 0 8px;
+    font-size:clamp(35px,7vw,70px);
+    font-weight:800;
+    line-height:1;
+}
+
+.hero h1 span{
+    color:var(--pink);
+    text-shadow:0 0 25px rgba(255,47,146,.55);
+}
+
+.hero p{
+    color:#bbb;
+    margin:15px auto 0;
+    max-width:650px;
+    line-height:1.6;
+}
+
+/* ================= CONTAINER ================= */
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:0 18px 50px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:18px;
+}
+
+.col-12{grid-column:span 12;}
+.col-8{grid-column:span 8;}
+.col-6{grid-column:span 6;}
+.col-4{grid-column:span 4;}
+
+/* ================= CARDS ================= */
+
+.card{
+    background:
+        linear-gradient(145deg,rgba(30,30,30,.96),rgba(12,12,12,.96));
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 12px 35px rgba(0,0,0,.45);
+}
+
+.card-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:0 0 20px;
+    font-size:19px;
+    font-weight:800;
+}
+
+.card-title .icon{
+    width:36px;
+    height:36px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:10px;
+    background:rgba(255,47,146,.12);
+    color:var(--pink);
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* ================= AUTH ================= */
+
+.auth-wrapper{
+    max-width:530px;
+    margin:25px auto;
+}
+
+.tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    background:#080808;
+    padding:4px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+.tab{
+    padding:12px;
+    text-align:center;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:700;
+    color:#888;
+}
+
+.tab.active{
+    background:var(--pink);
+    color:white;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:7px;
+    font-size:13px;
+    color:#bbb;
+    font-weight:600;
+}
+
+input,
+select{
+    width:100%;
+    padding:13px 14px;
+    border-radius:10px;
+    border:1px solid #333;
+    outline:none;
+    background:#080808;
+    color:#fff;
+    font-family:inherit;
+    font-size:14px;
+}
+
+input:focus,
+select:focus{
+    border-color:var(--pink);
+    box-shadow:0 0 0 2px rgba(255,47,146,.1);
+}
+
+input::placeholder{
+    color:#666;
+}
+
+.btn{
+    width:100%;
+    padding:14px 18px;
+    border:0;
+    border-radius:11px;
+    cursor:pointer;
+    font-family:inherit;
+    font-weight:800;
+    font-size:14px;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-primary{
+    background:linear-gradient(135deg,var(--pink),#d6006d);
+    color:white;
+    box-shadow:0 6px 18px rgba(255,47,146,.22);
+}
+
+.btn-gold{
+    background:linear-gradient(135deg,var(--gold),#f0ad00);
+    color:#111;
+}
+
+.btn-blue{
+    background:linear-gradient(135deg,#2196f3,#0066d6);
+    color:white;
+}
+
+.btn-green{
+    background:linear-gradient(135deg,#00d084,#00a96b);
+    color:#06120d;
+}
+
+.btn-red{
+    background:linear-gradient(135deg,#ff5555,#c90000);
+    color:white;
+}
+
+.message{
+    margin-top:14px;
+    padding:12px;
+    border-radius:10px;
+    display:none;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.message.show{
+    display:block;
+}
+
+.message.success{
+    background:rgba(0,208,132,.1);
+    border:1px solid rgba(0,208,132,.3);
+    color:#62e9b0;
+}
+
+.message.error{
+    background:rgba(255,77,77,.1);
+    border:1px solid rgba(255,77,77,.3);
+    color:#ff9292;
+}
+
+/* ================= DASHBOARD ================= */
+
+.balance-card{
+    background:
+        radial-gradient(circle at top right,rgba(255,47,146,.25),transparent 45%),
+        linear-gradient(145deg,#1b0713,#090909);
+    border:1px solid rgba(255,47,146,.25);
+}
+
+.balance-label{
+    color:#999;
+    font-size:13px;
+}
+
+.balance-value{
+    font-size:38px;
+    font-weight:800;
+    color:var(--gold);
+    margin:8px 0 18px;
+}
+
+.user-name{
+    color:#ddd;
+    font-size:14px;
+}
+
+/* ================= SORTEIOS ================= */
+
+.draw-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    gap:12px;
+}
+
+.draw-card{
+    background:#090909;
+    border:1px solid #2b2b2b;
+    border-radius:14px;
+    padding:17px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.draw-card:hover{
+    border-color:var(--pink);
+}
+
+.draw-card.selected{
+    border-color:var(--gold);
+    box-shadow:0 0 20px rgba(255,215,0,.1);
+}
+
+.draw-id{
+    font-size:12px;
+    color:#777;
+}
+
+.draw-time{
+    font-size:25px;
+    font-weight:800;
+    color:white;
+    margin:6px 0;
+}
+
+.draw-status{
+    display:inline-block;
+    padding:5px 8px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:800;
+}
+
+.status-open{
+    color:#00d084;
+    background:rgba(0,208,132,.1);
+}
+
+.status-closed{
+    color:#ff5555;
+    background:rgba(255,85,85,.1);
+}
+
+.status-done{
+    color:#aaa;
+    background:#202020;
+}
+
+/* ================= LOTTERY BALLS ================= */
+
+.selected-draw{
+    margin-bottom:15px;
+    padding:12px;
+    background:#0a0a0a;
+    border-radius:10px;
+    border:1px solid #252525;
+    font-size:13px;
+}
+
+.number-grid{
+    display:grid;
+    grid-template-columns:repeat(9,1fr);
+    gap:8px;
+}
+
+.number{
+    aspect-ratio:1;
+    border-radius:50%;
+    border:1px solid #353535;
+    background:#101010;
+    color:#ddd;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-weight:700;
+    font-size:13px;
+    transition:.15s;
+}
+
+.number:hover{
+    border-color:var(--pink);
+    color:white;
+}
+
+.number.selected{
+    background:linear-gradient(135deg,var(--pink),#b90060);
+    border-color:#ff79b5;
+    color:white;
+    box-shadow:0 0 14px rgba(255,47,146,.45);
+}
+
+.bet-info{
+    margin:18px 0;
+    display:flex;
+    justify-content:space-between;
+    padding:13px;
+    border-radius:10px;
+    background:#080808;
+}
+
+.bet-info span:last-child{
+    color:var(--gold);
+    font-weight:800;
+}
+
+/* ================= ACTIONS ================= */
+
+.action-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.action-btn{
+    padding:14px 10px;
+    background:#101010;
+    border:1px solid #292929;
+    color:#ddd;
+    border-radius:12px;
+    cursor:pointer;
+    font-family:inherit;
+    font-weight:700;
+}
+
+.action-btn:hover{
+    border-color:var(--pink);
+    color:white;
+}
+
+/* ================= LISTAS ================= */
+
+.list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.list-item{
+    padding:13px;
+    border-radius:11px;
+    background:#090909;
+    border:1px solid #242424;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.list-main{
+    min-width:0;
+}
+
+.list-title{
+    font-size:13px;
+    font-weight:700;
+}
+
+.list-sub{
+    color:#777;
+    font-size:11px;
+    margin-top:4px;
+}
+
+.amount{
+    font-weight:800;
+    color:var(--gold);
+    white-space:nowrap;
+}
+
+.empty{
+    padding:25px;
+    text-align:center;
+    color:#777;
+    font-size:13px;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:2000;
+    background:rgba(0,0,0,.78);
+    backdrop-filter:blur(8px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:100%;
+    max-width:440px;
+    background:#151515;
+    border:1px solid #333;
+    border-radius:18px;
+    padding:23px;
+    box-shadow:0 20px 60px rgba(0,0,0,.7);
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.modal-header h3{
+    margin:0;
+}
+
+.close{
+    width:34px;
+    height:34px;
+    border:0;
+    border-radius:50%;
+    background:#292929;
+    color:#fff;
+    cursor:pointer;
+}
+
+/* ================= NAV ================= */
+
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:1500;
+    background:rgba(5,5,5,.96);
+    backdrop-filter:blur(15px);
+    border-top:1px solid #242424;
+    display:none;
+}
+
+.nav-inner{
+    max-width:700px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+}
+
+.nav-btn{
+    padding:10px 5px;
+    border:0;
+    background:transparent;
+    color:#777;
+    font-family:inherit;
+    font-size:10px;
+    cursor:pointer;
+}
+
+.nav-btn .nav-icon{
+    display:block;
+    font-size:19px;
+    margin-bottom:4px;
+}
+
+.nav-btn.active{
+    color:var(--pink);
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+    margin-top:30px;
+    padding:30px 20px 80px;
+    text-align:center;
+    border-top:1px solid #222;
+    color:#666;
+    font-size:11px;
+    line-height:1.7;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:800px){
+
+    .col-8,
+    .col-6,
+    .col-4{
+        grid-column:span 12;
     }
-  </script>
-  <style>
-    html { scroll-behavior: smooth; }
-    body { overflow-x: hidden; }
-    .modal { transition: opacity 0.25s ease; }
-    .modal-box { animation: modalEntrada 0.25s ease; }
-    @keyframes modalEntrada {
-      from { opacity: 0; transform: translateY(20px) scale(0.97); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+
+    .number-grid{
+        grid-template-columns:repeat(9,1fr);
+        gap:6px;
     }
-    .slide-wrapper { position: relative; overflow: hidden; width: 100%; }
-    .slide-track { display: flex; transition: transform 0.45s ease-in-out; width: 100%; }
-    .slide-item { min-width: 100%; width: 100%; flex-shrink: 0; }
-    .slide-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
-    .slide-dot { width: 7px; height: 7px; border-radius: 999px; background: rgba(255,255,255,0.55); transition: all 0.25s ease; }
-    .slide-dot.active { width: 22px; background: white; }
-    .product-image { background: #f1f5f9; }
-    .loading-spinner {
-      width: 25px; height: 25px; border: 3px solid #dcfce7;
-      border-top-color: #16a34a; border-radius: 50%; animation: girar 0.8s linear infinite;
+
+    .number{
+        font-size:11px;
     }
-    @keyframes girar { to { transform: rotate(360deg); } }
-    .toast { animation: toastEntrada 0.3s ease; }
-    @keyframes toastEntrada {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .hero{
+        padding-top:32px;
     }
-    .line-clamp-2 {
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+
+    .bottom-nav{
+        display:block;
     }
-  </style>
+
+    footer{
+        padding-bottom:100px;
+    }
+
+    .header-user{
+        display:flex;
+    }
+
+    .balance-mini{
+        font-size:11px;
+        padding:7px 10px;
+    }
+}
+
+@media(max-width:430px){
+
+    .number-grid{
+        grid-template-columns:repeat(9,1fr);
+        gap:4px;
+    }
+
+    .number{
+        font-size:10px;
+    }
+
+    .card{
+        padding:17px;
+    }
+
+    .balance-value{
+        font-size:31px;
+    }
+}
+</style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-  <!-- HEADER -->
-  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between min-h-20 gap-4">
-        <!-- LOGO -->
-        <div class="flex items-center gap-3 min-w-0 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-          <div class="w-12 h-12 shrink-0 bg-gradient-to-tr from-brand-600 to-emerald-400 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-brand-500/30">
-            M1
-          </div>
-          <div class="min-w-0">
-            <span class="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-slate-900 via-brand-700 to-slate-800 bg-clip-text text-transparent">
-              Moz1Vendas
-            </span>
-            <span class="block text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 -mt-1">
-              Marketplace Digital
-            </span>
-          </div>
-        </div>
+<body>
 
-        <!-- ÁREA DO VENDEDOR -->
-        <div class="flex items-center gap-2">
-          <!-- TERMOS -->
-          <button onclick="openModal('modalTermos')" class="text-xs font-semibold text-slate-500 hover:text-slate-800 hidden md:block mr-2">
-            <i class="fa-solid fa-file-contract mr-1"></i> Termos & Condições
-          </button>
+<!-- ================= HEADER ================= -->
 
-          <!-- SESSÃO LOGADA -->
-          <div id="sessaoVendedor" class="hidden items-center gap-2">
-            <div class="hidden sm:block text-right mr-1">
-              <span id="nomeLojaSessao" class="block text-xs font-bold text-slate-700"></span>
-              <span class="text-[9px] text-slate-400">Vendedor</span>
+<header>
+    <div class="header-inner">
+
+        <div class="logo">
+            <div class="logo-icon">★</div>
+            <div class="logo-text">
+                Sorte<span>Moz</span>
             </div>
-            <button onclick="openModal('modalAddProduto')" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-3 sm:px-4 py-2.5 rounded-full shadow transition-all">
-              <i class="fa-solid fa-plus mr-1"></i>
-              <span class="hidden sm:inline">Adicionar Produto</span>
-              <span class="sm:hidden">Produto</span>
-            </button>
-            <button onclick="terminarSessao()" class="text-xs text-red-500 hover:underline px-2">Sair</button>
-          </div>
-
-          <!-- VISITANTE -->
-          <div id="botoesVisitante" class="flex items-center gap-2">
-            <button onclick="openModal('modalLogin')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold px-3 sm:px-4 py-2.5 rounded-full transition-all">
-              <i class="fa-solid fa-right-to-bracket mr-1"></i>
-              <span class="hidden sm:inline">Entrar na Loja</span>
-              <span class="sm:hidden">Entrar</span>
-            </button>
-            <button onclick="openModal('modalRegistro')" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-4 sm:px-5 py-2.5 rounded-full transition-all shadow-md shadow-brand-500/20">
-              <i class="fa-solid fa-store mr-1"></i>
-              <span class="hidden sm:inline">Criar Loja</span>
-              <span class="sm:hidden">Criar</span>
-            </button>
-          </div>
         </div>
-      </div>
+
+        <div class="header-user" id="header-user">
+            <div class="balance-mini" id="mini-balance">
+                0 MT
+            </div>
+        </div>
+
     </div>
-  </header>
+</header>
 
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <section class="mb-8">
-      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-        <div>
-          <p class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Marketplace de Moçambique</p>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Produtos e lojas</h1>
-          <p class="text-sm text-slate-500 mt-1">Descubra produtos publicados por vendedores verificados no Moz1Vendas.</p>
-        </div>
-        <button onclick="carregarLojas(true)" class="self-start sm:self-auto text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 px-4 py-2.5 rounded-full transition-all">
-          <i class="fa-solid fa-rotate mr-1"></i> Atualizar
-        </button>
-      </div>
-    </section>
 
-    <!-- ESTADOS DA PÁGINA -->
-    <section id="estadoCarregamento" class="py-16 flex flex-col items-center justify-center">
-      <div class="loading-spinner mb-4"></div>
-      <p class="text-sm font-semibold text-slate-500">A carregar lojas e produtos...</p>
-      <p class="text-xs text-slate-400 mt-1">Conectando ao banco de dados</p>
-    </section>
+<!-- ================= HERO ================= -->
 
-    <section id="estadoErro" class="hidden py-12">
-      <div class="max-w-lg mx-auto bg-red-50 border border-red-100 rounded-3xl p-6 text-center">
-        <div class="w-14 h-14 mx-auto rounded-full bg-red-100 flex items-center justify-center text-red-600 text-xl mb-4">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-        </div>
-        <h3 class="font-extrabold text-red-800">Não foi possível carregar as lojas</h3>
-        <p id="mensagemErro" class="text-xs text-red-600 mt-2">O servidor não respondeu corretamente.</p>
-        <button onclick="carregarLojas(true)" class="mt-5 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-full text-xs font-bold">Tentar novamente</button>
-      </div>
-    </section>
+<section class="hero">
 
-    <section id="seccaoBlocosEmpresas" class="hidden space-y-10"></section>
-
-    <section id="estadoVazio" class="hidden py-16">
-      <div class="text-center">
-        <div class="w-20 h-20 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-3xl mb-5">
-          <i class="fa-solid fa-store"></i>
-        </div>
-        <h3 class="text-lg font-extrabold text-slate-700">Nenhuma loja registada ainda</h3>
-        <p class="text-sm text-slate-400 mt-2">Seja o primeiro vendedor a criar a sua loja no Moz1Vendas.</p>
-        <button onclick="openModal('modalRegistro')" class="mt-5 bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-full text-xs font-bold shadow">
-          <i class="fa-solid fa-store mr-1"></i> Criar Minha Loja
-        </button>
-      </div>
-    </section>
-  </main>
-
-  <!-- RODAPÉ DA PÁGINA -->
-  <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-slate-500 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div>
-        <p class="font-bold text-slate-800">Moz1Vendas Marketplace</p>
-        <p class="text-[11px] text-slate-400">A Moz1Vendas é uma plataforma intermediadora de anúncios. Cada vendedor é responsável por seus produtos.</p>
-      </div>
-      <div class="flex items-center gap-4">
-        <button onclick="openModal('modalTermos')" class="hover:underline font-semibold text-brand-700">Termos e Condições de Uso</button>
-      </div>
+    <div class="hero-badge">
+        LOTO 5/45
     </div>
-  </footer>
 
-  <!-- MODAL PAGAMENTO NETSHOP -->
-  <div id="modalPagamentoNetshop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative modal-box">
-      <button onclick="closeModal('modalPagamentoNetshop')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
-        <i class="fa-solid fa-xmark text-xl"></i>
-      </button>
-      <div class="pr-8">
-        <span class="inline-block px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-[10px] font-extrabold uppercase mb-2">Checkout Seguro NetShop</span>
-        <h3 id="netshopTituloProduto" class="text-lg font-extrabold text-slate-900">Pagar Produto</h3>
-        <p class="text-xs text-slate-500 mt-0.5">Valor: <strong id="netshopValorProduto" class="text-brand-700 text-sm">0,00 Mtn</strong></p>
-      </div>
-      
-      <form onsubmit="submeterPagamentoNetshop(event)" class="space-y-4 text-xs">
-        <input type="hidden" id="netshopProdutoId">
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">Número de Telefone (M-Pesa / NetShop)</label>
-          <input type="tel" required id="netshopTelefone" placeholder="84... / 85... / +258..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-          <p class="text-[10px] text-slate-400 mt-1">Insira o número onde receberá a notificação de pagamento.</p>
-        </div>
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">Método de Pagamento</label>
-          <select id="netshopMetodo" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-            <option value="mpesa">M-Pesa</option>
-            <option value="emola">e-Mola</option>
-          </select>
-        </div>
+    <h1>
+        Sua sorte.<br>
+        Seu <span>momento.</span>
+    </h1>
 
-        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[10px] text-slate-500 leading-relaxed">
-          <i class="fa-solid fa-shield-halved text-brand-600 mr-1"></i>
-          Pagamento processado via NetShop. Garantia de reembolso Moz1Vendas caso o produto não seja entregue.
-        </div>
+    <p>
+        Escolha 5 números, participe dos sorteios
+        e acompanhe seus bilhetes e resultados.
+    </p>
 
-        <button type="submit" id="btnSubmitNetshop" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all text-sm">
-          Pagar Agora via NetShop
-        </button>
-      </form>
-    </div>
-  </div>
+</section>
 
-  <!-- MODAL TERMOS E CONDIÇÕES -->
-  <div id="modalTermos" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-4 shadow-2xl relative max-h-[85vh] overflow-y-auto modal-box text-slate-700">
-      <button onclick="closeModal('modalTermos')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
-        <i class="fa-solid fa-xmark text-xl"></i>
-      </button>
-      <div class="border-b border-slate-100 pb-3">
-        <h3 class="text-xl font-extrabold text-slate-900">Termos e Condições de Uso</h3>
-        <p class="text-xs text-slate-400">Regras de utilização da plataforma Moz1Vendas</p>
-      </div>
-      
-      <div class="space-y-4 text-xs leading-relaxed">
-        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 font-medium">
-          <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-          Ao utilizar a nossa plataforma, concorda inteira e expressamente com todos os nossos Termos e Condições.
-        </div>
 
-        <h4 class="font-extrabold text-slate-900 text-sm">1. Natureza da Plataforma (Marketplace)</h4>
-        <p>A Moz1Vendas atua exclusivamente como uma plataforma digital de intermediação de anúncios (marketplace). A Moz1Vendas <strong>não é a proprietária nem fornecedora dos produtos visíveis</strong> e não realiza vendas diretas, sendo os itens publicados de integral responsabilidade de cada vendedor cadastrado.</p>
+<!-- ================= AUTENTICAÇÃO ================= -->
 
-        <h4 class="font-extrabold text-slate-900 text-sm">2. Proibição de Fraudes e Produtos Ilícitos</h4>
-        <p>É estritamente proibida a publicação, comercialização ou tentativa de venda de <strong>produtos roubados, furtados, falsificados ou a prática de quaisquer atividades fraudulentas</strong>. Lojas ou anúncios suspeitos serão banidos permanentemente da plataforma e denunciados às autoridades competentes.</p>
+<section id="auth-screen" class="container">
 
-        <h4 class="font-extrabold text-slate-900 text-sm">3. Isenção de Responsabilidade</h4>
-        <p>Em caso de inconformidade entre o produto anunciado e o entregue, defeito, avaria ou atraso, a responsabilidade é <strong>total e exclusiva do vendedor</strong>. A Moz1Vendas não assume responsabilidade civil nem penal sobre transações diretas acertadas fora do nosso gateway oficial.</p>
+    <div class="auth-wrapper">
 
-        <h4 class="font-extrabold text-slate-900 text-sm">4. Política de Reembolsos</h4>
-        <p>A Moz1Vendas <strong>não realiza reembolsos</strong> em negociações e pagamentos diretos efetuados ao vendedor (por exemplo, transações acertadas diretamente via WhatsApp). A única exceção de reembolso pela plataforma aplica-se a pagamentos processados via <strong>NetShop</strong>, caso o comprador comprove o não recebimento formal do produto dentro do prazo estabelecido.</p>
-      </div>
+        <div class="card">
 
-      <div class="pt-4 border-t border-slate-100 text-right">
-        <button onclick="closeModal('modalTermos')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-xl text-xs">
-          Compreendi e Aceito
-        </button>
-      </div>
-    </div>
-  </div>
+            <div class="tabs">
 
-  <!-- MODAL REGISTO -->
-  <div id="modalRegistro" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto modal-box">
-      <button onclick="closeModal('modalRegistro')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
-        <i class="fa-solid fa-xmark text-xl"></i>
-      </button>
-      <div class="pr-8">
-        <h3 class="text-xl font-extrabold text-slate-900">Registo de Empresa / Marca</h3>
-        <p class="text-xs text-slate-500 mt-1">Crie a sua loja e publique os seus produtos.</p>
-      </div>
-      <form id="formRegistro" onsubmit="submeterRegistro(event)" class="space-y-4 text-xs">
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">Nome Completo</label>
-          <input type="text" required id="regNome" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="font-bold text-slate-700 block mb-1">E-mail</label>
-            <input type="email" required id="regEmail" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-          <div>
-            <label class="font-bold text-slate-700 block mb-1">Contacto (WhatsApp)</label>
-            <input type="tel" required id="regTelefone" placeholder="+258..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="font-bold text-slate-700 block mb-1">Nome da Empresa / Marca</label>
-            <input type="text" required id="regEmpresa" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-          <div>
-            <label class="font-bold text-slate-700 block mb-1">Link do Logotipo</label>
-            <input type="url" required id="regLogo" placeholder="https://..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="font-bold text-slate-700 block mb-1">Data de Nascimento</label>
-            <input type="date" required id="regDataNasc" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-          <div>
-            <label class="font-bold text-slate-700 block mb-1">BI N°</label>
-            <input type="text" required id="regBI" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-        </div>
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">PIN de Acesso (4-6 dígitos)</label>
-          <input type="password" required id="regPin" maxlength="6" minlength="4" inputmode="numeric" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-        </div>
-
-        <div class="flex items-start gap-2 pt-1">
-          <input type="checkbox" required id="regAceiteTermos" class="mt-0.5 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
-          <label for="regAceiteTermos" class="text-[11px] text-slate-500 leading-tight">
-            Li e aceito os <button type="button" onclick="openModal('modalTermos')" class="text-brand-700 underline font-semibold">Termos e Condições</button> do Moz1Vendas. Declaramos proibida a venda de itens roubados.
-          </label>
-        </div>
-
-        <button type="submit" id="btnSubmitReg" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all text-sm">
-          Criar Minha Empresa
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL LOGIN -->
-  <div id="modalLogin" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-6 shadow-2xl relative modal-box">
-      <button onclick="closeModal('modalLogin')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
-        <i class="fa-solid fa-xmark text-xl"></i>
-      </button>
-      <div class="pr-8">
-        <h3 class="text-xl font-extrabold text-slate-900">Entrar na Sua Loja</h3>
-        <p class="text-xs text-slate-500 mt-1">Aceda ao painel do vendedor.</p>
-      </div>
-      <form onsubmit="submeterLogin(event)" class="space-y-4 text-xs">
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">Contacto (WhatsApp)</label>
-          <input type="tel" id="loginTelefone" required class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-        </div>
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">PIN de Acesso</label>
-          <input type="password" id="loginPin" required maxlength="6" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-        </div>
-        <button type="submit" id="btnLogin" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-all">
-          Aceder ao Painel
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL ADICIONAR PRODUTO -->
-  <div id="modalAddProduto" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto modal-box">
-      <button onclick="closeModal('modalAddProduto')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
-        <i class="fa-solid fa-xmark text-xl"></i>
-      </button>
-      <div class="pr-8">
-        <h3 class="text-xl font-extrabold text-slate-900">Novo Produto</h3>
-        <p class="text-xs text-slate-500 mt-1">Publique um produto na sua loja.</p>
-      </div>
-      <form onsubmit="submeterProduto(event)" class="space-y-4 text-xs">
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">Nome do Produto</label>
-          <input type="text" id="prodNome" required class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-        </div>
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">Descrição</label>
-          <textarea id="prodDescricao" rows="3" placeholder="Descrição do produto..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 resize-none"></textarea>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="font-bold text-slate-700 block mb-1">Preço (Mtn)</label>
-            <input type="number" id="prodPreco" required min="0" step="0.01" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-          <div>
-            <label class="font-bold text-slate-700 block mb-1">Tipo de Produto</label>
-            <select id="prodTipo" onchange="toggleLinkDigital(this.value)" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-              <option value="FISICO">Físico</option>
-              <option value="DIGITAL">Digital</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">URL da Imagem</label>
-          <input type="url" id="prodImagem" required placeholder="https://..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-        </div>
-        <div>
-          <label class="font-bold text-slate-700 block mb-1">WhatsApp do Vendedor para o Produto</label>
-          <input type="tel" id="prodWhatsapp" placeholder="+258..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-        </div>
-        <div id="divLinkDigital" class="hidden">
-          <label class="font-bold text-slate-700 block mb-1">Link de Download / Ficheiro Digital</label>
-          <input type="url" id="prodLinkDigital" placeholder="https://..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
-        </div>
-        <button type="submit" id="btnSubmitProduto" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all">
-          Publicar Produto
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- TOAST -->
-  <div id="toast" class="fixed bottom-5 right-5 z-[200] hidden max-w-sm">
-    <div id="toastBox" class="toast bg-slate-900 text-white rounded-2xl shadow-2xl px-5 py-4 flex items-start gap-3">
-      <i id="toastIcon" class="fa-solid fa-circle-check text-brand-400 mt-0.5"></i>
-      <div>
-        <p id="toastTitle" class="font-bold text-sm">Concluído</p>
-        <p id="toastMessage" class="text-xs text-slate-300 mt-1"></p>
-      </div>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT INTEGRADO AO GOOGLE APPS SCRIPT -->
-  <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwhpTqzTJFu0WxwylPO_xCLVnz-Sxd-3yRpwXO8WCYbvcuCekoSnJ1G_XCtM7_DAcjtHA/exec";
-    const SLIDE_INTERVALO = 6000;
-
-    let lojas = [];
-    let usuarioLogado = null;
-    let timersSlideshow = {};
-
-    /* FUNÇÕES DE MODAL */
-    function openModal(id) {
-      const modal = document.getElementById(id);
-      if (!modal) return;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      document.body.classList.add('overflow-hidden');
-    }
-
-    function closeModal(id) {
-      const modal = document.getElementById(id);
-      if (!modal) return;
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      document.body.classList.remove('overflow-hidden');
-    }
-
-    document.querySelectorAll('.modal').forEach(function(modal) {
-      modal.addEventListener('click', function(event) {
-        if (event.target === modal) closeModal(modal.id);
-      });
-    });
-
-    /* TOAST NOTIFICATION */
-    function mostrarToast(mensagem, tipo = 'success') {
-      const toast = document.getElementById('toast');
-      const title = document.getElementById('toastTitle');
-      const message = document.getElementById('toastMessage');
-      const icon = document.getElementById('toastIcon');
-
-      if (!toast) return;
-      message.innerText = mensagem;
-      if (tipo === 'error') {
-        title.innerText = 'Erro';
-        icon.className = 'fa-solid fa-circle-exclamation text-red-400 mt-0.5';
-      } else {
-        title.innerText = 'Concluído';
-        icon.className = 'fa-solid fa-circle-check text-brand-400 mt-0.5';
-      }
-      toast.classList.remove('hidden');
-      clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(function() {
-        toast.classList.add('hidden');
-      }, 4000);
-    }
-
-    /* UTILITÁRIOS */
-    function escaparHTML(valor) {
-      if (valor === null || valor === undefined) return "";
-      return String(valor)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    function formatarPreco(valor) {
-      const numero = Number(valor);
-      if (!Number.isFinite(numero)) return '0';
-      return numero.toLocaleString('pt-MZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-    }
-
-    function normalizarWhatsApp(numero) {
-      if (!numero) return "";
-      let n = String(numero).trim().replace(/[^\d+]/g, "");
-      if (n.startsWith('00')) n = '+' + n.substring(2);
-      if (!n.startsWith('+') && n.length === 9) n = '+258' + n;
-      return n;
-    }
-
-    function gerarLinkWhatsApp(numero, nomeProduto) {
-      const n = normalizarWhatsApp(numero);
-      if (!n) return "";
-      const telefone = n.replace(/\+/g, "");
-      const mensagem = 'Olá! Tenho interesse no produto "' + (nomeProduto || "") + '" publicado no Moz1Vendas.';
-      return 'https://wa.me/' + telefone + '?text=' + encodeURIComponent(mensagem);
-    }
-
-    function validarURL(url) {
-      if (!url) return false;
-      try {
-        const u = new URL(url);
-        return u.protocol === 'http:' || u.protocol === 'https:';
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function toggleLinkDigital(valor) {
-      const div = document.getElementById('divLinkDigital');
-      const input = document.getElementById('prodLinkDigital');
-      if (!div || !input) return;
-      if (valor === 'DIGITAL') {
-        div.classList.remove('hidden');
-      } else {
-        div.classList.add('hidden');
-        input.value = "";
-      }
-    }
-
-    /* CONTROLE DE VISIBILIDADE DOS ESTADOS */
-    function mostrarCarregamento() {
-      document.getElementById('estadoCarregamento').classList.remove('hidden');
-      document.getElementById('estadoErro').classList.add('hidden');
-      document.getElementById('estadoVazio').classList.add('hidden');
-      document.getElementById('seccaoBlocosEmpresas').classList.add('hidden');
-    }
-
-    function mostrarErro(mensagem) {
-      document.getElementById('estadoCarregamento').classList.add('hidden');
-      document.getElementById('estadoVazio').classList.add('hidden');
-      document.getElementById('seccaoBlocosEmpresas').classList.add('hidden');
-      document.getElementById('estadoErro').classList.remove('hidden');
-      document.getElementById('mensagemErro').innerText = mensagem || 'Falha ao comunicar com o servidor.';
-    }
-
-    function mostrarVazio() {
-      document.getElementById('estadoCarregamento').classList.add('hidden');
-      document.getElementById('estadoErro').classList.add('hidden');
-      document.getElementById('seccaoBlocosEmpresas').classList.add('hidden');
-      document.getElementById('estadoVazio').classList.remove('hidden');
-    }
-
-    /* COMUNICAÇÃO COM GAS (API) */
-    async function gasGet(action, parametros = {}) {
-      let url = GAS_URL + '?action=' + encodeURIComponent(action);
-      Object.keys(parametros).forEach(function(chave) {
-        const valor = parametros[chave];
-        if (valor !== undefined && valor !== null && valor !== "") {
-          url += '&' + encodeURIComponent(chave) + '=' + encodeURIComponent(valor);
-        }
-      });
-      const resposta = await fetch(url, { method: 'GET', cache: 'no-store' });
-      if (!resposta.ok) throw new Error('Servidor respondeu com HTTP ' + resposta.status);
-      const texto = await resposta.text();
-      try { return JSON.parse(texto); } catch (e) { throw new Error('O GAS não devolveu JSON válido.'); }
-    }
-
-    async function gasPost(payload) {
-      const resposta = await fetch(GAS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-        body: JSON.stringify(payload)
-      });
-      if (!resposta.ok) throw new Error('Servidor respondeu com HTTP ' + resposta.status);
-      const texto = await resposta.text();
-      try { return JSON.parse(texto); } catch (e) { throw new Error('Resposta inválida do Google Apps Script.'); }
-    }
-
-    /* CARREGAR DADOS */
-    async function carregarLojas(mostrarMensagem = false) {
-      if (mostrarMensagem) {
-        mostrarToast('A atualizar lojas e produtos...');
-        mostrarCarregamento();
-      }
-      try {
-        const resultado = await gasGet('homeBlocos');
-        if (!resultado || resultado.ok !== true) {
-          throw new Error(resultado && resultado.erro ? resultado.erro : 'Resposta inválida do GAS.');
-        }
-        const blocos = Array.isArray(resultado.blocos) ? resultado.blocos : [];
-        lojas = normalizarBlocosRecebidos(blocos);
-        if (lojas.length === 0) {
-          mostrarVazio();
-          return;
-        }
-        renderizarBlocos(lojas);
-        if (mostrarMensagem) mostrarToast('Dados atualizados com sucesso.');
-      } catch (erro) {
-        console.error('Erro ao carregar lojas:', erro);
-        mostrarErro(erro.message || 'Não foi possível carregar as lojas.');
-      }
-    }
-
-    function normalizarBlocosRecebidos(blocos) {
-      return blocos.map(function(bloco) {
-        const produtos = Array.isArray(bloco.slideshowProdutos) ? bloco.slideshowProdutos : [];
-        return {
-          vendedorId: bloco.vendedorId || bloco.id || extrairVendedorDoLink(bloco.linkLoja),
-          empresa: bloco.empresa || 'Loja',
-          logo: bloco.logo || "",
-          linkLoja: bloco.linkLoja || '#',
-          produtoDestaque: bloco.produtoDestaque || null,
-          produtosLoja: produtos.map(function(produto) {
-            return {
-              id: produto.produtoId || produto.id || "",
-              produtoId: produto.produtoId || produto.id || "",
-              nome: produto.nome || 'Produto',
-              preco: produto.preco || 0,
-              img: produto.imagemUrl || produto.img || "",
-              imagemUrl: produto.imagemUrl || produto.img || "",
-              descricao: produto.descricao || "",
-              tipo: produto.tipo || "",
-              whatsapp: produto.whatsapp || "",
-              downloadUrl: produto.downloadUrl || produto.linkDigital || "",
-              metodoPagamento: produto.metodoPagamento || ""
-            };
-          })
-        };
-      });
-    }
-
-    function extrairVendedorDoLink(link) {
-      if (!link) return "";
-      try {
-        const params = new URLSearchParams(link.replace('?', ""));
-        return params.get('vendedor') || "";
-      } catch (e) { return ""; }
-    }
-
-    /* RENDERIZAÇÃO NA TELA */
-    function renderizarBlocos(listaLojas) {
-      pararTodosSlideshows();
-      const container = document.getElementById('seccaoBlocosEmpresas');
-      if (!listaLojas || listaLojas.length === 0) {
-        mostrarVazio();
-        return;
-      }
-      document.getElementById('estadoCarregamento').classList.add('hidden');
-      document.getElementById('estadoErro').classList.add('hidden');
-      document.getElementById('estadoVazio').classList.add('hidden');
-      container.classList.remove('hidden');
-
-      container.innerHTML = listaLojas.map(function(loja, indice) {
-        return criarBlocoLoja(loja, indice);
-      }).join("");
-
-      listaLojas.forEach(function(loja, indice) {
-        if (loja.produtosLoja && loja.produtosLoja.length > 1) {
-          iniciarSlideshow(indice, loja.produtosLoja.length);
-        }
-      });
-    }
-
-    function criarBlocoLoja(loja, indice) {
-      const produtos = Array.isArray(loja.produtosLoja) ? loja.produtosLoja : [];
-      const logo = validarURL(loja.logo) ? loja.logo : "";
-
-      if (produtos.length === 0) {
-        return `
-          <article class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-            <div class="flex items-center justify-between flex-wrap gap-4 pb-5 border-b border-slate-100">
-              <div class="flex items-center gap-4">
-                ${logo ? `<img src="${escaparHTML(logo)}" alt="${escaparHTML(loja.empresa)}" class="w-14 h-14 rounded-2xl object-cover ring-2 ring-brand-500/20 shadow-md">` : `<div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl font-black">${escaparHTML(String(loja.empresa || 'L').charAt(0).toUpperCase())}</div>`}
-                <div>
-                  <h3 class="text-lg font-bold text-slate-900">${escaparHTML(loja.empresa)}</h3>
-                  <span class="text-xs text-slate-400">Loja Oficial Moz1Vendas</span>
+                <div class="tab active"
+                     id="tab-register"
+                     onclick="mostrarAuth('register')">
+                    Criar conta
                 </div>
-              </div>
-            </div>
-            <div class="py-8 text-center">
-              <div class="w-14 h-14 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-xl">
-                <i class="fa-solid fa-box-open"></i>
-              </div>
-              <p class="text-xs text-slate-400 mt-3">Nenhum produto publicado nesta loja.</p>
-            </div>
-          </article>
-        `;
-      }
 
-      const slides = produtos.map(function(produto, produtoIndex) {
-        return criarSlideProduto(produto, indice, produtoIndex);
-      }).join("");
+                <div class="tab"
+                     id="tab-login"
+                     onclick="mostrarAuth('login')">
+                    Entrar
+                </div>
 
-      const dots = produtos.map(function(produto, produtoIndex) {
-        return `<button type="button" onclick="irParaSlide(${indice}, ${produtoIndex})" class="slide-dot ${produtoIndex === 0 ? 'active' : ''}" aria-label="Produto ${produtoIndex + 1}"></button>`;
-      }).join("");
-
-      return `
-        <article class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
-          <div class="p-5 sm:p-6 flex items-center justify-between flex-wrap gap-4 border-b border-slate-100">
-            <div class="flex items-center gap-4">
-              ${logo ? `<img src="${escaparHTML(logo)}" alt="${escaparHTML(loja.empresa)}" class="w-14 h-14 rounded-2xl object-cover ring-2 ring-brand-500/20 shadow-md">` : `<div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl font-black">${escaparHTML(String(loja.empresa || 'L').charAt(0).toUpperCase())}</div>`}
-              <div>
-                <h3 class="text-lg font-bold text-slate-900">${escaparHTML(loja.empresa)}</h3>
-                <span class="text-xs text-slate-400">Loja Oficial Moz1Vendas</span>
-              </div>
-            </div>
-          </div>
-          <div class="relative bg-slate-950">
-            <div id="slideWrapper-${indice}" class="slide-wrapper">
-              <div id="slideTrack-${indice}" class="slide-track">
-                ${slides}
-              </div>
-              ${produtos.length > 1 ? `<div id="slideDots-${indice}" class="slide-dots">${dots}</div>` : ''}
-            </div>
-            ${produtos.length > 1 ? `
-              <button onclick="slideAnterior(${indice})" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center">
-                <i class="fa-solid fa-chevron-left"></i>
-              </button>
-              <button onclick="slideSeguinte(${indice})" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center">
-                <i class="fa-solid fa-chevron-right"></i>
-              </button>
-            ` : ''}
-          </div>
-          <div class="px-5 sm:px-6 py-4 border-t border-slate-100">
-            <div class="flex items-center justify-between gap-3">
-              <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Apresentação automática</span>
-              ${produtos.length > 1 ? `<span class="text-[10px] text-slate-400"><i class="fa-regular fa-clock mr-1"></i>6 segundos</span>` : ''}
-            </div>
-          </div>
-        </article>
-      `;
-    }
-
-    function criarSlideProduto(produto, lojaIndex, produtoIndex) {
-      const imagem = validarURL(produto.img) ? produto.img : "";
-      const nome = produto.nome || 'Produto';
-      const preco = formatarPreco(produto.preco);
-      const whatsapp = produto.whatsapp || "";
-      const linkWhatsApp = gerarLinkWhatsApp(whatsapp, nome);
-
-      return `
-        <div class="slide-item">
-          <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[430px]">
-            <div class="relative bg-slate-900 min-h-[300px] lg:min-h-[430px]">
-              ${imagem ? `<img src="${escaparHTML(imagem)}" alt="${escaparHTML(nome)}" class="w-full h-full min-h-[300px] lg:min-h-[430px] object-cover product-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"><div class="hidden absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500 text-5xl"><i class="fa-solid fa-image"></i></div>` : `<div class="absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500 text-5xl"><i class="fa-solid fa-image"></i></div>`}
-              <div class="absolute top-4 left-4 bg-black/50 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-full">
-                Produto ${produtoIndex + 1}
-              </div>
             </div>
 
-            <div class="bg-white p-6 sm:p-8 flex flex-col justify-center">
-              <span class="inline-flex self-start items-center gap-1 bg-brand-50 text-brand-700 px-3 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider mb-4">
-                <i class="fa-solid fa-tag"></i> ${escaparHTML(produto.tipo || 'Produto')}
-              </span>
-              <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight line-clamp-2">${escaparHTML(nome)}</h2>
-              ${produto.descricao ? `<p class="text-sm text-slate-500 mt-3 line-clamp-2">${escaparHTML(produto.descricao)}</p>` : ''}
 
-              <div class="mt-5">
-                <span class="block text-[10px] uppercase tracking-widest font-bold text-slate-400">Preço</span>
-                <span class="text-3xl font-black text-brand-700">${preco} <small class="text-base font-bold">Mtn</small></span>
-              </div>
+            <!-- REGISTRO -->
 
-              <!-- BOTÕES DE AÇÃO: NETSHOP E WHATSAPP -->
-              <div class="flex flex-wrap gap-2 mt-6">
-                <!-- PAGAMENTO NETSHOP -->
-                <button type="button" onclick="abrirCheckoutNetshop('${escaparHTML(produto.produtoId)}', '${escaparHTML(nome)}', ${produto.preco})" class="flex-1 min-w-[130px] bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-3 rounded-xl text-center transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-1">
-                  <i class="fa-solid fa-wallet"></i> Pagar NetShop
+            <form id="register-form">
+
+                <div class="form-group">
+                    <label>Nome completo</label>
+                    <input
+                        type="text"
+                        id="reg-nome"
+                        placeholder="Seu nome"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        id="reg-email"
+                        placeholder="seu@email.com"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Número de telefone</label>
+                    <input
+                        type="text"
+                        id="reg-numero"
+                        placeholder="84xxxxxxx"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>PIN de 6 dígitos</label>
+                    <input
+                        type="password"
+                        id="reg-pin"
+                        maxlength="6"
+                        inputmode="numeric"
+                        pattern="[0-9]{6}"
+                        placeholder="••••••"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Idade</label>
+                    <input
+                        type="number"
+                        id="reg-idade"
+                        min="18"
+                        placeholder="18"
+                        required>
+                </div>
+
+                <button class="btn btn-primary"
+                        type="submit">
+                    CRIAR MINHA CONTA
                 </button>
 
-                <!-- WHATSAPP DIRETO -->
-                ${linkWhatsApp ? `
-                  <a href="${escaparHTML(linkWhatsApp)}" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[130px] bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-4 py-3 rounded-xl text-center transition-all flex items-center justify-center gap-1">
-                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
-                  </a>
-                ` : ''}
-              </div>
+            </form>
 
-              <div class="mt-5 flex items-center gap-2 text-[10px] text-slate-400">
-                <span class="w-2 h-2 rounded-full bg-brand-500"></span>
-                Produto publicado no Moz1Vendas
-              </div>
-            </div>
-          </div>
+
+            <!-- LOGIN -->
+
+            <form id="login-form" class="hidden">
+
+                <div class="form-group">
+                    <label>Número de telefone</label>
+                    <input
+                        type="text"
+                        id="login-numero"
+                        placeholder="Seu número"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>PIN de 6 dígitos</label>
+                    <input
+                        type="password"
+                        id="login-pin"
+                        maxlength="6"
+                        inputmode="numeric"
+                        placeholder="••••••"
+                        required>
+                </div>
+
+                <button class="btn btn-primary"
+                        type="submit">
+                    ENTRAR NO SORTE MOZ
+                </button>
+
+            </form>
+
+            <div id="auth-message" class="message"></div>
+
         </div>
-      `;
+
+    </div>
+
+</section>
+
+
+<!-- ================= APP ================= -->
+
+<section id="app-screen" class="container hidden">
+
+    <div class="grid">
+
+
+        <!-- SALDO -->
+
+        <div class="col-4">
+
+            <div class="card balance-card">
+
+                <div class="card-title">
+                    <div class="icon">💰</div>
+                    Minha carteira
+                </div>
+
+                <div class="balance-label">
+                    Saldo disponível
+                </div>
+
+                <div class="balance-value"
+                     id="balance">
+                    0 MT
+                </div>
+
+                <div class="user-name"
+                     id="welcome-name">
+                    Bem-vindo!
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AÇÕES -->
+
+        <div class="col-8">
+
+            <div class="card">
+
+                <div class="card-title">
+                    <div class="icon">⚡</div>
+                    Minha conta
+                </div>
+
+                <div class="action-grid">
+
+                    <button class="action-btn"
+                            onclick="abrirDeposito()">
+                        💳 Depositar
+                    </button>
+
+                    <button class="action-btn"
+                            onclick="abrirLevantamento()">
+                        💸 Levantar
+                    </button>
+
+                    <button class="action-btn"
+                            onclick="carregarBilhetes()">
+                        🎟️ Meus bilhetes
+                    </button>
+
+                    <button class="action-btn"
+                            onclick="carregarMovimentos()">
+                        📋 Movimentos
+                    </button>
+
+                    <button class="action-btn"
+                            onclick="carregarVencedores()">
+                        🏆 Vencedores
+                    </button>
+
+                    <button class="action-btn"
+                            onclick="atualizarTudo()">
+                        🔄 Atualizar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SORTEIOS -->
+
+        <div class="col-12">
+
+            <div class="card">
+
+                <div class="card-title">
+                    <div class="icon">🎰</div>
+                    Sorteios
+                </div>
+
+                <div id="draw-list"
+                     class="draw-list">
+
+                    <div class="empty">
+                        Carregando sorteios...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- APOSTA -->
+
+        <div class="col-8">
+
+            <div class="card">
+
+                <div class="card-title">
+                    <div class="icon">🎯</div>
+                    Faça sua aposta
+                </div>
+
+                <div id="selected-draw"
+                     class="selected-draw">
+                    Selecione um sorteio acima.
+                </div>
+
+                <div class="number-grid"
+                     id="number-grid">
+                </div>
+
+                <div class="bet-info">
+
+                    <span>
+                        Números:
+                        <strong id="selected-count">0</strong>/5
+                    </span>
+
+                    <span>
+                        Custo: <strong>10 MT</strong>
+                    </span>
+
+                </div>
+
+                <button
+                    class="btn btn-gold"
+                    onclick="fazerAposta()">
+                    CONFIRMAR APOSTA — 10 MT
+                </button>
+
+                <div id="bet-message"
+                     class="message">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRÊMIOS -->
+
+        <div class="col-4">
+
+            <div class="card">
+
+                <div class="card-title">
+                    <div class="icon">🏆</div>
+                    Prêmios
+                </div>
+
+                <div class="list">
+
+                    <div class="list-item">
+                        <div class="list-main">
+                            <div class="list-title">
+                                3 acertos
+                            </div>
+                            <div class="list-sub">
+                                Prêmio
+                            </div>
+                        </div>
+                        <div class="amount">
+                            50 MT
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-main">
+                            <div class="list-title">
+                                4 acertos
+                            </div>
+                            <div class="list-sub">
+                                Prêmio
+                            </div>
+                        </div>
+                        <div class="amount">
+                            500 MT
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="list-main">
+                            <div class="list-title">
+                                5 acertos
+                            </div>
+                            <div class="list-sub">
+                                Jackpot
+                            </div>
+                        </div>
+                        <div class="amount">
+                            5.000 MT
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BILHETES -->
+
+        <div class="col-6">
+
+            <div class="card">
+
+                <div class="card-title">
+                    <div class="icon">🎟️</div>
+                    Meus bilhetes
+                </div>
+
+                <div id="tickets-list"
+                     class="list">
+
+                    <div class="empty">
+                        Faça uma aposta para ver seus bilhetes.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MOVIMENTOS -->
+
+        <div class="col-6">
+
+            <div class="card">
+
+                <div class="card-title">
+                    <div class="icon">💰</div>
+                    Movimentos
+                </div>
+
+                <div id="movements-list"
+                     class="list">
+
+                    <div class="empty">
+                        Nenhum movimento encontrado.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- VENCEDORES -->
+
+        <div class="col-12">
+
+            <div class="card">
+
+                <div class="card-title">
+                    <div class="icon">🏆</div>
+                    Últimos vencedores
+                </div>
+
+                <div id="winners-list"
+                     class="list">
+
+                    <div class="empty">
+                        Carregando...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MODAL DEPÓSITO ================= -->
+
+<div class="modal" id="deposit-modal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h3>💳 Solicitar depósito</h3>
+
+            <button class="close"
+                    onclick="fecharModal('deposit-modal')">
+                ×
+            </button>
+
+        </div>
+
+        <p style="color:#999;font-size:13px;line-height:1.6">
+            Informe o valor que deseja adicionar à sua conta.
+            O pedido será enviado ao administrador para processamento.
+        </p>
+
+        <div class="form-group">
+
+            <label>Valor do depósito (MT)</label>
+
+            <input
+                type="number"
+                id="deposit-value"
+                min="1"
+                step="1"
+                placeholder="Ex.: 100">
+
+        </div>
+
+        <button class="btn btn-primary"
+                onclick="solicitarDeposito()">
+            SOLICITAR DEPÓSITO
+        </button>
+
+        <div id="deposit-message"
+             class="message">
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= MODAL LEVANTAMENTO ================= -->
+
+<div class="modal" id="withdraw-modal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h3>💸 Solicitar levantamento</h3>
+
+            <button class="close"
+                    onclick="fecharModal('withdraw-modal')">
+                ×
+            </button>
+
+        </div>
+
+        <p style="color:#999;font-size:13px;line-height:1.6">
+            Informe o valor que deseja levantar.
+            O valor será reservado do seu saldo enquanto o pedido
+            aguarda aprovação do administrador.
+        </p>
+
+        <div class="form-group">
+
+            <label>Valor do levantamento (MT)</label>
+
+            <input
+                type="number"
+                id="withdraw-value"
+                min="1"
+                step="1"
+                placeholder="Ex.: 100">
+
+        </div>
+
+        <button class="btn btn-primary"
+                onclick="solicitarLevantamento()">
+            SOLICITAR LEVANTAMENTO
+        </button>
+
+        <div id="withdraw-message"
+             class="message">
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= NAVEGAÇÃO MOBILE ================= -->
+
+<nav class="bottom-nav">
+
+    <div class="nav-inner">
+
+        <button class="nav-btn active"
+                onclick="irPara('app-screen')">
+            <span class="nav-icon">🏠</span>
+            Início
+        </button>
+
+        <button class="nav-btn"
+                onclick="irPara('draw-list')">
+            <span class="nav-icon">🎰</span>
+            Sorteios
+        </button>
+
+        <button class="nav-btn"
+                onclick="irPara('number-grid')">
+            <span class="nav-icon">🎯</span>
+            Apostar
+        </button>
+
+        <button class="nav-btn"
+                onclick="carregarBilhetes()">
+            <span class="nav-icon">🎟️</span>
+            Bilhetes
+        </button>
+
+        <button class="nav-btn"
+                onclick="logout()">
+            <span class="nav-icon">🚪</span>
+            Sair
+        </button>
+
+    </div>
+
+</nav>
+
+
+<footer>
+
+    <strong>SorteMoz</strong> — Loto 5/45<br>
+
+    Jogo destinado exclusivamente a maiores de 18 anos.<br>
+
+    Jogue com responsabilidade.
+
+</footer>
+
+
+<script>
+
+/* ==========================================================
+   CONFIGURAÇÃO
+   ========================================================== */
+
+const API_URL = 'https://script.google.com/macros/s/AKfycbxox3M6ja3yKp2C0U9UKwo7U_N_A_DOLbhtaYnONOkLYERMAgGpRqabL_kF58mN8J70tw/exec';
+
+
+/* ==========================================================
+   ESTADO DA APLICAÇÃO
+   ========================================================== */
+
+let token = localStorage.getItem('sortemoz_token') || '';
+
+let usuario = JSON.parse(
+    localStorage.getItem('sortemoz_usuario') || 'null'
+);
+
+let sorteios = [];
+
+let sorteioSelecionado = null;
+
+let numerosSelecionados = [];
+
+
+/* ==========================================================
+   INICIALIZAÇÃO
+   ========================================================== */
+
+document.addEventListener('DOMContentLoaded', function(){
+
+    criarNumeros();
+
+    document
+        .getElementById('register-form')
+        .addEventListener('submit', function(e){
+
+            e.preventDefault();
+
+            registrarUsuario();
+
+        });
+
+
+    document
+        .getElementById('login-form')
+        .addEventListener('submit', function(e){
+
+            e.preventDefault();
+
+            login();
+
+        });
+
+
+    if(token && usuario){
+
+        mostrarApp();
+
     }
 
-    /* LÓGICA DE SLIDESHOW */
-    function iniciarSlideshow(lojaIndex, quantidade) {
-      pararSlideshow(lojaIndex);
-      window._slides = window._slides || {};
-      window._slides[lojaIndex] = { atual: 0, total: quantidade };
-      timersSlideshow[lojaIndex] = setInterval(function() {
-        slideSeguinte(lojaIndex);
-      }, SLIDE_INTERVALO);
+});
+
+
+/* ==========================================================
+   API
+   ========================================================== */
+
+async function apiPost(dados){
+
+    if(!API_URL ||
+       API_URL === 'COLOQUE_AQUI_A_URL_DO_SEU_WEB_APP_GAS'){
+
+        throw new Error(
+            'Configure primeiro a URL do Web App do GAS.'
+        );
+
     }
 
-    function pararSlideshow(lojaIndex) {
-      if (timersSlideshow[lojaIndex]) {
-        clearInterval(timersSlideshow[lojaIndex]);
-        delete timersSlideshow[lojaIndex];
-      }
-    }
+    const response = await fetch(API_URL, {
 
-    function pararTodosSlideshows() {
-      Object.keys(timersSlideshow).forEach(function(indice) {
-        clearInterval(timersSlideshow[indice]);
-      });
-      timersSlideshow = {};
-    }
+        method:'POST',
 
-    function irParaSlide(lojaIndex, slideIndex) {
-      const estado = window._slides && window._slides[lojaIndex];
-      if (!estado) return;
-      if (slideIndex < 0) slideIndex = estado.total - 1;
-      if (slideIndex >= estado.total) slideIndex = 0;
-      estado.atual = slideIndex;
-      const track = document.getElementById('slideTrack-' + lojaIndex);
-      if (!track) return;
-      track.style.transform = 'translateX(-' + (slideIndex * 100) + '%)';
+        headers:{
+            'Content-Type':'text/plain;charset=utf-8'
+        },
 
-      const dots = document.querySelectorAll('#slideDots-' + lojaIndex + ' .slide-dot');
-      dots.forEach(function(dot, index) {
-        dot.classList.toggle('active', index === slideIndex);
-      });
-    }
+        body:JSON.stringify(dados)
 
-    function slideSeguinte(lojaIndex) {
-      const estado = window._slides && window._slides[lojaIndex];
-      if (!estado) return;
-      irParaSlide(lojaIndex, estado.atual + 1);
-    }
-
-    function slideAnterior(lojaIndex) {
-      const estado = window._slides && window._slides[lojaIndex];
-      if (!estado) return;
-      irParaSlide(lojaIndex, estado.atual - 1);
-    }
-
-    /* PROCESSAMENTO DE PAGAMENTO NETSHOP */
-    function abrirCheckoutNetshop(produtoId, nome, preco) {
-      document.getElementById('netshopProdutoId').value = produtoId;
-      document.getElementById('netshopTituloProduto').innerText = nome;
-      document.getElementById('netshopValorProduto').innerText = formatarPreco(preco) + ' Mtn';
-      openModal('modalPagamentoNetshop');
-    }
-
-    async function submeterPagamentoNetshop(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmitNetshop');
-      btn.innerText = 'A processar pagamento...';
-      btn.disabled = true;
-
-      const payload = {
-        action: 'COMPRAR_PRODUTO',
-        produtoId: document.getElementById('netshopProdutoId').value,
-        telefone: document.getElementById('netshopTelefone').value.trim(),
-        metodo: document.getElementById('netshopMetodo').value
-      };
-
-      try {
-        const resultado = await gasPost(payload);
-        if (resultado && resultado.ok) {
-          closeModal('modalPagamentoNetshop');
-          if (resultado.checkoutUrl) {
-            mostrarToast('A redirecionar para o NetShop...');
-            window.location.href = resultado.checkoutUrl;
-          } else {
-            mostrarToast('Pagamento criado! Referência: ' + (resultado.referencia || 'MZV'));
-          }
-        } else {
-          throw new Error(resultado.erro || 'Não foi possível gerar a cobrança no NetShop.');
-        }
-      } catch (erro) {
-        console.error('Erro NetShop:', erro);
-        mostrarToast(erro.message || 'Falha ao processar pagamento.', 'error');
-      } finally {
-        btn.innerText = 'Pagar Agora via NetShop';
-        btn.disabled = false;
-      }
-    }
-
-    /* CADASTRO & LOGIN */
-    async function submeterRegistro(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmitReg');
-      btn.innerText = 'A guardar no Google Sheets...';
-      btn.disabled = true;
-
-      const payload = {
-        action: 'CRIAR_LOJA',
-        nome: document.getElementById('regNome').value.trim(),
-        email: document.getElementById('regEmail').value.trim(),
-        telefone: document.getElementById('regTelefone').value.trim(),
-        empresa: document.getElementById('regEmpresa').value.trim(),
-        logo: document.getElementById('regLogo').value.trim(),
-        dataNasc: document.getElementById('regDataNasc').value,
-        bi: document.getElementById('regBI').value.trim(),
-        pin: document.getElementById('regPin').value.trim()
-      };
-
-      try {
-        const result = await gasPost(payload);
-        if (result && result.status === 'SUCCESS') {
-          usuarioLogado = {
-            id: result.vendedorId,
-            vendedorId: result.vendedorId,
-            empresa: payload.empresa,
-            logo: payload.logo
-          };
-          atualizarEstadoSessao();
-          closeModal('modalRegistro');
-          document.getElementById('formRegistro').reset();
-          mostrarToast('Loja registada com sucesso!');
-          await carregarLojas(false);
-        } else {
-          throw new Error(result && (result.message || result.erro) ? (result.message || result.erro) : 'Falha interna no servidor.');
-        }
-      } catch (erro) {
-        console.error('Erro no registo:', erro);
-        mostrarToast(erro.message || 'Falha ao registar a loja.', 'error');
-      } finally {
-        btn.innerText = 'Criar Minha Empresa';
-        btn.disabled = false;
-      }
-    }
-
-    async function submeterLogin(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnLogin');
-      btn.innerText = 'A entrar...';
-      btn.disabled = true;
-
-      const payload = {
-        action: 'LOGIN',
-        telefone: document.getElementById('loginTelefone').value.trim(),
-        pin: document.getElementById('loginPin').value.trim()
-      };
-
-      try {
-        const result = await gasPost(payload);
-        if (result && result.status === 'SUCCESS') {
-          usuarioLogado = result.vendedor;
-          atualizarEstadoSessao();
-          closeModal('modalLogin');
-          mostrarToast('Sessão iniciada como ' + (usuarioLogado.empresa || 'vendedor'));
-        } else {
-          throw new Error('Telefone ou PIN incorretos.');
-        }
-      } catch (erro) {
-        console.error('Erro no login:', erro);
-        mostrarToast(erro.message || 'Erro no login.', 'error');
-      } finally {
-        btn.innerText = 'Aceder ao Painel';
-        btn.disabled = false;
-      }
-    }
-
-    async function submeterProduto(e) {
-      e.preventDefault();
-      if (!usuarioLogado) {
-        mostrarToast('Precisa de iniciar sessão.', 'error');
-        return;
-      }
-
-      const btn = document.getElementById('btnSubmitProduto');
-      const tipo = document.getElementById('prodTipo').value;
-      const linkDigital = document.getElementById('prodLinkDigital').value.trim();
-
-      if (tipo === 'DIGITAL' && linkDigital && !validarURL(linkDigital)) {
-        mostrarToast('O link do produto digital não é válido.', 'error');
-        return;
-      }
-
-      btn.innerText = 'A publicar...';
-      btn.disabled = true;
-
-      const payload = {
-        action: 'CRIAR_PRODUTO',
-        vendedorId: usuarioLogado.id || usuarioLogado.vendedorId,
-        nome: document.getElementById('prodNome').value.trim(),
-        descricao: document.getElementById('prodDescricao').value.trim(),
-        preco: Number(document.getElementById('prodPreco').value),
-        tipo: tipo,
-        imagem: document.getElementById('prodImagem').value.trim(),
-        whatsapp: document.getElementById('prodWhatsapp').value.trim(),
-        linkDigital: linkDigital
-      };
-
-      try {
-        const result = await gasPost(payload);
-        if (result && result.status === 'SUCCESS') {
-          mostrarToast('Produto publicado com sucesso!');
-          e.target.reset();
-          toggleLinkDigital('FISICO');
-          closeModal('modalAddProduto');
-          await carregarLojas(false);
-        } else {
-          throw new Error(result && (result.message || result.erro) ? (result.message || result.erro) : 'Falha ao publicar produto.');
-        }
-      } catch (erro) {
-        console.error('Erro ao criar produto:', erro);
-        mostrarToast(erro.message || 'Erro ao publicar produto.', 'error');
-      } finally {
-        btn.innerText = 'Publicar Produto';
-        btn.disabled = false;
-      }
-    }
-
-    /* ESTADO DA SESSÃO DO VENDEDOR */
-    function atualizarEstadoSessao() {
-      const visitante = document.getElementById('botoesVisitante');
-      const sessao = document.getElementById('sessaoVendedor');
-      const nome = document.getElementById('nomeLojaSessao');
-
-      if (usuarioLogado) {
-        visitante.classList.add('hidden');
-        sessao.classList.remove('hidden');
-        sessao.classList.add('flex');
-        nome.innerText = usuarioLogado.empresa || usuarioLogado.nome || 'Minha Loja';
-      } else {
-        visitante.classList.remove('hidden');
-        sessao.classList.add('hidden');
-        sessao.classList.remove('flex');
-        nome.innerText = "";
-      }
-    }
-
-    function terminarSessao() {
-      usuarioLogado = null;
-      atualizarEstadoSessao();
-      mostrarToast('Sessão terminada.');
-    }
-
-    document.addEventListener('keydown', function(event) {
-      if (event.key !== 'Escape') return;
-      document.querySelectorAll('.modal').forEach(function(modal) {
-        if (!modal.classList.contains('hidden')) closeModal(modal.id);
-      });
     });
 
-    /* INICIAÇÃO AUTOMÁTICA */
-    document.addEventListener('DOMContentLoaded', async function() {
-      atualizarEstadoSessao();
-      toggleLinkDigital(document.getElementById('prodTipo').value);
-      await carregarLojas(false);
-    });
-  </script>
+    const texto = await response.text();
+
+    let data;
+
+    try{
+
+        data = JSON.parse(texto);
+
+    }catch(e){
+
+        throw new Error(
+            'O GAS não devolveu uma resposta JSON válida.'
+        );
+
+    }
+
+    return data;
+
+}
+
+
+async function apiGet(acao){
+
+    if(!API_URL ||
+       API_URL === 'COLOQUE_AQUI_A_URL_DO_SEU_WEB_APP_GAS'){
+
+        throw new Error(
+            'Configure primeiro a URL do Web App do GAS.'
+        );
+
+    }
+
+    const separador =
+        API_URL.includes('?') ? '&' : '?';
+
+    const response = await fetch(
+        API_URL + separador +
+        'acao=' + encodeURIComponent(acao)
+    );
+
+    const texto = await response.text();
+
+    let data;
+
+    try{
+
+        data = JSON.parse(texto);
+
+    }catch(e){
+
+        throw new Error(
+            'O GAS não devolveu uma resposta JSON válida.'
+        );
+
+    }
+
+    return data;
+
+}
+
+
+/* ==========================================================
+   AUTENTICAÇÃO
+   ========================================================== */
+
+function mostrarAuth(tipo){
+
+    const registerForm =
+        document.getElementById('register-form');
+
+    const loginForm =
+        document.getElementById('login-form');
+
+    const tabRegister =
+        document.getElementById('tab-register');
+
+    const tabLogin =
+        document.getElementById('tab-login');
+
+
+    if(tipo === 'register'){
+
+        registerForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+
+    }else{
+
+        registerForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+
+        tabRegister.classList.remove('active');
+        tabLogin.classList.add('active');
+
+    }
+
+    limparMensagem('auth-message');
+
+}
+
+
+async function registrarUsuario(){
+
+    const nome =
+        document.getElementById('reg-nome').value.trim();
+
+    const email =
+        document.getElementById('reg-email').value.trim();
+
+    const numero =
+        document.getElementById('reg-numero').value.trim();
+
+    const pin =
+        document.getElementById('reg-pin').value.trim();
+
+    const idade =
+        parseInt(
+            document.getElementById('reg-idade').value
+        );
+
+
+    if(!/^\d{6}$/.test(pin)){
+
+        mostrarMensagem(
+            'auth-message',
+            'O PIN deve conter exatamente 6 dígitos.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    if(idade < 18){
+
+        mostrarMensagem(
+            'auth-message',
+            'Apenas maiores de 18 anos podem se cadastrar.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    mostrarMensagem(
+        'auth-message',
+        'Processando cadastro...',
+        'success'
+    );
+
+
+    try{
+
+        const data = await apiPost({
+
+            acao:'registar',
+
+            nome:nome,
+
+            email:email,
+
+            numero:numero,
+
+            pin:pin,
+
+            idade:idade
+
+        });
+
+
+        mostrarMensagem(
+            'auth-message',
+            data.mensagem || 'Operação concluída.',
+            data.ok ? 'success' : 'error'
+        );
+
+
+        if(data.ok){
+
+            document.getElementById('register-form').reset();
+
+            setTimeout(function(){
+
+                mostrarAuth('login');
+
+                document.getElementById(
+                    'login-numero'
+                ).value = numero;
+
+            },1200);
+
+        }
+
+    }catch(error){
+
+        mostrarMensagem(
+            'auth-message',
+            error.message,
+            'error'
+        );
+
+    }
+
+}
+
+
+async function login(){
+
+    const numero =
+        document.getElementById('login-numero').value.trim();
+
+    const pin =
+        document.getElementById('login-pin').value.trim();
+
+
+    if(!numero || !pin){
+
+        mostrarMensagem(
+            'auth-message',
+            'Informe o número e o PIN.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    mostrarMensagem(
+        'auth-message',
+        'Entrando...',
+        'success'
+    );
+
+
+    try{
+
+        const data = await apiPost({
+
+            acao:'login',
+
+            numero:numero,
+
+            pin:pin
+
+        });
+
+
+        if(!data.ok){
+
+            mostrarMensagem(
+                'auth-message',
+                data.mensagem || 'Falha no login.',
+                'error'
+            );
+
+            return;
+        }
+
+
+        token = data.dados.token;
+
+        usuario = {
+
+            usuariold:data.dados.usuariold,
+
+            nome:data.dados.nome,
+
+            saldo:data.dados.saldo
+
+        };
+
+
+        localStorage.setItem(
+            'sortemoz_token',
+            token
+        );
+
+        localStorage.setItem(
+            'sortemoz_usuario',
+            JSON.stringify(usuario)
+        );
+
+
+        mostrarApp();
+
+    }catch(error){
+
+        mostrarMensagem(
+            'auth-message',
+            error.message,
+            'error'
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   MOSTRAR APP
+   ========================================================== */
+
+function mostrarApp(){
+
+    document
+        .getElementById('auth-screen')
+        .classList.add('hidden');
+
+    document
+        .getElementById('app-screen')
+        .classList.remove('hidden');
+
+    document
+        .getElementById('header-user')
+        .style.display = 'flex';
+
+
+    document
+        .getElementById('welcome-name')
+        .innerText =
+            'Olá, ' +
+            (usuario?.nome || 'Jogador');
+
+
+    atualizarTudo();
+
+}
+
+
+/* ==========================================================
+   LOGOUT
+   ========================================================== */
+
+function logout(){
+
+    token = '';
+
+    usuario = null;
+
+    localStorage.removeItem(
+        'sortemoz_token'
+    );
+
+    localStorage.removeItem(
+        'sortemoz_usuario'
+    );
+
+
+    document
+        .getElementById('app-screen')
+        .classList.add('hidden');
+
+    document
+        .getElementById('auth-screen')
+        .classList.remove('hidden');
+
+    document
+        .getElementById('header-user')
+        .style.display = 'none';
+
+
+    mostrarAuth('login');
+
+}
+
+
+/* ==========================================================
+   SALDO
+   ========================================================== */
+
+async function carregarSaldo(){
+
+    try{
+
+        const data = await apiPost({
+
+            acao:'saldo',
+
+            token:token
+
+        });
+
+
+        if(!data.ok){
+
+            if(
+                data.mensagem &&
+                data.mensagem.toLowerCase().includes('sessão')
+            ){
+
+                logout();
+
+            }
+
+            return;
+
+        }
+
+
+        const saldo =
+            Number(data.dados.saldo || 0);
+
+
+        usuario.saldo = saldo;
+
+
+        localStorage.setItem(
+            'sortemoz_usuario',
+            JSON.stringify(usuario)
+        );
+
+
+        document
+            .getElementById('balance')
+            .innerText =
+                formatarMoeda(saldo);
+
+
+        document
+            .getElementById('mini-balance')
+            .innerText =
+                formatarMoeda(saldo);
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* ==========================================================
+   SORTEIOS
+   ========================================================== */
+
+async function carregarSorteios(){
+
+    const container =
+        document.getElementById('draw-list');
+
+
+    try{
+
+        const data =
+            await apiGet('sorteios');
+
+
+        if(!data.ok){
+
+            container.innerHTML =
+                '<div class="empty">' +
+                'Não foi possível carregar os sorteios.' +
+                '</div>';
+
+            return;
+        }
+
+
+        sorteios = data.dados || [];
+
+
+        if(sorteios.length === 0){
+
+            container.innerHTML =
+                '<div class="empty">' +
+                'Nenhum sorteio disponível.' +
+                '</div>';
+
+            return;
+        }
+
+
+        container.innerHTML =
+            sorteios.map(function(sorteio,index){
+
+                const status =
+                    String(
+                        sorteio.status || ''
+                    ).toUpperCase();
+
+
+                let classe = 'status-closed';
+
+                let texto = status;
+
+
+                if(status === 'ABERTO'){
+
+                    classe = 'status-open';
+
+                    texto = 'ABERTO';
+
+                }
+
+                if(status === 'CONCLUIDO'){
+
+                    classe = 'status-done';
+
+                    texto = 'CONCLUÍDO';
+
+                }
+
+
+                return `
+
+                    <div
+                        class="draw-card"
+                        data-index="${index}"
+                        onclick="selecionarSorteio(${index})"
+                    >
+
+                        <div class="draw-id">
+                            ${escapeHtml(sorteio.id)}
+                        </div>
+
+                        <div class="draw-time">
+                            ${escapeHtml(sorteio.hora)}
+                        </div>
+
+                        <div>
+                            <span class="draw-status ${classe}">
+                                ${texto}
+                            </span>
+                        </div>
+
+                        <div
+                            style="
+                            color:#666;
+                            font-size:10px;
+                            margin-top:8px;
+                            "
+                        >
+                            Fecha às
+                            ${escapeHtml(sorteio.fechamento || '--')}
+                        </div>
+
+                    </div>
+
+                `;
+
+            }).join('');
+
+
+        const primeiroAberto =
+            sorteios.findIndex(
+                s =>
+                    String(s.status).toUpperCase()
+                    === 'ABERTO'
+            );
+
+
+        if(primeiroAberto >= 0){
+
+            selecionarSorteio(primeiroAberto);
+
+        }
+
+    }catch(error){
+
+        container.innerHTML =
+            '<div class="empty">' +
+            escapeHtml(error.message) +
+            '</div>';
+
+    }
+
+}
+
+
+/* ==========================================================
+   SELECIONAR SORTEIO
+   ========================================================== */
+
+function selecionarSorteio(index){
+
+    if(!sorteios[index]) return;
+
+
+    const sorteio =
+        sorteios[index];
+
+
+    if(
+        String(sorteio.status).toUpperCase()
+        !== 'ABERTO'
+    ){
+
+        mostrarMensagem(
+            'bet-message',
+            'Este sorteio não está aberto para apostas.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    sorteioSelecionado = sorteio;
+
+
+    document
+        .querySelectorAll('.draw-card')
+        .forEach(
+            card => card.classList.remove('selected')
+        );
+
+
+    const card =
+        document.querySelector(
+            `.draw-card[data-index="${index}"]`
+        );
+
+
+    if(card){
+
+        card.classList.add('selected');
+
+    }
+
+
+    document
+        .getElementById('selected-draw')
+        .innerHTML =
+            'Sorteio selecionado: <strong>' +
+            escapeHtml(sorteio.id) +
+            '</strong> — ' +
+            escapeHtml(sorteio.hora);
+
+
+    limparNumeros();
+
+}
+
+
+/* ==========================================================
+   NÚMEROS
+   ========================================================== */
+
+function criarNumeros(){
+
+    const grid =
+        document.getElementById('number-grid');
+
+
+    let html = '';
+
+
+    for(let i=1;i<=45;i++){
+
+        html += `
+
+            <button
+                type="button"
+                class="number"
+                id="number-${i}"
+                onclick="selecionarNumero(${i})"
+            >
+                ${i}
+            </button>
+
+        `;
+
+    }
+
+
+    grid.innerHTML = html;
+
+}
+
+
+function selecionarNumero(numero){
+
+    if(!sorteioSelecionado){
+
+        mostrarMensagem(
+            'bet-message',
+            'Primeiro selecione um sorteio aberto.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    if(numerosSelecionados.includes(numero)){
+
+        numerosSelecionados =
+            numerosSelecionados.filter(
+                n => n !== numero
+            );
+
+        document
+            .getElementById('number-' + numero)
+            .classList.remove('selected');
+
+    }else{
+
+        if(numerosSelecionados.length >= 5){
+
+            mostrarMensagem(
+                'bet-message',
+                'Você pode escolher exatamente 5 números.',
+                'error'
+            );
+
+            return;
+        }
+
+
+        numerosSelecionados.push(numero);
+
+        numerosSelecionados.sort(
+            (a,b)=>a-b
+        );
+
+
+        document
+            .getElementById('number-' + numero)
+            .classList.add('selected');
+
+    }
+
+
+    document
+        .getElementById('selected-count')
+        .innerText =
+            numerosSelecionados.length;
+
+
+    limparMensagem('bet-message');
+
+}
+
+
+function limparNumeros(){
+
+    numerosSelecionados = [];
+
+
+    document
+        .querySelectorAll('.number')
+        .forEach(
+            btn => btn.classList.remove('selected')
+        );
+
+
+    document
+        .getElementById('selected-count')
+        .innerText = '0';
+
+}
+
+
+/* ==========================================================
+   APOSTAR
+   ========================================================== */
+
+async function fazerAposta(){
+
+    if(!sorteioSelecionado){
+
+        mostrarMensagem(
+            'bet-message',
+            'Selecione um sorteio aberto.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    if(numerosSelecionados.length !== 5){
+
+        mostrarMensagem(
+            'bet-message',
+            'Escolha exatamente 5 números.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    mostrarMensagem(
+        'bet-message',
+        'Processando sua aposta...',
+        'success'
+    );
+
+
+    try{
+
+        const data =
+            await apiPost({
+
+                acao:'apostar',
+
+                token:token,
+
+                sorteiold:
+                    sorteioSelecionado.id,
+
+                apostas:[
+                    numerosSelecionados
+                ]
+
+            });
+
+
+        mostrarMensagem(
+            'bet-message',
+            data.mensagem ||
+            'Operação concluída.',
+            data.ok ? 'success' : 'error'
+        );
+
+
+        if(data.ok){
+
+            limparNumeros();
+
+            await carregarSaldo();
+
+            await carregarBilhetes();
+
+            setTimeout(
+                ()=>limparMensagem('bet-message'),
+                5000
+            );
+
+        }
+
+    }catch(error){
+
+        mostrarMensagem(
+            'bet-message',
+            error.message,
+            'error'
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   DEPÓSITO
+   ========================================================== */
+
+function abrirDeposito(){
+
+    document
+        .getElementById('deposit-modal')
+        .classList.add('show');
+
+}
+
+
+async function solicitarDeposito(){
+
+    const valor =
+        Number(
+            document.getElementById(
+                'deposit-value'
+            ).value
+        );
+
+
+    if(!valor || valor <= 0){
+
+        mostrarMensagem(
+            'deposit-message',
+            'Informe um valor válido.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    mostrarMensagem(
+        'deposit-message',
+        'Enviando pedido...',
+        'success'
+    );
+
+
+    try{
+
+        const data =
+            await apiPost({
+
+                acao:'deposito',
+
+                token:token,
+
+                valor:valor
+
+            });
+
+
+        mostrarMensagem(
+            'deposit-message',
+            data.mensagem ||
+            'Pedido enviado.',
+            data.ok ? 'success' : 'error'
+        );
+
+
+        if(data.ok){
+
+            document
+                .getElementById(
+                    'deposit-value'
+                )
+                .value = '';
+
+
+            /*
+             * IMPORTANTE:
+             * O GAS não adiciona o saldo automaticamente.
+             * O pedido fica PENDENTE e envia email
+             * ao administrador.
+             */
+
+        }
+
+    }catch(error){
+
+        mostrarMensagem(
+            'deposit-message',
+            error.message,
+            'error'
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   LEVANTAMENTO
+   ========================================================== */
+
+function abrirLevantamento(){
+
+    document
+        .getElementById('withdraw-modal')
+        .classList.add('show');
+
+}
+
+
+async function solicitarLevantamento(){
+
+    const valor =
+        Number(
+            document.getElementById(
+                'withdraw-value'
+            ).value
+        );
+
+
+    if(!valor || valor <= 0){
+
+        mostrarMensagem(
+            'withdraw-message',
+            'Informe um valor válido.',
+            'error'
+        );
+
+        return;
+    }
+
+
+    mostrarMensagem(
+        'withdraw-message',
+        'Enviando pedido...',
+        'success'
+    );
+
+
+    try{
+
+        const data =
+            await apiPost({
+
+                acao:'levantamento',
+
+                token:token,
+
+                valor:valor
+
+            });
+
+
+        mostrarMensagem(
+            'withdraw-message',
+            data.mensagem ||
+            'Pedido enviado.',
+            data.ok ? 'success' : 'error'
+        );
+
+
+        if(data.ok){
+
+            document
+                .getElementById(
+                    'withdraw-value'
+                )
+                .value = '';
+
+
+            await carregarSaldo();
+
+            await carregarMovimentos();
+
+        }
+
+    }catch(error){
+
+        mostrarMensagem(
+            'withdraw-message',
+            error.message,
+            'error'
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   BILHETES
+   ========================================================== */
+
+async function carregarBilhetes(){
+
+    const container =
+        document.getElementById('tickets-list');
+
+
+    try{
+
+        const data =
+            await apiPost({
+
+                acao:'meusBilhetes',
+
+                token:token
+
+            });
+
+
+        if(!data.ok){
+
+            container.innerHTML =
+                `<div class="empty">
+                    ${escapeHtml(data.mensagem || 'Erro.')}
+                </div>`;
+
+            return;
+        }
+
+
+        const bilhetes =
+            data.dados || [];
+
+
+        if(bilhetes.length === 0){
+
+            container.innerHTML =
+                '<div class="empty">' +
+                'Você ainda não possui bilhetes.' +
+                '</div>';
+
+            return;
+        }
+
+
+        container.innerHTML =
+            bilhetes.slice().reverse()
+            .map(function(b){
+
+                return `
+
+                    <div class="list-item">
+
+                        <div class="list-main">
+
+                            <div class="list-title">
+                                🎟️ ${escapeHtml(b.bilheteld)}
+                            </div>
+
+                            <div class="list-sub">
+                                Sorteio:
+                                ${escapeHtml(b.jogo)}
+                                · ${b.quantidade} aposta(s)
+                                · ${escapeHtml(b.status)}
+                            </div>
+
+                        </div>
+
+                        <div class="amount">
+                            ${formatarMoeda(b.valor)}
+                        </div>
+
+                    </div>
+
+                `;
+
+            }).join('');
+
+
+    }catch(error){
+
+        container.innerHTML =
+            `<div class="empty">
+                ${escapeHtml(error.message)}
+            </div>`;
+
+    }
+
+}
+
+
+/* ==========================================================
+   MOVIMENTOS
+   ========================================================== */
+
+async function carregarMovimentos(){
+
+    const container =
+        document.getElementById('movements-list');
+
+
+    try{
+
+        const data =
+            await apiPost({
+
+                acao:'meusMovimentos',
+
+                token:token
+
+            });
+
+
+        if(!data.ok){
+
+            container.innerHTML =
+                `<div class="empty">
+                    ${escapeHtml(data.mensagem || 'Erro.')}
+                </div>`;
+
+            return;
+        }
+
+
+        const movimentos =
+            data.dados || [];
+
+
+        if(movimentos.length === 0){
+
+            container.innerHTML =
+                '<div class="empty">' +
+                'Nenhum movimento encontrado.' +
+                '</div>';
+
+            return;
+        }
+
+
+        container.innerHTML =
+            movimentos.slice().reverse()
+            .map(function(m){
+
+                const valor =
+                    Number(m.valor || 0);
+
+
+                const positivo =
+                    valor >= 0;
+
+
+                return `
+
+                    <div class="list-item">
+
+                        <div class="list-main">
+
+                            <div class="list-title">
+                                ${iconeMovimento(m.tipo)}
+                                ${escapeHtml(m.tipo)}
+                            </div>
+
+                            <div class="list-sub">
+                                ${escapeHtml(m.status)}
+                                ·
+                                ${escapeHtml(m.descricao || '')}
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="amount"
+                            style="color:${positivo ? '#00d084' : '#ff7777'}"
+                        >
+                            ${positivo ? '+' : ''}
+                            ${formatarMoeda(valor)}
+                        </div>
+
+                    </div>
+
+                `;
+
+            }).join('');
+
+
+    }catch(error){
+
+        container.innerHTML =
+            `<div class="empty">
+                ${escapeHtml(error.message)}
+            </div>`;
+
+    }
+
+}
+
+
+/* ==========================================================
+   VENCEDORES
+   ========================================================== */
+
+async function carregarVencedores(){
+
+    const container =
+        document.getElementById('winners-list');
+
+
+    try{
+
+        const data =
+            await apiGet('vencedores');
+
+
+        if(!data.ok){
+
+            container.innerHTML =
+                `<div class="empty">
+                    ${escapeHtml(data.mensagem || 'Erro.')}
+                </div>`;
+
+            return;
+        }
+
+
+        const vencedores =
+            data.dados || [];
+
+
+        if(vencedores.length === 0){
+
+            container.innerHTML =
+                '<div class="empty">' +
+                'Ainda não existem vencedores registrados.' +
+                '</div>';
+
+            return;
+        }
+
+
+        container.innerHTML =
+            vencedores.slice().reverse()
+            .map(function(v){
+
+                return `
+
+                    <div class="list-item">
+
+                        <div class="list-main">
+
+                            <div class="list-title">
+                                🏆 ${escapeHtml(v.jogo)}
+                            </div>
+
+                            <div class="list-sub">
+                                ${escapeHtml(v.acertos)}
+                                acertos
+                            </div>
+
+                        </div>
+
+                        <div class="amount">
+                            ${formatarMoeda(v.premio)}
+                        </div>
+
+                    </div>
+
+                `;
+
+            }).join('');
+
+
+    }catch(error){
+
+        container.innerHTML =
+            `<div class="empty">
+                ${escapeHtml(error.message)}
+            </div>`;
+
+    }
+
+}
+
+
+/* ==========================================================
+   ATUALIZAR TUDO
+   ========================================================== */
+
+async function atualizarTudo(){
+
+    await carregarSaldo();
+
+    await carregarSorteios();
+
+    await carregarBilhetes();
+
+    await carregarMovimentos();
+
+    await carregarVencedores();
+
+}
+
+
+/* ==========================================================
+   MODAIS
+   ========================================================== */
+
+function fecharModal(id){
+
+    document
+        .getElementById(id)
+        .classList.remove('show');
+
+}
+
+
+document.addEventListener('click',function(e){
+
+    if(e.target.classList.contains('modal')){
+
+        e.target.classList.remove('show');
+
+    }
+
+});
+
+
+/* ==========================================================
+   NAVEGAÇÃO
+   ========================================================== */
+
+function irPara(id){
+
+    const elemento =
+        document.getElementById(id);
+
+
+    if(elemento){
+
+        elemento.scrollIntoView({
+            behavior:'smooth',
+            block:'center'
+        });
+
+    }
+
+}
+
+
+/* ==========================================================
+   MENSAGENS
+   ========================================================== */
+
+function mostrarMensagem(id,texto,tipo){
+
+    const el =
+        document.getElementById(id);
+
+
+    el.innerText = texto;
+
+    el.className =
+        'message show ' +
+        (tipo === 'success'
+            ? 'success'
+            : 'error');
+
+}
+
+
+function limparMensagem(id){
+
+    const el =
+        document.getElementById(id);
+
+
+    if(!el) return;
+
+
+    el.innerText = '';
+
+    el.className = 'message';
+
+}
+
+
+/* ==========================================================
+   UTILITÁRIOS
+   ========================================================== */
+
+function formatarMoeda(valor){
+
+    return Number(valor || 0)
+        .toLocaleString(
+            'pt-MZ',
+            {
+                minimumFractionDigits:0,
+                maximumFractionDigits:2
+            }
+        ) + ' MT';
+
+}
+
+
+function iconeMovimento(tipo){
+
+    const t =
+        String(tipo || '').toUpperCase();
+
+
+    if(t === 'DEPOSITO')
+        return '💳';
+
+    if(t === 'LEVANTAMENTO')
+        return '💸';
+
+    if(t === 'APOSTA')
+        return '🎯';
+
+    return '💰';
+
+}
+
+
+function escapeHtml(valor){
+
+    return String(valor ?? '')
+        .replace(/&/g,'&')
+        .replace(/</g,'<')
+        .replace(/>/g,'>')
+        .replace(/"/g,'"')
+        .replace(/'/g,''');
+
+}
+
+</script>
+
 </body>
 </html>
