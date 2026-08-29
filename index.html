@@ -427,10 +427,46 @@ function closeModal(id) {
   document.body.classList.remove('overflow-hidden');
 }
 
-document.querySelectorAll('.modal').forEach(function(modal) {
-  modal.addEventListener('click', function(event) {
-    if (event.target === modal) closeModal(modal.id);
-  });
+/* 1. BUSCA OS DADOS DO BACKEND (GAS) */
+async function carregarLojas() {
+  try {
+    // Faz a chamada GET requisitando os dados
+    const response = await fetch(`${GAS_URL}?action=obterLojas`);
+    const data = await response.json();
+
+    // Armazena a lista retornada ou um array vazio
+    lojas = data.lojas || data.dados || data.resultado || [];
+    
+    // Desenha as lojas na tela
+    renderizarLojas();
+  } catch (erro) {
+    console.error('Erro ao carregar dados do GAS:', erro);
+  }
+}
+
+/* 2. INSERE OS DADOS NO CONTAINER HTML */
+function renderizarLojas() {
+  // Certifique-se de ter um container no seu HTML com o id="lista-lojas"
+  const container = document.getElementById('lista-lojas');
+  if (!container) return;
+
+  if (lojas.length === 0) {
+    container.innerHTML = `<p class="text-center text-gray-500 py-4">Nenhuma loja cadastrada.</p>`;
+    return;
+  }
+
+  // Gera o HTML para cada loja do array
+  container.innerHTML = lojas.map(loja => `
+    <div class="p-4 border rounded-lg shadow-sm bg-white">
+      <h3 class="font-bold text-lg text-gray-800">${loja.nome || loja[0] || 'Sem Nome'}</h3>
+      <p class="text-sm text-gray-600">${loja.categoria || loja[1] || ''}</p>
+    </div>
+  `).join('');
+}
+
+/* 3. EXECUTA O CARREGAMENTO AO ABRIR A PÁGINA */
+document.addEventListener('DOMContentLoaded', () => {
+  carregarLojas();
 });
 
 /* TOAST NOTIFICATION */
