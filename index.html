@@ -3,1942 +3,1024 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SorteMoz - LOT5/45</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
+<title>Moz1Vendas - Marketplace de Moçambique</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Plus Jakarta Sans', 'sans-serif']
+      },
+      colors: {
+        brand: {
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          900: '#14532d'
+        },
+        accent: {
+          500: '#f59e0b',
+          600: '#d97706'
+        }
+      }
+    }
+  }
+}
+</script>
 <style>
-:root{
-    --pink:#ff2f92;
-    --pink2:#ff69b4;
-    --gold:#ffd700;
-    --gold2:#ffb300;
-    --blue:#2196f3;
-    --green:#00c853;
-    --red:#ff1744;
-    --dark:#070707;
-    --dark2:#111;
-    --card:#171717;
-    --card2:#202020;
-    --text:#fff;
-    --muted:#aaa;
+html { scroll-behavior: smooth; }
+body { overflow-x: hidden; }
+.modal { transition: opacity 0.25s ease; }
+.modal-box { animation: modalEntrada 0.25s ease; }
+@keyframes modalEntrada {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
-*{
-    box-sizing:border-box;
+.slide-wrapper { position: relative; overflow: hidden; width: 100%; }
+.slide-track { display: flex; transition: transform 0.45s ease-in-out; width: 100%; }
+.slide-item { min-width: 100%; width: 100%; flex-shrink: 0; }
+.slide-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
+.slide-dot { width: 7px; height: 7px; border-radius: 999px; background: rgba(255,255,255,0.55); transition: all 0.25s ease; }
+.slide-dot.active { width: 22px; background: white; }
+.product-image { background: #f1f5f9; }
+.loading-spinner {
+  width: 25px; height: 25px; border: 3px solid #dcfce7;
+  border-top-color: #16a34a; border-radius: 50%; animation: girar 0.8s linear infinite;
 }
-
-body{
-    margin:0;
-    font-family:'Montserrat',sans-serif;
-    background:
-        radial-gradient(circle at top,#281020 0,#080808 35%,#000 75%);
-    color:var(--text);
-    min-height:100vh;
+@keyframes girar { to { transform: rotate(360deg); } }
+.toast { animation: toastEntrada 0.3s ease; }
+@keyframes toastEntrada {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-button,
-input{
-    font-family:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.header{
-    position:sticky;
-    top:0;
-    z-index:50;
-    background:rgba(0,0,0,.92);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid rgba(255,47,146,.35);
-}
-
-.header-inner{
-    max-width:1200px;
-    margin:auto;
-    padding:15px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-
-.logo{
-    font-size:25px;
-    font-weight:900;
-    letter-spacing:1px;
-    color:var(--pink2);
-}
-
-.logo span{
-    color:var(--gold);
-}
-
-.user-area{
-    display:none;
-    align-items:center;
-    gap:12px;
-}
-
-.balance{
-    background:#191919;
-    border:1px solid rgba(255,215,0,.4);
-    border-radius:20px;
-    padding:8px 14px;
-    color:var(--gold);
-    font-weight:800;
-}
-
-.logout{
-    border:0;
-    background:#292929;
-    color:white;
-    padding:8px 12px;
-    border-radius:20px;
-}
-
-.container{
-    width:100%;
-    max-width:1200px;
-    margin:auto;
-    padding:25px 18px 50px;
-}
-
-.hero{
-    text-align:center;
-    padding:35px 15px;
-}
-
-.hero h1{
-    margin:0;
-    font-size:clamp(32px,7vw,62px);
-    font-weight:900;
-    background:linear-gradient(90deg,var(--pink2),var(--gold),var(--pink));
-    -webkit-background-clip:text;
-    color:transparent;
-}
-
-.hero p{
-    color:#bbb;
-    margin:12px 0 0;
-}
-
-.card{
-    background:linear-gradient(145deg,#1b1b1b,#101010);
-    border:1px solid rgba(255,255,255,.07);
-    border-radius:18px;
-    padding:24px;
-    margin-bottom:20px;
-    box-shadow:0 15px 45px rgba(0,0,0,.35);
-}
-
-.card h2{
-    margin-top:0;
-    color:var(--gold);
-}
-
-.hidden{
-    display:none!important;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:18px;
-}
-
-@media(max-width:700px){
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-    .header-inner{
-        padding:12px;
-    }
-
-    .logo{
-        font-size:20px;
-    }
-}
-
-label{
-    display:block;
-    margin:12px 0 7px;
-    font-size:13px;
-    color:#ccc;
-    font-weight:700;
-}
-
-input{
-    width:100%;
-    padding:14px;
-    background:#080808;
-    border:1px solid #333;
-    color:white;
-    border-radius:10px;
-    outline:none;
-}
-
-input:focus{
-    border-color:var(--pink);
-    box-shadow:0 0 0 2px rgba(255,47,146,.12);
-}
-
-.btn{
-    border:0;
-    border-radius:10px;
-    padding:13px 18px;
-    font-weight:800;
-    color:white;
-    transition:.2s;
-}
-
-.btn:hover{
-    transform:translateY(-2px);
-    filter:brightness(1.1);
-}
-
-.btn-pink{
-    background:linear-gradient(135deg,#ff2f92,#d90065);
-}
-
-.btn-blue{
-    background:linear-gradient(135deg,#2196f3,#1565c0);
-}
-
-.btn-green{
-    background:linear-gradient(135deg,#00c853,#009624);
-}
-
-.btn-gold{
-    background:linear-gradient(135deg,#ffd700,#ff9800);
-    color:#111;
-}
-
-.btn-red{
-    background:linear-gradient(135deg,#ff1744,#b00020);
-}
-
-.actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-}
-
-.message{
-    margin-top:15px;
-    padding:12px;
-    border-radius:10px;
-    background:#242424;
-    color:#ddd;
-    min-height:20px;
-}
-
-.message.success{
-    border-left:4px solid var(--green);
-}
-
-.message.error{
-    border-left:4px solid var(--red);
-}
-
-.auth-tabs{
-    display:flex;
-    gap:8px;
-    margin-bottom:20px;
-}
-
-.tab{
-    flex:1;
-    border:0;
-    padding:12px;
-    border-radius:9px;
-    background:#292929;
-    color:#aaa;
-    font-weight:800;
-}
-
-.tab.active{
-    background:var(--pink);
-    color:white;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-    margin-bottom:20px;
-}
-
-@media(max-width:600px){
-    .stats{
-        grid-template-columns:1fr;
-    }
-}
-
-.stat{
-    background:#0b0b0b;
-    border:1px solid #292929;
-    padding:18px;
-    border-radius:14px;
-}
-
-.stat small{
-    color:#888;
-}
-
-.stat strong{
-    display:block;
-    font-size:25px;
-    color:var(--gold);
-    margin-top:5px;
-}
-
-.draw{
-    background:#0c0c0c;
-    border:1px solid #292929;
-    padding:15px;
-    border-radius:13px;
-    margin-bottom:10px;
-}
-
-.draw-title{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    font-weight:800;
-}
-
-.status{
-    color:var(--green);
-}
-
-.closed{
-    color:#888;
-}
-
-.number-grid{
-    display:grid;
-    grid-template-columns:repeat(9,1fr);
-    gap:7px;
-    margin-top:18px;
-}
-
-@media(max-width:500px){
-    .number-grid{
-        grid-template-columns:repeat(5,1fr);
-    }
-}
-
-.number{
-    aspect-ratio:1;
-    border-radius:50%;
-    border:1px solid #444;
-    background:#181818;
-    color:white;
-    font-weight:800;
-    font-size:14px;
-}
-
-.number.selected{
-    background:linear-gradient(135deg,var(--pink),#b0005a);
-    border-color:var(--pink2);
-    box-shadow:0 0 15px rgba(255,47,146,.45);
-}
-
-.selected-info{
-    margin-top:15px;
-    color:#bbb;
-}
-
-.selected-info strong{
-    color:var(--gold);
-}
-
-.table-wrap{
-    overflow:auto;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:500px;
-}
-
-th,
-td{
-    padding:11px;
-    border-bottom:1px solid #292929;
-    text-align:left;
-    font-size:13px;
-}
-
-th{
-    color:var(--gold);
-}
-
-.loading{
-    text-align:center;
-    padding:20px;
-    color:#aaa;
-}
-
-footer{
-    text-align:center;
-    color:#777;
-    padding:30px 15px;
-    border-top:1px solid #222;
-    font-size:12px;
+.line-clamp-2 {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 </style>
 </head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-<body>
-
-<header class="header">
-    <div class="header-inner">
-        <div class="logo">Sorte<span>Moz</span> 🎰</div>
-
-        <div class="user-area" id="userArea">
-            <div class="balance">
-                <span id="headerBalance">0</span> MT
-            </div>
-            <button class="logout" onclick="logout()">Sair</button>
+<!-- HEADER -->
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between min-h-20 gap-4">
+      <!-- LOGO -->
+      <div class="flex items-center gap-3 min-w-0 cursor-pointer" onclick="window.scrollTo({top:0, behavior: 'smooth'})">
+        <div class="w-12 h-12 shrink-0 bg-gradient-to-tr from-brand-600 to-emerald-400 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-brand-500/30">
+          M1
         </div>
+        <div class="min-w-0">
+          <span class="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-slate-900 via-brand-700 to-slate-800 bg-clip-text text-transparent">
+            Moz1Vendas
+          </span>
+          <span class="block text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 -mt-1">
+            Marketplace Digital
+          </span>
+        </div>
+      </div>
+
+      <!-- ÁREA DO VENDEDOR -->
+      <div class="flex items-center gap-2">
+        <button onclick="openModal('modalTermos')" class="text-xs font-semibold text-slate-500 hover:text-slate-800 hidden md:block mr-2">
+          <i class="fa-solid fa-file-contract mr-1"></i> Termos & Condições
+        </button>
+
+        <!-- SESSÃO LOGADA -->
+        <div id="sessaoVendedor" class="hidden items-center gap-2">
+          <div class="hidden sm:block text-right mr-1">
+            <span id="nomeLojaSessao" class="block text-xs font-bold text-slate-700"></span>
+            <span class="text-[9px] text-slate-400">Vendedor</span>
+          </div>
+          <button onclick="openModal('modalAddProduto')" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-3 sm:px-4 py-2.5 rounded-full shadow transition-all">
+            <i class="fa-solid fa-plus mr-1"></i>
+            <span class="hidden sm:inline">Adicionar Produto</span>
+            <span class="sm:hidden">Produto</span>
+          </button>
+          <button onclick="terminarSessao()" class="text-xs text-red-500 hover:underline px-2">Sair</button>
+        </div>
+
+        <!-- VISITANTE -->
+        <div id="botoesVisitante" class="flex items-center gap-2">
+          <button onclick="openModal('modalLogin')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold px-3 sm:px-4 py-2.5 rounded-full transition-all">
+            <i class="fa-solid fa-right-to-bracket mr-1"></i>
+            <span class="hidden sm:inline">Entrar na Loja</span>
+            <span class="sm:hidden">Entrar</span>
+          </button>
+          <button onclick="openModal('modalRegistro')" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-4 sm:px-5 py-2.5 rounded-full transition-all shadow-md shadow-brand-500/20">
+            <i class="fa-solid fa-store mr-1"></i>
+            <span class="hidden sm:inline">Criar Loja</span>
+            <span class="sm:hidden">Criar</span>
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </header>
 
-<div class="container">
-
-    <section class="hero">
-        <h1>SorteMoz</h1>
-        <p>LOT5/45 • Escolha 5 números • Boa sorte!</p>
-    </section>
-
-
-    <!-- AUTENTICAÇÃO -->
-    <section id="authSection" class="card">
-
-        <div class="auth-tabs">
-            <button id="tabLogin"
-                    class="tab active"
-                    onclick="mostrarLogin()">
-                LOGIN
-            </button>
-
-            <button id="tabRegistro"
-                    class="tab"
-                    onclick="mostrarRegistro()">
-                REGISTAR
-            </button>
-        </div>
-
-
-        <!-- LOGIN -->
-        <div id="loginBox">
-
-            <h2>Entrar na conta</h2>
-
-            <label>Número de telefone</label>
-            <input id="loginNumero"
-                   type="text"
-                   placeholder="Seu número">
-
-            <label>PIN de 6 dígitos</label>
-            <input id="loginPin"
-                   type="password"
-                   maxlength="6"
-                   inputmode="numeric"
-                   placeholder="••••••">
-
-            <br><br>
-
-            <button class="btn btn-pink"
-                    onclick="login()">
-                ENTRAR
-            </button>
-
-        </div>
-
-
-        <!-- REGISTRO -->
-        <div id="registroBox" class="hidden">
-
-            <h2>Criar conta</h2>
-
-            <label>Nome completo</label>
-            <input id="regNome"
-                   type="text"
-                   placeholder="Seu nome">
-
-            <label>Email</label>
-            <input id="regEmail"
-                   type="email"
-                   placeholder="seuemail@gmail.com">
-
-            <label>Número de telefone</label>
-            <input id="regNumero"
-                   type="text"
-                   placeholder="Seu número">
-
-            <label>PIN de 6 dígitos</label>
-            <input id="regPin"
-                   type="password"
-                   maxlength="6"
-                   inputmode="numeric"
-                   placeholder="••••••">
-
-            <label>Idade</label>
-            <input id="regIdade"
-                   type="number"
-                   min="18"
-                   placeholder="18">
-
-            <br><br>
-
-            <button class="btn btn-pink"
-                    onclick="registrar()">
-                CRIAR CONTA
-            </button>
-
-        </div>
-
-        <div id="authMessage" class="message"></div>
-
-    </section>
-
-
-    <!-- ÁREA PRINCIPAL -->
-    <section id="appSection" class="hidden">
-
-        <div class="stats">
-
-            <div class="stat">
-                <small>Saldo disponível</small>
-                <strong>
-                    <span id="saldo">0</span> MT
-                </strong>
-            </div>
-
-            <div class="stat">
-                <small>Custo por aposta</small>
-                <strong>10 MT</strong>
-            </div>
-
-            <div class="stat">
-                <small>Jogo</small>
-                <strong>5/45</strong>
-            </div>
-
-        </div>
-
-
-        <!-- MENU -->
-        <div class="card">
-
-            <h2>Minha conta</h2>
-
-            <div class="actions">
-
-                <button class="btn btn-gold"
-                        onclick="atualizarSaldo()">
-                    💰 Atualizar saldo
-                </button>
-
-                <button class="btn btn-green"
-                        onclick="mostrarDeposito()">
-                    ➕ Depositar
-                </button>
-
-                <button class="btn btn-blue"
-                        onclick="mostrarLevantamento()">
-                    💸 Levantar
-                </button>
-
-                <button class="btn btn-pink"
-                        onclick="carregarBilhetes()">
-                    🎟️ Meus bilhetes
-                </button>
-
-                <button class="btn btn-blue"
-                        onclick="carregarMovimentos()">
-                    📜 Movimentos
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- DEPÓSITO -->
-        <div id="depositoBox" class="card hidden">
-
-            <h2>Depositar saldo</h2>
-
-            <p>
-                Informe o valor que deseja depositar.
-                O pedido será enviado ao administrador para
-                processamento manual.
-            </p>
-
-            <label>Valor em MT</label>
-
-            <input id="depositoValor"
-                   type="number"
-                   min="1"
-                   placeholder="Ex: 100">
-
-            <br><br>
-
-            <button class="btn btn-green"
-                    onclick="solicitarDeposito()">
-                SOLICITAR DEPÓSITO
-            </button>
-
-            <div id="depositoMessage" class="message"></div>
-
-        </div>
-
-
-        <!-- LEVANTAMENTO -->
-        <div id="levantamentoBox" class="card hidden">
-
-            <h2>Solicitar levantamento</h2>
-
-            <p>
-                O valor será retirado do saldo e ficará
-                pendente até aprovação do administrador.
-            </p>
-
-            <label>Valor em MT</label>
-
-            <input id="levantamentoValor"
-                   type="number"
-                   min="1"
-                   placeholder="Ex: 100">
-
-            <br><br>
-
-            <button class="btn btn-blue"
-                    onclick="solicitarLevantamento()">
-                SOLICITAR LEVANTAMENTO
-            </button>
-
-            <div id="levantamentoMessage" class="message"></div>
-
-        </div>
-
-
-        <!-- SORTEIOS -->
-        <div class="card">
-
-            <h2>🎯 Sorteios</h2>
-
-            <div id="sorteios">
-                <div class="loading">
-                    Carregando sorteios...
-                </div>
-            </div>
-
-        </div>
-
-
-        <!-- APOSTA -->
-        <div class="card">
-
-            <h2>🎟️ Fazer aposta</h2>
-
-            <label>Escolha o sorteio</label>
-
-            <select id="sorteioSelect"
-                    style="width:100%;padding:13px;border-radius:10px;background:#080808;color:white;border:1px solid #333;">
-            </select>
-
-            <p class="selected-info">
-                Escolha exatamente <strong>5 números</strong>.
-                Cada aposta custa <strong>10 MT</strong>.
-            </p>
-
-            <div id="numberGrid" class="number-grid"></div>
-
-            <div class="selected-info">
-                Números selecionados:
-                <strong id="selectedNumbers">Nenhum</strong>
-            </div>
-
-            <br>
-
-            <button class="btn btn-pink"
-                    onclick="fazerAposta()">
-                🎟️ CONFIRMAR APOSTA — 10 MT
-            </button>
-
-            <div id="apostaMessage" class="message"></div>
-
-        </div>
-
-
-        <!-- RESULTADOS -->
-        <div class="card">
-
-            <h2>🏆 Vencedores</h2>
-
-            <button class="btn btn-gold"
-                    onclick="carregarVencedores()">
-                Ver vencedores
-            </button>
-
-            <div id="vencedores"
-                 style="margin-top:15px;">
-            </div>
-
-        </div>
-
-
-        <!-- BILHETES -->
-        <div id="bilhetesBox" class="card hidden">
-
-            <h2>🎟️ Meus bilhetes</h2>
-
-            <div id="bilhetes"></div>
-
-        </div>
-
-
-        <!-- MOVIMENTOS -->
-        <div id="movimentosBox" class="card hidden">
-
-            <h2>📜 Meus movimentos</h2>
-
-            <div id="movimentos"></div>
-
-        </div>
-
-    </section>
-
-</div>
-
-
-<footer>
-    © 2026 SorteMoz • LOT5/45<br>
-    Jogue com responsabilidade. Apenas maiores de 18 anos.
+<!-- CONTEÚDO PRINCIPAL -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <section class="mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Marketplace de Moçambique</p>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Produtos e lojas</h1>
+        <p class="text-sm text-slate-500 mt-1">Descubra produtos publicados por vendedores verificados no Moz1Vendas.</p>
+      </div>
+      <button onclick="carregarLojas(true)" class="self-start sm:self-auto text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 px-4 py-2.5 rounded-full transition-all">
+        <i class="fa-solid fa-rotate mr-1"></i> Atualizar
+      </button>
+    </div>
+  </section>
+
+  <!-- ESTADOS DA PÁGINA -->
+  <section id="estadoCarregamento" class="py-16 flex flex-col items-center justify-center">
+    <div class="loading-spinner mb-4"></div>
+    <p class="text-sm font-semibold text-slate-500">A carregar lojas e produtos...</p>
+    <p class="text-xs text-slate-400 mt-1">Conectando ao banco de dados</p>
+  </section>
+
+  <section id="estadoErro" class="hidden py-12">
+    <div class="max-w-lg mx-auto bg-red-50 border border-red-100 rounded-3xl p-6 text-center">
+      <div class="w-14 h-14 mx-auto rounded-full bg-red-100 flex items-center justify-center text-red-600 text-xl mb-4">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 class="font-extrabold text-red-800">Não foi possível carregar as lojas</h3>
+      <p id="mensagemErro" class="text-xs text-red-600 mt-2">O servidor não respondeu corretamente.</p>
+      <button onclick="carregarLojas(true)" class="mt-5 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-full text-xs font-bold">Tentar novamente</button>
+    </div>
+  </section>
+
+  <section id="seccaoBlocosEmpresas" class="hidden space-y-10"></section>
+
+  <section id="estadoVazio" class="hidden py-16">
+    <div class="text-center">
+      <div class="w-20 h-20 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-3xl mb-5">
+        <i class="fa-solid fa-store"></i>
+      </div>
+      <h3 class="text-lg font-extrabold text-slate-700">Nenhuma loja registada ainda</h3>
+      <p class="text-sm text-slate-400 mt-2">Seja o primeiro vendedor a criar a sua loja no Moz1Vendas.</p>
+      <button onclick="openModal('modalRegistro')" class="mt-5 bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-full text-xs font-bold shadow">
+        <i class="fa-solid fa-store mr-1"></i> Criar Minha Loja
+      </button>
+    </div>
+  </section>
+</main>
+
+<!-- RODAPÉ DA PÁGINA -->
+<footer class="bg-white border-t border-slate-200 py-6 mt-12 text-slate-500 text-xs">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+    <div>
+      <p class="font-bold text-slate-800">Moz1Vendas Marketplace</p>
+      <p class="text-[11px] text-slate-400">A Moz1Vendas é uma plataforma intermediadora de anúncios. Cada vendedor é responsável por seus produtos.</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <button onclick="openModal('modalTermos')" class="hover:underline font-semibold text-brand-700">Termos e Condições de Uso</button>
+    </div>
+  </div>
 </footer>
 
+<!-- MODAL PAGAMENTO NETSHOP -->
+<div id="modalPagamentoNetshop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
+  <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative modal-box">
+    <button onclick="closeModal('modalPagamentoNetshop')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+    <div class="pr-8">
+      <span class="inline-block px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-[10px] font-extrabold uppercase mb-2">Checkout Seguro NetShop</span>
+      <h3 id="netshopTituloProduto" class="text-lg font-extrabold text-slate-900">Pagar Produto</h3>
+      <p class="text-xs text-slate-500 mt-0.5">Valor: <strong id="netshopValorProduto" class="text-brand-700 text-sm">0,00 Mtn</strong></p>
+    </div>
+    <form onsubmit="submeterPagamentoNetshop(event)" class="space-y-4 text-xs">
+      <input type="hidden" id="netshopProdutoId">
+      <div>
+        <label class="font-bold text-slate-700 block mb-1">Número de Telefone (M-Pesa / NetShop)</label>
+        <input type="tel" required id="netshopTelefone" placeholder="84... / 85... / +258..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+        <p class="text-[10px] text-slate-400 mt-1">Insira o número onde receberá a notificação de pagamento.</p>
+      </div>
+      <div>
+        <label class="font-bold text-slate-700 block mb-1">Método de Pagamento</label>
+        <select id="netshopMetodo" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+          <option value="mpesa">M-Pesa</option>
+          <option value="emola">e-Mola</option>
+        </select>
+      </div>
+      <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[10px] text-slate-500 leading-relaxed">
+        <i class="fa-solid fa-shield-halved text-brand-600 mr-1"></i>
+        Pagamento processado via NetShop. Garantia de reembolso Moz1Vendas caso o produto não seja entregue.
+      </div>
+      <button type="submit" id="btnSubmitNetshop" class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all text-sm">
+        Pagar Agora via NetShop
+      </button>
+    </form>
+  </div>
+</div>
 
+<!-- MODAL TERMOS E CONDIÇÕES -->
+<div id="modalTermos" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
+  <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-4 shadow-2xl relative max-h-[85vh] overflow-y-auto modal-box text-slate-700">
+    <button onclick="closeModal('modalTermos')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+    <div class="border-b border-slate-100 pb-3">
+      <h3 class="text-xl font-extrabold text-slate-900">Termos e Condições de Uso</h3>
+      <p class="text-xs text-slate-400">Regras de utilização da plataforma Moz1Vendas</p>
+    </div>
+    <div class="space-y-4 text-xs leading-relaxed">
+      <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 font-medium">
+        <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+        Ao utilizar a nossa plataforma, concorda inteira e expressamente com todos os nossos Termos e Condições.
+      </div>
+      <h4 class="font-extrabold text-slate-900 text-sm">1. Natureza da Plataforma (Marketplace)</h4>
+      <p>A Moz1Vendas atua exclusivamente como uma plataforma digital de intermediação de anúncios (marketplace). A Moz1Vendas <strong>não é a proprietária nem fornecedora dos produtos visíveis</strong> e não realiza vendas diretas, sendo os itens publicados de integral responsabilidade de cada vendedor cadastrado.</p>
+      <h4 class="font-extrabold text-slate-900 text-sm">2. Proibição de Fraudes e Produtos Ilícitos</h4>
+      <p>É estritamente proibida a publicação, comercialização ou tentativa de venda de <strong>produtos roubados, furtados, falsificados ou a prática de quaisquer atividades fraudulentas</strong>. Lojas ou anúncios suspeitos serão banidos permanentemente da plataforma e denunciados às autoridades competentes.</p>
+      <h4 class="font-extrabold text-slate-900 text-sm">3. Isenção de Responsabilidade</h4>
+      <p>Em caso de inconformidade entre o produto anunciado e o entregue, defeito, avaria ou atraso, a responsabilidade é <strong>total e exclusiva do vendedor</strong>. A Moz1Vendas não assume responsabilidade civil nem penal sobre transações diretas acertadas fora do nosso gateway oficial.</p>
+      <h4 class="font-extrabold text-slate-900 text-sm">4. Política de Reembolsos</h4>
+      <p>A Moz1Vendas <strong>não realiza reembolsos</strong> em negociações e pagamentos diretos efetuados ao vendedor (por exemplo, transações acertadas diretamente via WhatsApp). A única exceção de reembolso pela plataforma aplica-se a pagamentos processados via <strong>NetShop</strong>, caso o comprador comprove o não recebimento formal do produto dentro do prazo estabelecido.</p>
+    </div>
+    <div class="pt-4 border-t border-slate-100 text-right">
+      <button onclick="closeModal('modalTermos')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-xl text-xs">
+        Compreendi e Aceito
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REGISTO -->
+<div id="modalRegistro" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
+  <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto modal-box">
+    <button onclick="closeModal('modalRegistro')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+    <div class="pr-8">
+      <h3 class="text-xl font-extrabold text-slate-900">Registo de Empresa / Marca</h3>
+      <p class="text-xs text-slate-500 mt-1">Crie a sua loja e publique os seus produtos.</p>
+    </div>
+    <form id="formRegistro" onsubmit="submeterRegistro(event)" class="space-y-4 text-xs">
+      <div>
+        <label class="font-bold text-slate-700 block mb-1">Nome Completo</label>
+        <input type="text" required id="regNome" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">E-mail</label>
+          <input type="email" required id="regEmail" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Contacto (WhatsApp)</label>
+          <input type="tel" required id="regTelefone" placeholder="+258..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Nome da Empresa / Marca</label>
+          <input type="text" required id="regEmpresa" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Link do Logotipo</label>
+          <input type="url" required id="regLogo" placeholder="https://..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Data de Nascimento</label>
+          <input type="date" required id="regDataNasc" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">BI N°</label>
+          <input type="text" required id="regBI" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+      </div>
+      <div>
+        <label class="font-bold text-slate-700 block mb-1">PIN de Acesso (4-6 dígitos)</label>
+        <input type="password" required id="regPin" maxlength="6" minlength="4" inputmode="numeric" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+      </div>
+      <div class="flex items-start gap-2 pt-1">
+        <input type="checkbox" required id="regAceiteTermos" class="mt-0.5 rounded border-slate-300 text-brand-600 focus:ring-brand-500">
+        <label for="regAceiteTermos" class="text-[11px] text-slate-500 leading-tight">
+          Li e aceito os <button type="button" onclick="openModal('modalTermos')" class="text-brand-700 underline font-semibold">Termos e Condições</button> do Moz1Vendas. Declaramos proibida a venda de itens roubados.
+        </label>
+      </div>
+      <button type="submit" id="btnSubmitReg" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all text-sm">
+        Criar Minha Empresa
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div id="modalLogin" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
+  <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-6 shadow-2xl relative modal-box">
+    <button onclick="closeModal('modalLogin')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+    <div class="pr-8">
+      <h3 class="text-xl font-extrabold text-slate-900">Entrar na Sua Loja</h3>
+      <p class="text-xs text-slate-500 mt-1">Aceda ao painel do vendedor.</p>
+    </div>
+    <form onsubmit="submeterLogin(event)" class="space-y-4 text-xs">
+      <div>
+        <label class="font-bold text-slate-700 block mb-1">Contacto (WhatsApp)</label>
+        <input type="tel" id="loginTelefone" required class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+      </div>
+      <div>
+        <label class="font-bold text-slate-700 block mb-1">PIN de Acesso</label>
+        <input type="password" id="loginPin" required maxlength="6" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+      </div>
+      <button type="submit" id="btnLogin" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-all">
+        Aceder ao Painel
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL ADICIONAR PRODUTO -->
+<div id="modalAddProduto" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 modal">
+  <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto modal-box">
+    <button onclick="closeModal('modalAddProduto')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+    <div class="pr-8">
+      <h3 class="text-xl font-extrabold text-slate-900">Novo Produto</h3>
+      <p class="text-xs text-slate-500 mt-1">Publique um produto na sua loja.</p>
+    </div>
+    <form onsubmit="submeterProduto(event)" class="space-y-4 text-xs">
+      <div>
+        <label class="font-bold text-slate-700 block mb-1">Nome do Produto</label>
+        <input type="text" id="prodNome" required class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+      </div>
+      <div>
+        <label class="font-bold text-slate-700 block mb-1">Descrição</label>
+        <textarea id="prodDescricao" rows="3" placeholder="Descrição do produto..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 resize-none"></textarea>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Preço (Mtn)</label>
+          <input type="number" id="prodPreco" required min="0" step="0.01" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Tipo de Produto</label>
+          <select id="prodTipo" onchange="toggleLinkDigital(this.value)" class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="FISICO">Físico</option>
+            <option value="DIGITAL">Digital</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="font-bold text-slate-700 block mb-1">URL da Imagem</label>
+        <input type="url" id="prodImagem" required placeholder="https://..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+      </div>
+      <div>
+        <label class="font-bold text-slate-700 block mb-1">WhatsApp do Vendedor para o Produto</label>
+        <input type="tel" id="prodWhatsapp" placeholder="+258..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+      </div>
+      <div id="divLinkDigital" class="hidden">
+        <label class="font-bold text-slate-700 block mb-1">Link de Download / Ficheiro Digital</label>
+        <input type="url" id="prodLinkDigital" placeholder="https://..." class="w-full p-3 bg-slate-100 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+      </div>
+      <button type="submit" id="btnSubmitProduto" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all">
+        Publicar Produto
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="fixed bottom-5 right-5 z-[200] hidden max-w-sm">
+  <div id="toastBox" class="toast bg-slate-900 text-white rounded-2xl shadow-2xl px-5 py-4 flex items-start gap-3">
+    <i id="toasticon" class="fa-solid fa-circle-check text-brand-400 mt-0.5"></i>
+    <div>
+      <p id="toastTitle" class="font-bold text-sm">Concluído</p>
+      <p id="toastMessage" class="text-xs text-slate-300 mt-1"></p>
+    </div>
+  </div>
+</div>
+
+<!-- JAVASCRIPT INTEGRADO AO GOOGLE APPS SCRIPT -->
 <script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwhpTqzTJFu0WxwyIPO_xCLVnz-Sxd-3yRpwXO8WCYbvcuCekoSnJ1G_XCtM7_DAcjtHA/exec";
+const SLIDE_INTERVALO = 6000;
+let lojas = [];
+let usuarioLogado = null;
+let timersSlideshow = {};
 
-/* =========================================================
-   CONFIGURAÇÃO
-========================================================= */
-
-const API_URL =
-'https://script.google.com/macros/s/AKfycbxox3M6ja3yKp2C0U9UKwo7U_N_A_DOLbhtaYnONOkLYERMAgGpRqabL_kF58mN8J70tw/exec';
-
-const CONFIG = {
-    custoAposta: 10,
-    bolasPorAposta: 5,
-    numeroMinimo: 1,
-    numeroMaximo: 45
-};
-
-let token = localStorage.getItem('sortemoz_token') || '';
-
-let sorteios = [];
-
-let numerosSelecionados = [];
-
-
-/* =========================================================
-   COMUNICAÇÃO COM GAS
-========================================================= */
-
-async function chamarAPI(dados){
-
-    try{
-
-        const resposta = await fetch(API_URL, {
-            method:'POST',
-            headers:{
-                'Content-Type':'text/plain;charset=utf-8'
-            },
-            body:JSON.stringify(dados)
-        });
-
-        const texto = await resposta.text();
-
-        console.log('Resposta GAS:',texto);
-
-        try{
-            return JSON.parse(texto);
-        }catch(e){
-
-            return {
-                ok:false,
-                mensagem:'O servidor devolveu uma resposta inválida.'
-            };
-        }
-
-    }catch(erro){
-
-        console.error(erro);
-
-        return {
-            ok:false,
-            mensagem:'Não foi possível conectar ao servidor.'
-        };
-    }
+/* FUNÇÕES DE MODAL */
+function openModal(id) {
+  const modal = document.getElementById(id);
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  document.body.classList.add('overflow-hidden');
 }
 
-
-/* =========================================================
-   MENSAGENS
-========================================================= */
-
-function mensagem(id,texto,tipo=''){
-
-    const el=document.getElementById(id);
-
-    if(!el)return;
-
-    el.innerText=texto;
-
-    el.className='message '+tipo;
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  if (!modal) return;
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+  document.body.classList.remove('overflow-hidden');
 }
 
-
-/* =========================================================
-   TABS
-========================================================= */
-
-function mostrarLogin(){
-
-    document.getElementById('loginBox')
-        .classList.remove('hidden');
-
-    document.getElementById('registroBox')
-        .classList.add('hidden');
-
-    document.getElementById('tabLogin')
-        .classList.add('active');
-
-    document.getElementById('tabRegistro')
-        .classList.remove('active');
-
-    mensagem('authMessage','');
-}
-
-
-function mostrarRegistro(){
-
-    document.getElementById('loginBox')
-        .classList.add('hidden');
-
-    document.getElementById('registroBox')
-        .classList.remove('hidden');
-
-    document.getElementById('tabLogin')
-        .classList.remove('active');
-
-    document.getElementById('tabRegistro')
-        .classList.add('active');
-
-    mensagem('authMessage','');
-}
-
-
-/* =========================================================
-   REGISTRO
-========================================================= */
-
-async function registrar(){
-
-    const nome=
-        document.getElementById('regNome').value.trim();
-
-    const email=
-        document.getElementById('regEmail').value.trim();
-
-    const numero=
-        document.getElementById('regNumero').value.trim();
-
-    const pin=
-        document.getElementById('regPin').value.trim();
-
-    const idade=
-        Number(document.getElementById('regIdade').value);
-
-
-    if(!nome || !email || !numero || !pin || !idade){
-
-        mensagem(
-            'authMessage',
-            'Preencha todos os campos.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    if(idade<18){
-
-        mensagem(
-            'authMessage',
-            'Apenas maiores de 18 anos podem se cadastrar.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    if(!/^\d{6}$/.test(pin)){
-
-        mensagem(
-            'authMessage',
-            'O PIN deve conter exatamente 6 dígitos.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    mensagem(
-        'authMessage',
-        'A registar a conta, aguarde...'
-    );
-
-
-    const data=await chamarAPI({
-
-        acao:'registar',
-
-        nome:nome,
-
-        email:email,
-
-        numero:numero,
-
-        pin:pin,
-
-        idade:idade
-
-    });
-
-
-    if(data.ok){
-
-        mensagem(
-            'authMessage',
-            data.mensagem ||
-            'Conta criada com sucesso.',
-            'success'
-        );
-
-        document.getElementById('regPin').value='';
-
-        setTimeout(()=>{
-            mostrarLogin();
-
-            document.getElementById('loginNumero')
-                .value=numero;
-
-        },1000);
-
-    }else{
-
-        mensagem(
-            'authMessage',
-            data.mensagem ||
-            'Não foi possível realizar o registo.',
-            'error'
-        );
-    }
-
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-async function login(){
-
-    const numero=
-        document.getElementById('loginNumero')
-        .value.trim();
-
-    const pin=
-        document.getElementById('loginPin')
-        .value.trim();
-
-
-    if(!numero || !pin){
-
-        mensagem(
-            'authMessage',
-            'Digite o número e o PIN.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    mensagem(
-        'authMessage',
-        'A entrar na sua conta...'
-    );
-
-
-    const data=await chamarAPI({
-
-        acao:'login',
-
-        numero:numero,
-
-        pin:pin
-
-    });
-
-
-    if(!data.ok){
-
-        mensagem(
-            'authMessage',
-            data.mensagem ||
-            'Número ou PIN incorretos.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    token=data.dados.token;
-
-    localStorage.setItem(
-        'sortemoz_token',
-        token
-    );
-
-    localStorage.setItem(
-        'sortemoz_usuario',
-        data.dados.usuariold
-    );
-
-    localStorage.setItem(
-        'sortemoz_nome',
-        data.dados.nome
-    );
-
-
-    document.getElementById('authSection')
-        .classList.add('hidden');
-
-    document.getElementById('appSection')
-        .classList.remove('hidden');
-
-    document.getElementById('userArea')
-        .style.display='flex';
-
-
-    atualizarSaldo();
-
-    carregarSorteios();
-
-    criarNumeros();
-
-
-    mensagem('authMessage','');
-
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-function logout(){
-
-    token='';
-
-    localStorage.removeItem('sortemoz_token');
-    localStorage.removeItem('sortemoz_usuario');
-    localStorage.removeItem('sortemoz_nome');
-
-    document.getElementById('appSection')
-        .classList.add('hidden');
-
-    document.getElementById('authSection')
-        .classList.remove('hidden');
-
-    document.getElementById('userArea')
-        .style.display='none';
-
-}
-
-
-/* =========================================================
-   SALDO
-========================================================= */
-
-async function atualizarSaldo(){
-
-    if(!token)return;
-
-
-    const data=await chamarAPI({
-
-        acao:'saldo',
-
-        token:token
-
-    });
-
-
-    if(data.ok){
-
-        const saldo=
-            Number(data.dados.saldo || 0);
-
-
-        document.getElementById('saldo')
-            .innerText=saldo.toFixed(2);
-
-        document.getElementById('headerBalance')
-            .innerText=saldo.toFixed(2);
-
-    }else{
-
-        if(data.mensagem &&
-           data.mensagem.toLowerCase().includes('sessão')){
-
-            logout();
-        }
-    }
-
-}
-
-
-/* =========================================================
-   DEPÓSITO
-========================================================= */
-
-function mostrarDeposito(){
-
-    document.getElementById('depositoBox')
-        .classList.toggle('hidden');
-
-    document.getElementById('levantamentoBox')
-        .classList.add('hidden');
-}
-
-
-async function solicitarDeposito(){
-
-    const valor=
-        Number(
-            document.getElementById('depositoValor')
-            .value
-        );
-
-
-    if(!valor || valor<=0){
-
-        mensagem(
-            'depositoMessage',
-            'Informe um valor válido.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    mensagem(
-        'depositoMessage',
-        'A enviar o pedido...'
-    );
-
-
-    const data=await chamarAPI({
-
-        acao:'deposito',
-
-        token:token,
-
-        valor:valor
-
-    });
-
-
-    if(data.ok){
-
-        mensagem(
-            'depositoMessage',
-            data.mensagem ||
-            'Seu pedido encontra-se em processamento. Aguarde a aprovação do depósito.',
-            'success'
-        );
-
-        document.getElementById('depositoValor')
-            .value='';
-
-    }else{
-
-        mensagem(
-            'depositoMessage',
-            data.mensagem,
-            'error'
-        );
-    }
-
-}
-
-
-/* =========================================================
-   LEVANTAMENTO
-========================================================= */
-
-function mostrarLevantamento(){
-
-    document.getElementById('levantamentoBox')
-        .classList.toggle('hidden');
-
-    document.getElementById('depositoBox')
-        .classList.add('hidden');
-}
-
-
-async function solicitarLevantamento(){
-
-    const valor=
-        Number(
-            document.getElementById('levantamentoValor')
-            .value
-        );
-
-
-    if(!valor || valor<=0){
-
-        mensagem(
-            'levantamentoMessage',
-            'Informe um valor válido.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    mensagem(
-        'levantamentoMessage',
-        'A enviar o pedido...'
-    );
-
-
-    const data=await chamarAPI({
-
-        acao:'levantamento',
-
-        token:token,
-
-        valor:valor
-
-    });
-
-
-    if(data.ok){
-
-        mensagem(
-            'levantamentoMessage',
-            data.mensagem ||
-            'Aguarde a aprovação do administrador.',
-            'success'
-        );
-
-        document.getElementById(
-            'levantamentoValor'
-        ).value='';
-
-        atualizarSaldo();
-
-    }else{
-
-        mensagem(
-            'levantamentoMessage',
-            data.mensagem,
-            'error'
-        );
-    }
-
-}
-
-
-/* =========================================================
-   SORTEIOS
-========================================================= */
-
-async function carregarSorteios(){
-
-    try{
-
-        const resposta=
-            await fetch(
-                API_URL+'?acao=sorteios'
-            );
-
-        const data=
-            await resposta.json();
-
-
-        if(!data.ok){
-
-            document.getElementById('sorteios')
-                .innerHTML=
-                '<div class="message error">'+
-                data.mensagem+
-                '</div>';
-
-            return;
-        }
-
-
-        sorteios=data.dados || [];
-
-        renderizarSorteios();
-
-    }catch(e){
-
-        document.getElementById('sorteios')
-            .innerHTML=
-            '<div class="message error">'+
-            'Não foi possível carregar os sorteios.'+
-            '</div>';
-    }
-
-}
-
-
-function renderizarSorteios(){
-
-    const box=
-        document.getElementById('sorteios');
-
-    const select=
-        document.getElementById('sorteioSelect');
-
-
-    box.innerHTML='';
-
-    select.innerHTML='';
-
-
-    if(!sorteios.length){
-
-        box.innerHTML=
-            '<div class="message">Nenhum sorteio disponível.</div>';
-
-        return;
-    }
-
-
-    sorteios.forEach((sorteio,index)=>{
-
-        const status=
-            String(sorteio.status || '')
-            .toUpperCase();
-
-
-        const div=
-            document.createElement('div');
-
-        div.className='draw';
-
-
-        div.innerHTML=`
-
-            <div class="draw-title">
-
-                <span>
-                    🎯 ${sorteio.id}
-                </span>
-
-                <span class="${
-                    status==='ABERTO'
-                    ? 'status'
-                    : 'closed'
-                }">
-                    ${status}
-                </span>
-
-            </div>
-
-            <div style="margin-top:7px;color:#aaa">
-
-                Horário:
-                <strong style="color:white">
-                    ${sorteio.hora}
-                </strong>
-
-                &nbsp; • &nbsp;
-
-                Fechamento:
-                <strong style="color:white">
-                    ${sorteio.fechamento}
-                </strong>
-
-            </div>
-        `;
-
-
-        box.appendChild(div);
-
-
-        if(status==='ABERTO'){
-
-            const option=
-                document.createElement('option');
-
-            option.value=sorteio.id;
-
-            option.textContent=
-                `${sorteio.id} — ${sorteio.hora}`;
-
-            select.appendChild(option);
-        }
-
-    });
-
-}
-
-
-/* =========================================================
-   NÚMEROS
-========================================================= */
-
-function criarNumeros(){
-
-    const grid=
-        document.getElementById('numberGrid');
-
-    grid.innerHTML='';
-
-
-    for(
-        let n=CONFIG.numeroMinimo;
-        n<=CONFIG.numeroMaximo;
-        n++
-    ){
-
-        const button=
-            document.createElement('button');
-
-        button.className='number';
-
-        button.innerText=n;
-
-        button.onclick=
-            ()=>selecionarNumero(n,button);
-
-        grid.appendChild(button);
-    }
-
-}
-
-
-function selecionarNumero(numero,button){
-
-    const index=
-        numerosSelecionados.indexOf(numero);
-
-
-    if(index!==-1){
-
-        numerosSelecionados.splice(index,1);
-
-        button.classList.remove('selected');
-
-    }else{
-
-        if(numerosSelecionados.length>=5){
-
-            mensagem(
-                'apostaMessage',
-                'Você só pode escolher 5 números.',
-                'error'
-            );
-
-            return;
-        }
-
-
-        numerosSelecionados.push(numero);
-
-        button.classList.add('selected');
-    }
-
-
-    numerosSelecionados.sort(
-        (a,b)=>a-b
-    );
-
-
-    document.getElementById('selectedNumbers')
-        .innerText=
-        numerosSelecionados.length
-        ? numerosSelecionados.join(' • ')
-        : 'Nenhum';
-
-}
-
-
-/* =========================================================
-   APOSTA
-========================================================= */
-
-async function fazerAposta(){
-
-    if(numerosSelecionados.length!==5){
-
-        mensagem(
-            'apostaMessage',
-            'Escolha exatamente 5 números.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    const sorteioId=
-        document.getElementById(
-            'sorteioSelect'
-        ).value;
-
-
-    if(!sorteioId){
-
-        mensagem(
-            'apostaMessage',
-            'Selecione um sorteio.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    mensagem(
-        'apostaMessage',
-        'A processar a aposta...'
-    );
-
-
-    const data=await chamarAPI({
-
-        acao:'apostar',
-
-        token:token,
-
-        sorteiold:sorteioId,
-
-        apostas:[
-            numerosSelecionados
-        ]
-
-    });
-
-
-    if(data.ok){
-
-        mensagem(
-            'apostaMessage',
-            data.mensagem+
-            (data.bilheteld
-                ? ' Bilhete: '+data.bilheteld
-                : ''),
-            'success'
-        );
-
-
-        atualizarSaldo();
-
-
-        numerosSelecionados=[];
-
-
-        document.querySelectorAll(
-            '.number.selected'
-        ).forEach(el=>{
-            el.classList.remove('selected');
-        });
-
-
-        document.getElementById(
-            'selectedNumbers'
-        ).innerText='Nenhum';
-
-    }else{
-
-        mensagem(
-            'apostaMessage',
-            data.mensagem,
-            'error'
-        );
-    }
-
-}
-
-
-/* =========================================================
-   BILHETES
-========================================================= */
-
-async function carregarBilhetes(){
-
-    document.getElementById('bilhetesBox')
-        .classList.remove('hidden');
-
-
-    const box=
-        document.getElementById('bilhetes');
-
-    box.innerHTML=
-        '<div class="loading">A carregar...</div>';
-
-
-    const data=await chamarAPI({
-
-        acao:'meusBilhetes',
-
-        token:token
-
-    });
-
-
-    if(!data.ok){
-
-        box.innerHTML=
-            '<div class="message error">'+
-            data.mensagem+
-            '</div>';
-
-        return;
-    }
-
-
-    if(!data.dados.length){
-
-        box.innerHTML=
-            '<div class="message">'+
-            'Você ainda não possui bilhetes.'+
-            '</div>';
-
-        return;
-    }
-
-
-    let html=`
-
-        <div class="table-wrap">
-
-        <table>
-
-        <thead>
-
-        <tr>
-            <th>Bilhete</th>
-            <th>Sorteio</th>
-            <th>Qtd.</th>
-            <th>Valor</th>
-            <th>Status</th>
-        </tr>
-
-        </thead>
-
-        <tbody>
-    `;
-
-
-    data.dados.forEach(item=>{
-
-        html+=`
-
-            <tr>
-
-                <td>${item.bilheteld}</td>
-
-                <td>${item.jogo}</td>
-
-                <td>${item.quantidade}</td>
-
-                <td>${item.valor} MT</td>
-
-                <td>${item.status}</td>
-
-            </tr>
-
-        `;
-
-    });
-
-
-    html+=`
-        </tbody>
-        </table>
-        </div>
-    `;
-
-
-    box.innerHTML=html;
-
-}
-
-
-/* =========================================================
-   MOVIMENTOS
-========================================================= */
-
-async function carregarMovimentos(){
-
-    document.getElementById('movimentosBox')
-        .classList.remove('hidden');
-
-
-    const box=
-        document.getElementById('movimentos');
-
-    box.innerHTML=
-        '<div class="loading">A carregar...</div>';
-
-
-    const data=await chamarAPI({
-
-        acao:'meusMovimentos',
-
-        token:token
-
-    });
-
-
-    if(!data.ok){
-
-        box.innerHTML=
-            '<div class="message error">'+
-            data.mensagem+
-            '</div>';
-
-        return;
-    }
-
-
-    if(!data.dados.length){
-
-        box.innerHTML=
-            '<div class="message">'+
-            'Nenhum movimento encontrado.'+
-            '</div>';
-
-        return;
-    }
-
-
-    let html=`
-
-        <div class="table-wrap">
-
-        <table>
-
-        <thead>
-
-        <tr>
-            <th>Tipo</th>
-            <th>Valor</th>
-            <th>Status</th>
-            <th>Descrição</th>
-        </tr>
-
-        </thead>
-
-        <tbody>
-    `;
-
-
-    data.dados.forEach(item=>{
-
-        html+=`
-
-            <tr>
-
-                <td>${item.tipo}</td>
-
-                <td>${item.valor} MT</td>
-
-                <td>${item.status}</td>
-
-                <td>${item.descricao}</td>
-
-            </tr>
-
-        `;
-
-    });
-
-
-    html+=`
-        </tbody>
-        </table>
-        </div>
-    `;
-
-
-    box.innerHTML=html;
-
-}
-
-
-/* =========================================================
-   VENCEDORES
-========================================================= */
-
-async function carregarVencedores(){
-
-    const box=
-        document.getElementById('vencedores');
-
-    box.innerHTML=
-        '<div class="loading">A carregar vencedores...</div>';
-
-
-    try{
-
-        const resposta=
-            await fetch(
-                API_URL+'?acao=vencedores'
-            );
-
-        const data=
-            await resposta.json();
-
-
-        if(!data.ok){
-
-            box.innerHTML=
-                '<div class="message error">'+
-                data.mensagem+
-                '</div>';
-
-            return;
-        }
-
-
-        if(!data.dados.length){
-
-            box.innerHTML=
-                '<div class="message">'+
-                'Ainda não existem vencedores registados.'+
-                '</div>';
-
-            return;
-        }
-
-
-        let html=`
-
-            <div class="table-wrap">
-
-            <table>
-
-            <thead>
-
-            <tr>
-                <th>Jogo</th>
-                <th>Acertos</th>
-                <th>Prémio</th>
-                <th>Data</th>
-            </tr>
-
-            </thead>
-
-            <tbody>
-        `;
-
-
-        data.dados.forEach(item=>{
-
-            html+=`
-
-                <tr>
-
-                    <td>${item.jogo || ''}</td>
-
-                    <td>${item.acertos || ''}</td>
-
-                    <td>${item.premio || 0} MT</td>
-
-                    <td>${item.data || ''}</td>
-
-                </tr>
-
-            `;
-
-        });
-
-
-        html+=`
-            </tbody>
-            </table>
-            </div>
-        `;
-
-
-        box.innerHTML=html;
-
-
-    }catch(e){
-
-        box.innerHTML=
-            '<div class="message error">'+
-            'Erro ao carregar vencedores.'+
-            '</div>';
-    }
-
-}
-
-
-/* =========================================================
-   RESTAURAR SESSÃO
-========================================================= */
-
-window.addEventListener('load',()=>{
-
-    if(token){
-
-        document.getElementById('authSection')
-            .classList.add('hidden');
-
-        document.getElementById('appSection')
-            .classList.remove('hidden');
-
-        document.getElementById('userArea')
-            .style.display='flex';
-
-        criarNumeros();
-
-        atualizarSaldo();
-
-        carregarSorteios();
-    }
-
+document.querySelectorAll('.modal').forEach(function(modal) {
+  modal.addEventListener('click', function(event) {
+    if (event.target === modal) closeModal(modal.id);
+  });
 });
 
-</script>
+/* TOAST NOTIFICATION */
+function mostrarToast(mensagem, tipo = 'success') {
+  const toast = document.getElementById('toast');
+  const title = document.getElementById('toastTitle');
+  const message = document.getElementById('toastMessage');
+  const icon = document.getElementById('toasticon');
+  if (!toast) return;
+  
+  message.innerText = mensagem;
+  if (tipo === 'error') {
+    title.innerText = 'Erro';
+    icon.className = 'fa-solid fa-circle-exclamation text-red-400 mt-0.5';
+  } else {
+    title.innerText = 'Concluído';
+    icon.className = 'fa-solid fa-circle-check text-brand-400 mt-0.5';
+  }
+  
+  toast.classList.remove('hidden');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function() {
+    toast.classList.add('hidden');
+  }, 4000);
+}
 
+/* UTILITÁRIOS */
+function escaparHTML(valor) {
+  if (valor === null || valor === undefined) return "";
+  return String(valor)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function formatarPreco(valor) {
+  const numero = Number(valor);
+  if (!Number.isFinite(numero)) return '0';
+  return numero.toLocaleString('pt-MZ', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+}
+
+function normalizarWhatsApp(numero) {
+  if (!numero) return "";
+  let n = String(numero).trim().replace(/[^\d+]/g, "");
+  if (n.startsWith('00')) n = '+' + n.substring(2);
+  if (!n.startsWith('+') && n.length === 9) n = '+258' + n;
+  return n;
+}
+
+function gerarLinkWhatsApp(numero, nomeProduto) {
+  const n = normalizarWhatsApp(numero);
+  if (!n) return "";
+  const telefone = n.replace(/\+/g, "");
+  const mensagem = 'Olá! Tenho interesse no produto "' + (nomeProduto || "") + '" publicado no Moz1Vendas.';
+  return 'https://wa.me/' + telefone + '?text=' + encodeURIComponent(mensagem);
+}
+
+function validarURL(url) {
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch (e) {
+    return false;
+  }
+}
+
+function toggleLinkDigital(valor) {
+  const div = document.getElementById('divLinkDigital');
+  const input = document.getElementById('prodLinkDigital');
+  if (!div || !input) return;
+  if (valor === 'DIGITAL') {
+    div.classList.remove('hidden');
+  } else {
+    div.classList.add('hidden');
+    input.value = "";
+  }
+}
+
+/* CONTROLE DE VISIBILIDADE DOS ESTADOS */
+function mostrarCarregamento() {
+  document.getElementById('estadoCarregamento').classList.remove('hidden');
+  document.getElementById('estadoErro').classList.add('hidden');
+  document.getElementById('estadoVazio').classList.add('hidden');
+  document.getElementById('seccaoBlocosEmpresas').classList.add('hidden');
+}
+
+function mostrarErro(mensagem) {
+  document.getElementById('estadoCarregamento').classList.add('hidden');
+  document.getElementById('estadoVazio').classList.add('hidden');
+  document.getElementById('seccaoBlocosEmpresas').classList.add('hidden');
+  document.getElementById('estadoErro').classList.remove('hidden');
+  document.getElementById('mensagemErro').innerText = mensagem || 'Falha ao comunicar com o servidor.';
+}
+
+function mostrarVazio() {
+  document.getElementById('estadoCarregamento').classList.add('hidden');
+  document.getElementById('estadoErro').classList.add('hidden');
+  document.getElementById('seccaoBlocosEmpresas').classList.add('hidden');
+  document.getElementById('estadoVazio').classList.remove('hidden');
+}
+
+/* COMUNICAÇÃO COM GAS (API) */
+async function gasGet(action, parametros = {}) {
+  let url = GAS_URL + '?action=' + encodeURIComponent(action);
+  Object.keys(parametros).forEach(function(chave) {
+    const valor = parametros[chave];
+    if (valor !== undefined && valor !== null && valor !== "") {
+      url += '&' + encodeURIComponent(chave) + '=' + encodeURIComponent(valor);
+    }
+  });
+  const resposta = await fetch(url, { method: 'GET', cache: 'no-store' });
+  if (!resposta.ok) throw new Error('Servidor respondeu com HTTP ' + resposta.status);
+  const texto = await resposta.text();
+  try { return JSON.parse(texto); } catch (e) { throw new Error('O GAS não devolveu JSON válido.'); }
+}
+
+async function gasPost(payload) {
+  const resposta = await fetch(GAS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+  if (!resposta.ok) throw new Error('Servidor respondeu com HTTP ' + resposta.status);
+  const texto = await resposta.text();
+  try { return JSON.parse(texto); } catch (e) { throw new Error('Resposta inválida do Google Apps Script.'); }
+}
+
+/* CARREGAR DADOS */
+async function carregarLojas(mostrarMensagem = false) {
+  if (mostrarMensagem) {
+    mostrarToast('A atualizar lojas e produtos...');
+  }
+  mostrarCarregamento();
+  try {
+    const resultado = await gasGet('homeBlocos');
+    if (!resultado || resultado.ok !== true) {
+      throw new Error(resultado && resultado.erro ? resultado.erro : 'Resposta inválida do GAS.');
+    }
+    const blocos = Array.isArray(resultado.blocos) ? resultado.blocos : [];
+    lojas = normalizarBlocosRecebidos(blocos);
+    if (lojas.length === 0) {
+      mostrarVazio();
+      return;
+    }
+    renderizarBlocos(lojas);
+    if (mostrarMensagem) mostrarToast('Dados atualizados com sucesso.');
+  } catch (erro) {
+    console.error('Erro ao carregar lojas:', erro);
+    mostrarErro(erro.message || 'Não foi possível carregar as lojas.');
+  }
+}
+
+function normalizarBlocosRecebidos(blocos) {
+  return blocos.map(function(bloco) {
+    const produtos = Array.isArray(bloco.slideshowProdutos) ? bloco.slideshowProdutos : [];
+    return {
+      vendedorId: bloco.vendedorId || bloco.id || extrairVendedorDoLink(bloco.linkLoja),
+      empresa: bloco.empresa || 'Loja',
+      logo: bloco.logo || "",
+      linkLoja: bloco.linkLoja || '#',
+      produtoDestaque: bloco.produtoDestaque || null,
+      produtosLoja: produtos.map(function(produto) {
+        return {
+          id: produto.produtoId || produto.id || "",
+          produtoId: produto.produtoId || produto.id || "",
+          nome: produto.nome || 'Produto',
+          preco: produto.preco || 0,
+          img: produto.imagemUrl || produto.img || "",
+          imagemUrl: produto.imagemUrl || produto.img || "",
+          descricao: produto.descricao || "",
+          tipo: produto.tipo || "",
+          whatsapp: produto.whatsapp || "",
+          downloadUrl: produto.downloadUrl || produto.linkDigital || "",
+          metodoPagamento: produto.metodoPagamento || ""
+        };
+      })
+    };
+  });
+}
+
+function extrairVendedorDoLink(link) {
+  if (!link) return "";
+  try {
+    const params = new URLSearchParams(link.replace('?', ""));
+    return params.get('vendedor') || "";
+  } catch (e) { return ""; }
+}
+
+/* RENDERIZAÇÃO NA TELA */
+function renderizarBlocos(listaLojas) {
+  pararTodosSlideshows();
+  const container = document.getElementById('seccaoBlocosEmpresas');
+  if (!listaLojas || listaLojas.length === 0) {
+    mostrarVazio();
+    return;
+  }
+  document.getElementById('estadoCarregamento').classList.add('hidden');
+  document.getElementById('estadoErro').classList.add('hidden');
+  document.getElementById('estadoVazio').classList.add('hidden');
+  container.classList.remove('hidden');
+  
+  container.innerHTML = listaLojas.map(function(loja, indice) {
+    return criarBlocoLoja(loja, indice);
+  }).join("");
+
+  listaLojas.forEach(function(loja, indice) {
+    if (loja.produtosLoja && loja.produtosLoja.length > 1) {
+      iniciarSlideshow(indice, loja.produtosLoja.length);
+    }
+  });
+}
+
+function criarBlocoLoja(loja, indice) {
+  const produtos = Array.isArray(loja.produtosLoja) ? loja.produtosLoja : [];
+  const logo = validarURL(loja.logo) ? loja.logo : "";
+  
+  if (produtos.length === 0) {
+    return `
+    <article class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+      <div class="flex items-center justify-between flex-wrap gap-4 pb-5 border-b border-slate-100">
+        <div class="flex items-center gap-4">
+          ${logo ? `<img src="${escaparHTML(logo)}" alt="${escaparHTML(loja.empresa)}" class="w-14 h-14 rounded-2xl object-cover ring-2 ring-brand-500/20 shadow-md">` : `<div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl font-black">${escaparHTML(String(loja.empresa || 'L').charAt(0).toUpperCase())}</div>`}
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">${escaparHTML(loja.empresa)}</h3>
+            <span class="text-xs text-slate-400">Loja Oficial Moz1Vendas</span>
+          </div>
+        </div>
+      </div>
+      <div class="py-8 text-center">
+        <div class="w-14 h-14 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-xl">
+          <i class="fa-solid fa-box-open"></i>
+        </div>
+        <p class="text-xs text-slate-400 mt-3">Nenhum produto publicado nesta loja.</p>
+      </div>
+    </article>`;
+  }
+
+  const slides = produtos.map(function(produto, produtoIndex) {
+    return criarSlideProduto(produto, indice, produtoIndex);
+  }).join("");
+
+  const dots = produtos.map(function(produto, produtoIndex) {
+    return `<button type="button" onclick="irParaSlide(${indice}, ${produtoIndex})" class="slide-dot ${produtoIndex === 0 ? 'active' : ''}" aria-label="Produto ${produtoIndex + 1}"></button>`;
+  }).join("");
+
+  return `
+  <article class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+    <div class="p-5 sm:p-6 flex items-center justify-between flex-wrap gap-4 border-b border-slate-100">
+      <div class="flex items-center gap-4">
+        ${logo ? `<img src="${escaparHTML(logo)}" alt="${escaparHTML(loja.empresa)}" class="w-14 h-14 rounded-2xl object-cover ring-2 ring-brand-500/20 shadow-md">` : `<div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl font-black">${escaparHTML(String(loja.empresa || 'L').charAt(0).toUpperCase())}</div>`}
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">${escaparHTML(loja.empresa)}</h3>
+          <span class="text-xs text-slate-400">Loja Oficial Moz1Vendas</span>
+        </div>
+      </div>
+    </div>
+    <div class="relative bg-slate-950">
+      <div id="slideWrapper-${indice}" class="slide-wrapper">
+        <div id="slideTrack-${indice}" class="slide-track">
+          ${slides}
+        </div>
+        ${produtos.length > 1 ? `<div id="slideDots-${indice}" class="slide-dots">${dots}</div>` : ''}
+      </div>
+      ${produtos.length > 1 ? `
+      <button onclick="slideAnterior(${indice})" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button onclick="slideSeguinte(${indice})" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+      ` : ''}
+    </div>
+    <div class="px-5 sm:px-6 py-4 border-t border-slate-100">
+      <div class="flex items-center justify-between gap-3">
+        <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Apresentação automática</span>
+        ${produtos.length > 1 ? `<span class="text-[10px] text-slate-400"><i class="fa-regular fa-clock mr-1"></i>6 segundos</span>` : ''}
+      </div>
+    </div>
+  </article>`;
+}
+
+function criarSlideProduto(produto, lojaIndex, produtoIndex) {
+  const imagem = validarURL(produto.img) ? produto.img : "";
+  const nome = produto.nome || 'Produto';
+  const preco = formatarPreco(produto.preco);
+  const whatsapp = produto.whatsapp || "";
+  const linkWhatsApp = gerarLinkWhatsApp(whatsapp, nome);
+
+  return `
+  <div class="slide-item">
+    <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[430px]">
+      <div class="relative bg-slate-900 min-h-[300px] lg:min-h-[430px]">
+        ${imagem ? `<img src="${escaparHTML(imagem)}" alt="${escaparHTML(nome)}" class="w-full h-full min-h-[300px] lg:min-h-[430px] object-cover product-image" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"><div class="hidden absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500 text-5xl"><i class="fa-solid fa-image"></i></div>` : `<div class="absolute inset-0 flex items-center justify-center bg-slate-800 text-slate-500 text-5xl"><i class="fa-solid fa-image"></i></div>`}
+        <div class="absolute top-4 left-4 bg-black/50 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-full">
+          Produto ${produtoIndex + 1}
+        </div>
+      </div>
+      <div class="bg-white p-6 sm:p-8 flex flex-col justify-center">
+        <span class="inline-flex self-start items-center gap-1 bg-brand-50 text-brand-700 px-3 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider mb-4">
+          <i class="fa-solid fa-tag"></i> ${escaparHTML(produto.tipo || 'Produto')}
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight line-clamp-2">${escaparHTML(nome)}</h2>
+        ${produto.descricao ? `<p class="text-sm text-slate-500 mt-3 line-clamp-2">${escaparHTML(produto.descricao)}</p>` : ''}
+        <div class="mt-5">
+          <span class="block text-[10px] uppercase tracking-widest font-bold text-slate-400">Preço</span>
+          <span class="text-3xl font-black text-brand-700">${preco} <small class="text-base font-bold">Mtn</small></span>
+        </div>
+        <!-- BOTÕES DE AÇÃO: NETSHOP E WHATSAPP -->
+        <div class="flex flex-wrap gap-2 mt-6">
+          <button type="button" onclick="abrirCheckoutNetshop('${escaparHTML(produto.produtoId)}', '${escaparHTML(nome)}', ${produto.preco})" class="flex-1 min-w-[130px] bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-3 rounded-xl text-center transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-1">
+            <i class="fa-solid fa-wallet"></i> Pagar NetShop
+          </button>
+          ${linkWhatsApp ? `
+          <a href="${escaparHTML(linkWhatsApp)}" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[130px] bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-4 py-3 rounded-xl text-center transition-all flex items-center justify-center gap-1">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </a>` : ''}
+        </div>
+        <div class="mt-5 flex items-center gap-2 text-[10px] text-slate-400">
+          <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+          Produto publicado no Moz1Vendas
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* LÓGICA DE SLIDESHOW */
+function iniciarSlideshow(lojaIndex, quantidade) {
+  pararSlideshow(lojaIndex);
+  window._slides = window._slides || {};
+  window._slides[lojaIndex] = { atual: 0, total: quantidade };
+  timersSlideshow[lojaIndex] = setInterval(function() {
+    slideSeguinte(lojaIndex);
+  }, SLIDE_INTERVALO);
+}
+
+function pararSlideshow(lojaIndex) {
+  if (timersSlideshow[lojaIndex]) {
+    clearInterval(timersSlideshow[lojaIndex]);
+    delete timersSlideshow[lojaIndex];
+  }
+}
+
+function pararTodosSlideshows() {
+  Object.keys(timersSlideshow).forEach(function(indice) {
+    clearInterval(timersSlideshow[indice]);
+  });
+  timersSlideshow = {};
+}
+
+function irParaSlide(lojaIndex, slideIndex) {
+  const estado = window._slides && window._slides[lojaIndex];
+  if (!estado) return;
+  if (slideIndex < 0) slideIndex = estado.total - 1;
+  if (slideIndex >= estado.total) slideIndex = 0;
+  estado.atual = slideIndex;
+  
+  const track = document.getElementById('slideTrack-' + lojaIndex);
+  if (!track) return;
+  track.style.transform = 'translateX(-' + (slideIndex * 100) + '%)';
+  
+  const dots = document.querySelectorAll('#slideDots-' + lojaIndex + ' .slide-dot');
+  dots.forEach(function(dot, index) {
+    dot.classList.toggle('active', index === slideIndex);
+  });
+}
+
+function slideSeguinte(lojaIndex) {
+  const estado = window._slides && window._slides[lojaIndex];
+  if (!estado) return;
+  irParaSlide(lojaIndex, estado.atual + 1);
+}
+
+function slideAnterior(lojaIndex) {
+  const estado = window._slides && window._slides[lojaIndex];
+  if (!estado) return;
+  irParaSlide(lojaIndex, estado.atual - 1);
+}
+
+/* PROCESSAMENTO DE PAGAMENTO NETSHOP */
+function abrirCheckoutNetshop(produtoId, nome, preco) {
+  document.getElementById('netshopProdutoId').value = produtoId;
+  document.getElementById('netshopTituloProduto').innerText = nome;
+  document.getElementById('netshopValorProduto').innerText = formatarPreco(preco) + ' Mtn';
+  openModal('modalPagamentoNetshop');
+}
+
+async function submeterPagamentoNetshop(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btnSubmitNetshop');
+  btn.innerText = 'A processar pagamento...';
+  btn.disabled = true;
+  
+  const payload = {
+    action: 'COMPRAR_PRODUTO',
+    produtoId: document.getElementById('netshopProdutoId').value,
+    telefone: document.getElementById('netshopTelefone').value.trim(),
+    metodo: document.getElementById('netshopMetodo').value
+  };
+
+  try {
+    const resultado = await gasPost(payload);
+    if (resultado && (resultado.ok || resultado.status === 'SUCCESS')) {
+      closeModal('modalPagamentoNetshop');
+      if (resultado.checkoutUrl) {
+        mostrarToast('A redirecionar para o NetShop...');
+        window.location.href = resultado.checkoutUrl;
+      } else {
+        mostrarToast('Pagamento criado! Referência: ' + (resultado.referencia || 'MZV'));
+      }
+    } else {
+      throw new Error(resultado.erro || resultado.message || 'Não foi possível gerar a cobrança no NetShop.');
+    }
+  } catch (erro) {
+    console.error('Erro NetShop:', erro);
+    mostrarToast(erro.message || 'Falha ao processar pagamento.', 'error');
+  } finally {
+    btn.innerText = 'Pagar Agora via NetShop';
+    btn.disabled = false;
+  }
+}
+
+/* CADASTRO & LOGIN */
+async function submeterRegistro(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btnSubmitReg');
+  btn.innerText = 'A guardar no Google Sheets...';
+  btn.disabled = true;
+
+  const payload = {
+    action: 'CRIAR_LOJA',
+    nome: document.getElementById('regNome').value.trim(),
+    email: document.getElementById('regEmail').value.trim(),
+    telefone: document.getElementById('regTelefone').value.trim(),
+    empresa: document.getElementById('regEmpresa').value.trim(),
+    logo: document.getElementById('regLogo').value.trim(),
+    dataNasc: document.getElementById('regDataNasc').value,
+    bi: document.getElementById('regBI').value.trim(),
+    pin: document.getElementById('regPin').value.trim()
+  };
+
+  try {
+    const result = await gasPost(payload);
+    if (result && (result.status === 'SUCCESS' || result.ok)) {
+      usuarioLogado = {
+        id: result.vendedorId || result.id,
+        vendedorId: result.vendedorId || result.id,
+        empresa: payload.empresa,
+        logo: payload.logo
+      };
+      atualizarEstadoSessao();
+      closeModal('modalRegistro');
+      document.getElementById('formRegistro').reset();
+      mostrarToast('Loja registada com sucesso!');
+      await carregarLojas(false);
+    } else {
+      throw new Error(result && (result.message || result.erro) ? (result.message || result.erro) : 'Falha interna no servidor.');
+    }
+  } catch (erro) {
+    console.error('Erro no registo:', erro);
+    mostrarToast(erro.message || 'Falha ao registar a loja.', 'error');
+  } finally {
+    btn.innerText = 'Criar Minha Empresa';
+    btn.disabled = false;
+  }
+}
+
+async function submeterLogin(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btnLogin');
+  btn.innerText = 'A entrar...';
+  btn.disabled = true;
+
+  const payload = {
+    action: 'LOGIN',
+    telefone: document.getElementById('loginTelefone').value.trim(),
+    pin: document.getElementById('loginPin').value.trim()
+  };
+
+  try {
+    const result = await gasPost(payload);
+    if (result && (result.status === 'SUCCESS' || result.ok)) {
+      usuarioLogado = result.vendedor || result.dados;
+      atualizarEstadoSessao();
+      closeModal('modalLogin');
+      mostrarToast('Sessão iniciada como ' + (usuarioLogado.empresa || 'vendedor'));
+    } else {
+      throw new Error(result.erro || result.message || 'Telefone ou PIN incorretos.');
+    }
+  } catch (erro) {
+    console.error('Erro no login:', erro);
+    mostrarToast(erro.message || 'Erro no login.', 'error');
+  } finally {
+    btn.innerText = 'Aceder ao Painel';
+    btn.disabled = false;
+  }
+}
+
+async function submeterProduto(e) {
+  e.preventDefault();
+  if (!usuarioLogado) {
+    mostrarToast('Precisa de iniciar sessão.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btnSubmitProduto');
+  const tipo = document.getElementById('prodTipo').value;
+  const linkDigital = document.getElementById('prodLinkDigital').value.trim();
+
+  if (tipo === 'DIGITAL' && linkDigital && !validarURL(linkDigital)) {
+    mostrarToast('O link do produto digital não é válido.', 'error');
+    return;
+  }
+
+  btn.innerText = 'A publicar...';
+  btn.disabled = true;
+
+  const payload = {
+    action: 'CRIAR_PRODUTO',
+    vendedorId: usuarioLogado.id || usuarioLogado.vendedorId,
+    nome: document.getElementById('prodNome').value.trim(),
+    descricao: document.getElementById('prodDescricao').value.trim(),
+    preco: Number(document.getElementById('prodPreco').value),
+    tipo: tipo,
+    imagem: document.getElementById('prodImagem').value.trim(),
+    whatsapp: document.getElementById('prodWhatsapp').value.trim(),
+    linkDigital: linkDigital
+  };
+
+  try {
+    const result = await gasPost(payload);
+    if (result && (result.status === 'SUCCESS' || result.ok)) {
+      mostrarToast('Produto publicado com sucesso!');
+      e.target.reset();
+      toggleLinkDigital('FISICO');
+      closeModal('modalAddProduto');
+      await carregarLojas(false);
+    } else {
+      throw new Error(result && (result.message || result.erro) ? (result.message || result.erro) : 'Falha ao publicar produto.');
+    }
+  } catch (erro) {
+    console.error('Erro ao criar produto:', erro);
+    mostrarToast(erro.message || 'Erro ao publicar produto.', 'error');
+  } finally {
+    btn.innerText = 'Publicar Produto';
+    btn.disabled = false;
+  }
+}
+
+/* ESTADO DA SESSÃO DO VENDEDOR */
+function atualizarEstadoSessao() {
+  const visitante = document.getElementById('botoesVisitante');
+  const sessao = document.getElementById('sessaoVendedor');
+  const nome = document.getElementById('nomeLojaSessao');
+  
+  if (usuarioLogado) {
+    visitante.classList.add('hidden');
+    sessao.classList.remove('hidden');
+    sessao.classList.add('flex');
+    nome.innerText = usuarioLogado.empresa || usuarioLogado.nome || 'Minha Loja';
+  } else {
+    visitante.classList.remove('hidden');
+    sessao.classList.add('hidden');
+    sessao.classList.remove('flex');
+    nome.innerText = "";
+  }
+}
+
+function terminarSessao() {
+  usuarioLogado = null;
+  atualizarEstadoSessao();
+  mostrarToast('Sessão terminada.');
+}
+
+document.addEventListener('keydown', function(event) {
+  if (event.key !== 'Escape') return;
+  document.querySelectorAll('.modal').forEach(function(modal) {
+    if (!modal.classList.contains('hidden')) closeModal(modal.id);
+  });
+});
+
+/* INICIAÇÃO AUTOMÁTICA */
+document.addEventListener('DOMContentLoaded', async function() {
+  atualizarEstadoSessao();
+  toggleLinkDigital(document.getElementById('prodTipo').value);
+  await carregarLojas(false);
+});
+</script>
 </body>
 </html>
