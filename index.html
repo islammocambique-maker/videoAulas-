@@ -1,309 +1,423 @@
 <!DOCTYPE html>
-<html lang="pt-MZ">
+<html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#087f5b">
-<title>MOZ1VENDAS — Marketplace de Moçambique</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
-<style>
-:root{--g:#087f5b;--g2:#07553f;--g3:#eaf7f2;--gold:#eabf4a;--ink:#12221d;--muted:#687a73;--bg:#f5f8f7;--card:#fff;--line:#e2ebe7;--danger:#b83227;--shadow:0 12px 35px rgba(10,50,38,.09);--r:20px}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.container{width:min(1200px,92%);margin:auto}
-.top{background:#063d2f;color:#dff5ec;font-size:12px;padding:7px 0}.top .container{display:flex;justify-content:space-between;gap:10px}
-header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.95);backdrop-filter:blur(15px);border-bottom:1px solid var(--line)}
-nav{height:68px;display:flex;align-items:center;gap:18px}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);margin-right:auto}.logo{width:43px;height:43px;border-radius:13px;background:linear-gradient(145deg,#087f5b,#16a879);display:grid;place-items:center;color:#fff;font:800 14px Manrope;box-shadow:0 8px 18px #087f5b2b}.brand b{font:800 20px Manrope}.brand small{display:block;color:var(--muted);font-size:10px;font-weight:600}
-.navlinks{display:flex;gap:4px}.navlinks a{color:#40524c;text-decoration:none;padding:9px 10px;border-radius:10px;font-size:13px;font-weight:700}.navlinks a:hover{background:var(--g3);color:var(--g)}
-.actions{display:flex;gap:7px}.btn{padding:11px 15px;border-radius:12px;font-weight:800;transition:.18s}.btn:hover{transform:translateY(-1px)}.primary{background:var(--g);color:#fff;box-shadow:0 7px 18px #087f5b24}.secondary{background:var(--g3);color:var(--g2)}.outline{background:#fff;border:1px solid var(--line);color:var(--ink)}.gold{background:var(--gold);color:#3d3008}
-.hero{padding:28px 0 22px;background:radial-gradient(circle at 85% 0,#d8f3e8 0,transparent 28%),linear-gradient(135deg,#fff,#eef8f4)}.heroTop{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:18px}.hero h1{font:800 clamp(30px,5vw,48px)/1.05 Manrope;margin:0 0 8px}.hero h1 em{font-style:normal;color:var(--g)}.hero p{margin:0;color:var(--muted);line-height:1.6;max-width:680px}.heroSearch{display:flex;gap:8px;background:#fff;border:1px solid var(--line);padding:8px;border-radius:15px;box-shadow:var(--shadow);width:min(510px,100%)}.heroSearch input{flex:1;min-width:0;border:0;outline:0;padding:8px}.heroSearch select{border:1px solid var(--line);border-radius:10px;padding:7px;outline:0;background:#fff}
-.market{padding:18px 0 50px}.marketHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}.marketHead h2{font:800 25px Manrope;margin:0}.marketHead span{color:var(--muted);font-size:13px}
-.productGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.product{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 5px 20px rgba(15,45,36,.045);transition:.18s}.product:hover{transform:translateY(-3px);box-shadow:var(--shadow)}.productImg{height:205px;background:#eaf1ee;position:relative;display:grid;place-items:center;color:#879890;font-size:38px;overflow:hidden}.productImg img{width:100%;height:100%;object-fit:cover}.type{position:absolute;top:10px;left:10px;padding:5px 8px;border-radius:8px;background:#fff;box-shadow:0 4px 12px #0002;font-size:9px;font-weight:900;color:var(--g2)}.type.digital{background:#f7d86c;color:#4b3a08}
-.seller{display:flex;align-items:center;gap:8px;margin-bottom:10px}.sellerLogo{width:30px;height:30px;border-radius:9px;object-fit:cover;background:#e8f3ef;display:grid;place-items:center;font-size:13px;font-weight:900;color:var(--g)}.sellerInfo{min-width:0}.sellerInfo b{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sellerInfo span{display:block;color:#8a9893;font-size:9px}.stars{color:#d59d18;font-size:11px;white-space:nowrap}
-.productBody{padding:14px}.productBody h3{font-size:15px;margin:0 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.desc{font-size:11px;color:var(--muted);line-height:1.45;height:32px;overflow:hidden}.price{font-size:19px;font-weight:900;color:var(--g);margin-top:8px}.tag{display:inline-block;margin-top:7px;padding:4px 7px;border-radius:7px;background:#eef5f2;color:var(--g2);font-size:9px;font-weight:800}.cardActions{display:flex;gap:7px;margin-top:12px}.cardActions .btn{flex:1;padding:9px 8px;font-size:11px}.like{width:38px!important;flex:0 0 38px!important}
-.empty{grid-column:1/-1;background:#fff;border:1px dashed var(--line);border-radius:18px;padding:50px 20px;text-align:center;color:var(--muted)}.empty strong{display:block;color:var(--ink);font-size:17px;margin-bottom:5px}
-.section{padding:35px 0}.sellerBanner{background:linear-gradient(135deg,#073d2f,#0b7454);color:#fff;border-radius:24px;padding:25px;display:flex;align-items:center;justify-content:space-between;gap:18px}.sellerBanner h2{font:800 25px Manrope;margin:0 0 5px}.sellerBanner p{margin:0;color:#cde8df;font-size:13px}
-footer{background:#082e25;color:#c7ddd6;padding:35px 0 18px}.footerGrid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:30px}.footerTitle{color:#fff;font-weight:900;margin-bottom:10px}.footer a{display:block;color:#c7ddd6;text-decoration:none;margin:7px 0;font-size:13px}.copy{border-top:1px solid #fff2;margin-top:25px;padding-top:15px;font-size:11px}
-.modal{position:fixed;inset:0;background:#061b15aa;display:none;align-items:center;justify-content:center;padding:15px;z-index:100}.modal.show{display:flex}.modalBox{width:min(650px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:23px;padding:23px;box-shadow:0 30px 80px #0004}.modalHead{display:flex;align-items:center;justify-content:space-between;gap:12px}.modalHead h2{margin:0;font:800 23px Manrope}.modalHead small{color:var(--muted)}.close{width:35px;height:35px;border-radius:10px;background:#edf2ef;font-size:21px}.form{display:grid;gap:10px;margin-top:16px}.form input,.form select,.form textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;outline:0;background:#fff}.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--g)}.form textarea{min-height:90px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.notice{padding:11px;border-radius:11px;background:#eef7f3;color:#36564b;font-size:12px}.error{background:#fff0ee!important;color:var(--danger)!important}.success{background:#edf9f2!important;color:#147544!important}
-.detailHero{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}.detailImg{height:330px;border-radius:17px;overflow:hidden;background:#eaf1ee;display:grid;place-items:center;font-size:50px}.detailImg img{width:100%;height:100%;object-fit:cover}.detailInfo h2{font:800 28px Manrope;margin:8px 0}.detailPrice{font-size:26px;font-weight:900;color:var(--g);margin:8px 0}.detailDesc{color:var(--muted);line-height:1.7;font-size:13px;white-space:pre-line}.sellerBox{display:flex;align-items:center;gap:12px;padding:12px;background:#f3f8f6;border-radius:14px;margin:15px 0}.sellerBox img{width:46px;height:46px;border-radius:13px;object-fit:cover;background:#dfeee8}.sellerBox b{display:block}.sellerBox span{font-size:11px;color:var(--muted)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.stat{background:#f5f8f7;border:1px solid var(--line);border-radius:13px;padding:13px}.stat b{display:block;font-size:20px;color:var(--g)}.stat span{font-size:10px;color:var(--muted)}
-.dashboard{display:grid;grid-template-columns:230px 1fr;gap:18px}.side{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;height:max-content}.side button{width:100%;text-align:left;background:transparent;padding:11px;border-radius:10px;font-weight:700;font-size:12px;color:#52635d}.side button:hover,.side button.active{background:var(--g3);color:var(--g)}.dashMain{min-width:0}.dashTitle{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.dashTitle h2{font:800 23px Manrope;margin:0}.dashCards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.dashCard{background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px}.dashCard b{font-size:22px;color:var(--g)}.dashCard span{display:block;font-size:10px;color:var(--muted);margin-top:3px}.myProducts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}.myProduct{display:flex;gap:11px;padding:11px;border:1px solid var(--line);border-radius:14px;background:#fff}.myProduct img{width:75px;height:65px;border-radius:10px;object-fit:cover;background:#eaf1ee}.myProduct h4{margin:0 0 4px;font-size:13px}.myProduct small{color:var(--muted);font-size:10px}.rowBtns{display:flex;gap:6px;margin-top:7px}.rowBtns button{font-size:10px;padding:6px 8px;border-radius:8px;background:#edf5f2;color:var(--g2)}
-.review{border-top:1px solid var(--line);padding:12px 0}.review:first-child{border-top:0}.review b{font-size:12px}.review p{font-size:12px;color:var(--muted);margin:5px 0;line-height:1.5}.complaint{border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}.complaint b{font-size:12px}.complaint p{font-size:11px;color:var(--muted);line-height:1.5}
-.toast{position:fixed;right:15px;bottom:15px;z-index:200;background:#12352c;color:#fff;padding:13px 16px;border-radius:12px;box-shadow:var(--shadow);display:none;max-width:360px;font-size:12px}.toast.show{display:block}
-.hidden{display:none!important}
-@media(max-width:950px){.productGrid{grid-template-columns:repeat(3,1fr)}.navlinks{display:none}.dashboard{grid-template-columns:1fr}.side{display:flex;overflow:auto;gap:5px}.side button{white-space:nowrap;width:auto}.dashCards{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){.top{display:none}.heroTop{display:block}.heroSearch{margin-top:16px}.heroSearch select{max-width:125px}.productGrid{grid-template-columns:repeat(2,1fr)}.footerGrid{grid-template-columns:1fr 1fr}.detailHero{grid-template-columns:1fr}.detailImg{height:270px}.grid2,.myProducts{grid-template-columns:1fr}.actions .outline{display:none}}
-@media(max-width:470px){.brand b{font-size:17px}.brand small{display:none}.productGrid{gap:10px}.productImg{height:155px}.productBody{padding:11px}.productBody h3{font-size:13px}.price{font-size:16px}.cardActions .btn{font-size:10px;padding:8px 5px}.like{width:34px!important;flex-basis:34px!important}.footerGrid{grid-template-columns:1fr}.sellerBanner{display:block}.sellerBanner .btn{margin-top:14px;width:100%}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOZ1VENDAS - O Seu Marketplace Multivendor em Moçambique</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body>
-<div class="top"><div class="container"><span>🇲🇿 Marketplace feito para Moçambique</span><span>Compra • vende • descobre</span></div></div>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen font-sans">
 
-<header><div class="container"><nav>
-<a class="brand" href="#inicio"><div class="logo">M1</div><div><b>MOZ1VENDAS</b><small>Marketplace de Moçambique</small></div></a>
-<div class="navlinks"><a href="#produtos">Produtos</a><a href="#vender">Vender</a><a href="#ajuda">Ajuda</a></div>
-<div class="actions"><button class="btn outline" onclick="openModal('loginModal')">Entrar</button><button class="btn primary" onclick="openModal('registerModal')">Vender</button></div>
-</nav></div></header>
+  <!-- ==========================================
+       HEADER & NAVEGAÇÃO
+  ========================================== -->
+  <header class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="bg-brand-600 text-white font-black text-xl px-3 py-1 rounded-lg tracking-wider">
+          MOZ1
+        </div>
+        <span class="text-xl font-bold text-gray-900 tracking-tight">VENDAS</span>
+      </div>
 
-<main id="inicio">
-<section class="hero"><div class="container">
-<div class="heroTop">
-<div><h1>Encontra o que procuras.<br><em>Compra com confiança.</em></h1><p>Produtos digitais e físicos publicados por vendedores e marcas em Moçambique.</p></div>
-<div class="heroSearch"><span style="padding:8px">⌕</span><input id="searchInput" placeholder="Pesquisar produtos, marcas..." oninput="filterProducts()"><select id="categoryFilter" onchange="loadCategory()"><option value="">Todas</option></select><button class="btn primary" onclick="loadProducts()">↻</button></div>
-</div>
-</div></section>
+      <!-- Barra de Pesquisa -->
+      <div class="hidden md:flex flex-1 max-w-md mx-8">
+        <div class="relative w-full">
+          <input type="text" id="searchInput" onkeyup="filtrarProdutos()" placeholder="Pesquisar produtos ou lojas..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+          <i data-lucide="search" class="absolute left-3 top-2.5 h-4 w-4 text-gray-400"></i>
+        </div>
+      </div>
 
-<section class="market" id="produtos"><div class="container">
-<div class="marketHead"><div><h2>Produtos publicados</h2><span id="productCount">A carregar produtos…</span></div><button class="btn outline" onclick="loadProducts()">Atualizar</button></div>
-<div id="productGrid" class="productGrid"><div class="empty"><strong>A carregar produtos…</strong>Estamos a procurar os produtos disponíveis.</div></div>
-</div></section>
-
-<section class="section" id="vender"><div class="container"><div class="sellerBanner"><div><h2>Tens produtos para vender?</h2><p>Cria a tua loja, publica os teus produtos e constrói a tua reputação no marketplace.</p></div><button class="btn gold" onclick="openModal('registerModal')">Criar loja gratuitamente →</button></div></div></section>
-
-<section class="section" id="ajuda"><div class="container"><div class="card" style="background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px"><h3 style="margin-top:0">Como funciona?</h3><div class="grid2"><div><b>🛍️ Para compradores</b><p style="color:var(--muted);font-size:12px;line-height:1.6">Explora os produtos, vê o vendedor/marca, reputação, avaliações e detalhes antes de comprar.</p></div><div><b>🏪 Para vendedores</b><p style="color:var(--muted);font-size:12px;line-height:1.6">Cria uma conta, adiciona produtos e acompanha a tua atividade através do painel.</p></div></div></div></div></section>
-</main>
-
-<footer><div class="container footerGrid"><div><div class="footerTitle">MOZ1VENDAS</div><p style="font-size:13px;line-height:1.7">Marketplace simples para aproximar compradores, vendedores e marcas em Moçambique.</p></div><div><div class="footerTitle">Navegação</div><a href="#produtos">Produtos</a><a href="#vender">Vender</a><a href="#" onclick="openModal('termsModal');return false">Termos</a></div><div><div class="footerTitle">Conta</div><a href="#" onclick="openModal('loginModal');return false">Entrar</a><a href="#" onclick="openModal('registerModal');return false">Criar loja</a></div></div><div class="container copy">© <span id="year"></span> MOZ1VENDAS. Todos os direitos reservados.</div></footer>
-
-<!-- LOGIN -->
-<div class="modal" id="loginModal"><div class="modalBox"><div class="modalHead"><div><h2>Entrar</h2><small>Acede ao teu painel de vendedor</small></div><button class="close" onclick="closeModal('loginModal')">×</button></div>
-<form class="form" onsubmit="login(event)"><input id="loginPhone" placeholder="Telefone (841234567)" required><input id="loginPin" type="password" inputmode="numeric" maxlength="6" placeholder="PIN" required><div id="loginMsg"></div><button class="btn primary" id="loginBtn">Entrar</button></form>
-<p style="font-size:12px;color:var(--muted)">Ainda não tens conta? <a href="#" onclick="closeModal('loginModal');openModal('registerModal');return false">Criar loja</a></p></div></div>
-
-<!-- REGISTO -->
-<div class="modal" id="registerModal"><div class="modalBox"><div class="modalHead"><div><h2>Criar loja</h2><small>Começa a publicar os teus produtos</small></div><button class="close" onclick="closeModal('registerModal')">×</button></div>
-<form class="form" onsubmit="register(event)">
-<input id="regName" placeholder="Nome completo" required><input id="regCompany" placeholder="Nome da empresa / marca" required><div class="grid2"><input id="regPhone" placeholder="Telefone" required><input id="regEmail" type="email" placeholder="E-mail (opcional)"></div><input id="regBi" placeholder="BI (opcional)"><input id="regLogo" placeholder="URL do logotipo (opcional)"><input id="regPin" type="password" inputmode="numeric" maxlength="6" placeholder="PIN de 4 a 6 dígitos" required>
-<select id="regPlan"><option value="GRATUITO">Plano gratuito</option><option value="SIMPLES">Plano Simples</option><option value="MEDIO">Plano Médio</option><option value="PRO">Plano Pro</option></select>
-<label style="font-size:11px"><input id="acceptTerms" type="checkbox" required> Aceito os <a href="#" onclick="openModal('termsModal');return false">Termos e Condições</a>.</label><div id="registerMsg"></div><button class="btn primary" id="registerBtn">Criar minha loja</button></form>
-<div class="notice" style="margin-top:12px">O telefone identifica a tua conta. Guarda o PIN com segurança.</div></div></div>
-
-<!-- PRODUTO -->
-<div class="modal" id="productModal"><div class="modalBox"><div class="modalHead"><div><h2>Produto</h2><small>Detalhes e reputação</small></div><button class="close" onclick="closeModal('productModal')">×</button></div><div id="productDetail" style="margin-top:15px"></div></div></div>
-
-<!-- COMPRA -->
-<div class="modal" id="buyModal"><div class="modalBox"><div class="modalHead"><div><h2>Comprar produto</h2><small>Pagamento através do gateway configurado</small></div><button class="close" onclick="closeModal('buyModal')">×</button></div>
-<div id="buySummary" class="notice" style="margin-top:15px"></div>
-<form class="form" onsubmit="buyProduct(event)"><input type="hidden" id="buyProductId"><input id="buyPhone" placeholder="Telefone para pagamento (841234567)" required><select id="buyMethod"><option value="mpesa">M-Pesa</option><option value="emola">e-Mola</option><option value="mkesh">mKesh</option></select><div id="buyMsg"></div><button class="btn primary" id="buyBtn">Continuar pagamento</button></form></div></div>
-
-<!-- AVALIAÇÃO -->
-<div class="modal" id="reviewModal"><div class="modalBox"><div class="modalHead"><div><h2>Avaliar produto</h2><small>A tua experiência ajuda outros compradores</small></div><button class="close" onclick="closeModal('reviewModal')">×</button></div>
-<form class="form" onsubmit="sendReview(event)"><input type="hidden" id="reviewProductId"><input id="reviewPhone" placeholder="Telefone do comprador" required><select id="reviewNote"><option value="">Nota (opcional)</option><option value="5">★★★★★ — 5</option><option value="4">★★★★☆ — 4</option><option value="3">★★★☆☆ — 3</option><option value="2">★★☆☆☆ — 2</option><option value="1">★☆☆☆☆ — 1</option></select><select id="reviewReaction"><option value="">Gosto / não gosto (opcional)</option><option value="GOSTO">👍 Gosto</option><option value="NAO_GOSTO">👎 Não gosto</option></select><textarea id="reviewComment" placeholder="Comentário (opcional)"></textarea><div id="reviewMsg"></div><button class="btn primary">Publicar avaliação</button></form></div></div>
-
-<!-- DASHBOARD -->
-<div class="modal" id="dashboardModal"><div class="modalBox" style="width:min(1050px,100%)"><div class="modalHead"><div><h2>Painel do vendedor</h2><small id="sellerSession"></small></div><button class="close" onclick="closeModal('dashboardModal')">×</button></div>
-<div class="dashboard" style="margin-top:18px"><aside class="side"><button class="active" onclick="showDash('overview',this)">📊 Visão geral</button><button onclick="showDash('products',this)">📦 Meus produtos</button><button onclick="showDash('add',this)">➕ Adicionar produto</button><button onclick="showDash('reputation',this)">⭐ Reputação</button><button onclick="logout()">🚪 Sair</button></aside>
-<div class="dashMain"><div id="dashOverview"></div><div id="dashProducts" class="hidden"></div><div id="dashAdd" class="hidden"></div><div id="dashReputation" class="hidden"></div></div></div></div></div>
-
-<!-- TERMOS -->
-<div class="modal" id="termsModal"><div class="modalBox"><div class="modalHead"><div><h2>Termos e condições</h2><small>Resumo operacional</small></div><button class="close" onclick="closeModal('termsModal')">×</button></div>
-<div style="font-size:12px;line-height:1.7;color:var(--muted);margin-top:15px"><h3>1. Marketplace</h3><p>O MOZ1VENDAS aproxima compradores e vendedores. O vendedor é responsável pelas informações e condições do produto.</p><h3>2. Pagamentos</h3><p>Os pagamentos realizados através do gateway dependem da confirmação do gateway e do estado registado no sistema.</p><h3>3. Produtos</h3><p>É proibida a publicação de produtos ilegais, fraudulentos ou que violem direitos de terceiros.</p><h3>4. Reputação</h3><p>A plataforma pode apresentar avaliações e reclamações públicas para ajudar futuros compradores.</p><h3>5. Segurança</h3><p>O utilizador deve manter o PIN confidencial e não partilhá-lo.</p></div><button class="btn primary" style="width:100%;margin-top:15px" onclick="closeModal('termsModal')">Entendi</button></div></div>
-
-<div id="toast" class="toast"></div>
-
-<script>
-const CONFIG={
- API_URL:'ns_live_sk_Tg7VfuRb_ySYFHFyzEEjRFszzADMUuXcqJWzdEa5dTSsVGpQZ',
- APP_NAME:'MOZ1VENDAS',VERSION:'5.0'
-};
-let products=[],sellerMap={},currentProduct=null,currentSeller=null;
-
-const $=id=>document.getElementById(id);
-function openModal(id){$(id)?.classList.add('show')}
-function closeModal(id){$(id)?.classList.remove('show')}
-document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
-$('year').textContent=new Date().getFullYear();
-
-function toast(text,ok=true){const t=$('toast');t.textContent=text;t.style.background=ok?'#12352c':'#7b241c';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500)}
-function msg(el,text,ok=false){$(el).innerHTML='<div class="notice '+(ok?'success':'error')+'">'+text+'</div>'}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-function js(v){return String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
-function money(v){return new Intl.NumberFormat('pt-MZ',{style:'currency',currency:'MZN',minimumFractionDigits:2}).format(Number(v)||0)}
-function imageUrl(v){return String(v||'').trim()}
-function sellerFor(p){return sellerMap[String(p?.vendedorId||'')]||{empresa:'Vendedor',logo:'',reputacao:{media:0,totalAvaliacoes:0}}}
-
-async function apiGet(action,params={}){
- const u=new URL(CONFIG.API_URL);u.searchParams.set('action',action);
- Object.entries(params).forEach(([k,v])=>{if(v!==undefined&&v!==null)u.searchParams.set(k,v)});
- const r=await fetch(u.toString(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return r.json();
-}
-async function apiPost(action,data={}){
- const r=await fetch(CONFIG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...data})});
- if(!r.ok)throw Error('HTTP '+r.status);return r.json();
-}
-
-/* Carrega produtos e associa cada produto à loja/marca devolvida pelo homeBlocos. */
-async function loadProducts(){
- $('productGrid').innerHTML='<div class="empty"><strong>A carregar produtos…</strong>A procurar produtos publicados.</div>';
- try{
-   const [rp,rh]=await Promise.all([apiGet('produtosDestaque'),apiGet('homeBlocos')]);
-   products=rp?.data?.destaques||[];
-   sellerMap={};
-   (rh?.data?.blocos||[]).forEach(b=>{
-     const ids=[];
-     if(b.produtoDestaque?.vendedorId)ids.push(b.produtoDestaque.vendedorId);
-     (b.slideshowProdutos||[]).forEach(p=>ids.push(p.vendedorId));
-     ids.forEach(id=>sellerMap[String(id)]={empresa:b.empresa||'Vendedor',logo:b.logo||'',reputacao:b.reputacao||{}});
-   });
-   buildCategories();renderProducts(products);
- }catch(e){$('productGrid').innerHTML='<div class="empty"><strong>Não foi possível carregar os produtos.</strong>'+esc(e.message)+'</div>';$('productCount').textContent='Erro ao carregar';}
-}
-function buildCategories(){
- const cats=[...new Set(products.map(p=>p.categoria).filter(Boolean))].sort();
- $('categoryFilter').innerHTML='<option value="">Todas</option>'+cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
-}
-function renderProducts(list){
- $('productCount').textContent=list.length+' produto'+(list.length===1?'':'s')+' encontrado'+(list.length===1?'':'s');
- if(!list.length){$('productGrid').innerHTML='<div class="empty"><strong>Nenhum produto encontrado.</strong>Tenta outra pesquisa ou categoria.</div>';return}
- $('productGrid').innerHTML=list.map(p=>{
-   const s=sellerFor(p),logo=imageUrl(s.logo),rep=s.reputacao||{},rating=Number(rep.media)||0;
-   return `<article class="product">
-    <div class="productImg">${logo?`<img src="${esc(imageUrl(p.imagemUrl))}" onerror="this.style.display='none'" alt="${esc(p.nome)}">`:'🛍️'}${p.tipo?`<span class="type ${String(p.tipo).toUpperCase()==='DIGITAL'?'digital':''}">${esc(p.tipo)}</span>`:''}</div>
-    <div class="productBody">
-      <div class="seller">${logo?`<img class="sellerLogo" src="${esc(logo)}" onerror="this.style.display='none'" alt="">`:'<div class="sellerLogo">🏪</div>'}<div class="sellerInfo"><b>${esc(s.empresa||'Vendedor')}</b><span>${rating?`★ ${rating.toFixed(1)} · `:''}${Number(rep.totalAvaliacoes)||0} avaliações</span></div></div>
-      <h3>${esc(p.nome||'Produto')}</h3><div class="desc">${esc(p.descricao||'')}</div><div class="price">${money(p.preco)}</div><span class="tag">${esc(p.categoria||'GERAL')}</span>
-      <div class="cardActions"><button class="btn secondary" onclick="viewProduct('${js(p.produtoId)}')">Ver produto</button><button class="btn primary" onclick="openBuy('${js(p.produtoId)}')">Comprar</button><button class="btn outline like" title="Gostar" onclick="reactProduct('${js(p.produtoId)}','GOSTO')">♡</button></div>
+      <!-- Ações do Utilizador -->
+      <div class="flex items-center space-x-4">
+        <button onclick="toggleModal('modalCheckout')" class="relative p-2 text-gray-600 hover:text-brand-600">
+          <i data-lucide="shopping-bag" class="h-6 w-6"></i>
+          <span id="cartCount" class="absolute top-0 right-0 bg-brand-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+        </button>
+        <a href="#como-funciona" class="hidden sm:inline-block text-sm font-medium text-gray-600 hover:text-brand-600">Como Funciona</a>
+      </div>
     </div>
-   </article>`;
- }).join('');
-}
-function filterProducts(){
- const q=$('searchInput').value.toLowerCase().trim();
- renderProducts(products.filter(p=>(String(p.nome)+' '+String(p.descricao)+' '+String(p.categoria)+' '+String(sellerFor(p).empresa)).toLowerCase().includes(q)));
-}
-async function loadCategory(){
- const c=$('categoryFilter').value;
- if(!c)return renderProducts(products);
- try{const r=await apiGet('produtosPorCategoria',{categoria:c});renderProducts(r?.data?.produtos||[])}catch(e){toast(e.message,false)}
-}
+  </header>
 
-async function viewProduct(id){
- try{
-   const r=await apiGet('produto',{produtoId:id});const p=r?.data?.produto;if(!p)return toast('Produto não encontrado.',false);
-   currentProduct=p;currentSeller=sellerFor(p);
-   const rep=p.reputacao||currentSeller.reputacao||{},logo=imageUrl(currentSeller.logo);
-   const av=await apiGet('avaliacoesProduto',{produtoId:id,limite:8}).catch(()=>null);
-   const rec=await apiGet('reclamacoesPublicas',{produtoId:id,limite:5}).catch(()=>null);
-   const reviews=av?.data?.avaliacoes||[], complaints=rec?.data?.reclamacoes||[];
-   $('productDetail').innerHTML=`<div class="detailHero">
-    <div class="detailImg">${p.imagemUrl?`<img src="${esc(p.imagemUrl)}" onerror="this.style.display='none'" alt="${esc(p.nome)}">`:'🛍️'}</div>
-    <div class="detailInfo">
-      <span class="tag">${esc(p.tipo||'PRODUTO')}</span><h2>${esc(p.nome)}</h2><div class="detailPrice">${money(p.preco)}</div>
-      <div class="sellerBox">${logo?`<img src="${esc(logo)}" onerror="this.style.display='none'">`:'<div class="sellerLogo" style="width:46px;height:46px">🏪</div>'}<div><b>${esc(currentSeller.empresa||'Vendedor')}</b><span>★ ${Number(rep.media)||0}/5 · ${Number(rep.totalAvaliacoes)||0} avaliações</span></div></div>
-      <p class="detailDesc">${esc(p.descricao||'Sem descrição disponível.')}</p>
-      <div class="stats"><div class="stat"><b>${Number(p.gosta)||0}</b><span>Gostam</span></div><div class="stat"><b>${Number(p.naoGosta)||0}</b><span>Não gostam</span></div><div class="stat"><b>${Number(rep.recomendacao)||0}%</b><span>Recomendação</span></div></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" onclick="openBuy('${js(p.produtoId)}')">Comprar agora</button><button class="btn secondary" onclick="reactProduct('${js(p.produtoId)}','GOSTO')">👍 Gostar</button><button class="btn outline" onclick="openReview('${js(p.produtoId)}')">⭐ Avaliar</button></div>
-    </div></div>
-    <hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
-    <h3>Avaliações</h3><div>${reviews.length?reviews.map(a=>`<div class="review"><b>★ ${esc(a.nota||'—')} ${a.reacao?' · '+esc(a.reacao):''}</b><p>${esc(a.comentario||'Sem comentário.')}</p></div>`).join(''):'<p style="font-size:12px;color:var(--muted)">Ainda não existem avaliações publicadas.</p>'}</div>
-    <h3 style="margin-top:20px">Reclamações públicas</h3><div>${complaints.length?complaints.map(c=>`<div class="complaint"><b>${esc(c.titulo||'Reclamação')}</b><p>${esc(c.descricao||'')}</p><small>Status: <strong>${esc(c.desfecho||c.status||'ABERTA')}</strong></small></div>`).join(''):'<p style="font-size:12px;color:var(--muted)">Nenhuma reclamação pública encontrada.</p>'}</div>`;
-   openModal('productModal');
- }catch(e){toast(e.message,false)}
-}
-async function reactProduct(id,type){
- try{const r=await apiPost('AVALIAR_PRODUTO',{produtoId:id,tipo:type});if(!r.ok)throw Error(r.message||r.erro||'Não foi possível registar.');toast(type==='GOSTO'?'Obrigado pelo gosto!':'Registo efetuado.');await loadProducts();if(currentProduct?.produtoId===id)viewProduct(id)}catch(e){toast(e.message,false)}
-}
-function openBuy(id){
- const p=products.find(x=>String(x.produtoId)===String(id))||currentProduct;
- if(!p)return toast('Produto não encontrado.',false);
- $('buyProductId').value=p.produtoId;$('buyPhone').value=localStorage.getItem('mz1_buyer_phone')||'';
- $('buySummary').innerHTML=`<b>${esc(p.nome)}</b><br>${esc(sellerFor(p).empresa||'Vendedor')} · <strong>${money(p.preco)}</strong>`;
- $('buyMsg').innerHTML='';openModal('buyModal');
-}
-async function buyProduct(ev){
- ev.preventDefault();const b=$('buyBtn');b.disabled=true;b.textContent='A iniciar pagamento…';
- try{
-   const telefone=$('buyPhone').value.trim();localStorage.setItem('mz1_buyer_phone',telefone);
-   const r=await apiPost('COMPRAR_PRODUTO',{produtoId:$('buyProductId').value,telefone,metodo:$('buyMethod').value});
-   if(!r.ok)throw Error(r.message||r.erro||'Não foi possível iniciar o pagamento.');
-   const d=r.data||{};msg($('buyMsg'),`Pagamento iniciado.<br><b>Referência:</b> ${esc(d.referencia||'')}<br><b>Estado:</b> ${esc(d.status||'PENDENTE')}${d.checkoutUrl?`<br><br><a class="btn primary" style="display:inline-block;text-decoration:none" href="${esc(d.checkoutUrl)}" target="_blank" rel="noopener">Abrir pagamento</a>`:''}`,true);
-   toast('Pagamento iniciado');
- }catch(e){msg($('buyMsg'),esc(e.message),false)}finally{b.disabled=false;b.textContent='Continuar pagamento'}
-}
-function openReview(id){$('reviewProductId').value=id;$('reviewMsg').innerHTML='';openModal('reviewModal')}
-async function sendReview(ev){
- ev.preventDefault();
- try{
-  const r=await apiPost('AVALIAR_PRODUTO',{produtoId:$('reviewProductId').value,tipo:$('reviewReaction').value,telefone:$('reviewPhone').value.trim(),nota:$('reviewNote').value,comentario:$('reviewComment').value.trim()});
-  if(!r.ok)throw Error(r.message||r.erro||'Não foi possível avaliar.');
-  msg($('reviewMsg'),'Avaliação registada com sucesso.',true);toast('Obrigado pela avaliação!');setTimeout(()=>{closeModal('reviewModal');viewProduct($('reviewProductId').value)},800);
- }catch(e){msg($('reviewMsg'),esc(e.message))}
-}
+  <!-- ==========================================
+       CONTEÚDO PRINCIPAL / Vitrine Multivendor
+  ========================================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Banner de Boas-Vindas -->
+    <div class="bg-gradient-to-r from-brand-900 to-brand-700 rounded-2xl p-6 sm:p-10 text-white mb-10 shadow-lg relative overflow-hidden">
+      <div class="relative z-10 max-w-2xl">
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">Compre e Venda com Segurança em Moçambique</h1>
+        <p class="text-brand-100 text-sm sm:text-base mb-6">Pagamentos rápidos via M-Pesa/e-Mola com NetShop. Entrega garantida e suporte direto via WhatsApp.</p>
+        <a href="#lojas" class="inline-flex items-center px-5 py-2.5 bg-white text-brand-900 rounded-lg font-bold text-sm hover:bg-brand-50 transition">Ver Produtos Disponíveis</a>
+      </div>
+    </div>
 
-/* REGISTO / LOGIN */
-async function register(ev){
- ev.preventDefault();const b=$('registerBtn');b.disabled=true;b.textContent='A criar loja…';
- try{
-  const r=await apiPost('CRIAR_LOJA',{nome:$('regName').value.trim(),empresa:$('regCompany').value.trim(),telefone:$('regPhone').value.trim(),bi:$('regBi').value.trim(),email:$('regEmail').value.trim(),logo:$('regLogo').value.trim(),pin:$('regPin').value.trim(),plano:$('regPlan').value});
-  if(!r.ok)throw Error(r.message||r.erro||'Não foi possível criar a conta.');
-  msg($('registerMsg'),`Loja criada com sucesso.<br>ID: <b>${esc(r.data?.vendedorId||'')}</b>`,true);toast('Loja criada!');
-  setTimeout(()=>{closeModal('registerModal');$('loginPhone').value=$('regPhone').value.trim();openModal('loginModal')},900);
- }catch(e){msg($('registerMsg'),esc(e.message))}finally{b.disabled=false;b.textContent='Criar minha loja'}
-}
-async function login(ev){
- ev.preventDefault();const b=$('loginBtn');b.disabled=true;b.textContent='A entrar…';
- try{
-  const r=await apiPost('LOGIN',{telefone:$('loginPhone').value.trim(),pin:$('loginPin').value.trim()});
-  if(!r.ok)throw Error(r.message||r.erro||'Telefone ou PIN incorretos.');
-  const v=r.data?.vendedor||{};localStorage.setItem('mz1_vendedor',JSON.stringify(v));localStorage.setItem('mz1_vendedor_id',v.id||'');
-  closeModal('loginModal');toast('Bem-vindo ao painel!');openDashboard();
- }catch(e){msg($('loginMsg'),esc(e.message))}finally{b.disabled=false;b.textContent='Entrar'}
-}
-function seller(){try{return JSON.parse(localStorage.getItem('mz1_vendedor')||'null')}catch(e){return null}}
-function logout(){localStorage.removeItem('mz1_vendedor');localStorage.removeItem('mz1_vendedor_id');closeModal('dashboardModal');toast('Sessão terminada.')}
-async function openDashboard(){
- const v=seller();if(!v)return openModal('loginModal');
- $('sellerSession').textContent=(v.empresa||v.nome||'Vendedor')+' · '+(v.telefone||'');
- openModal('dashboardModal');showDash('overview',document.querySelector('.side button'));
- await loadDashboard();await loadMyProducts();
-}
-async function loadDashboard(){
- const id=localStorage.getItem('mz1_vendedor_id');if(!id)return;
- try{const r=await apiGet('dashboard',{vendedorId:id}),d=r?.data||{};$('dashOverview').innerHTML=`<div class="dashTitle"><h2>Visão geral</h2><button class="btn primary" onclick="showDash('add')">+ Adicionar produto</button></div><div class="dashCards"><div class="dashCard"><b>${d.produtosPublicados||0}</b><span>Produtos publicados</span></div><div class="dashCard"><b>${d.totalVendas||0}</b><span>Vendas pagas</span></div><div class="dashCard"><b>${money(d.totalVendido)}</b><span>Total vendido</span></div><div class="dashCard"><b>${money(d.taxas)}</b><span>Taxas</span></div></div><div class="notice" style="margin-top:14px">O teu painel permite gerir produtos e acompanhar a atividade da loja.</div>`}catch(e){$('dashOverview').innerHTML='<div class="notice error">'+esc(e.message)+'</div>'}
-}
-async function loadMyProducts(){
- const id=localStorage.getItem('mz1_vendedor_id');if(!id)return;
- try{const r=await apiGet('listarProdutosVendedor',{vendedorId:id}),arr=r?.data?.produtos||[];$('dashProducts').innerHTML=`<div class="dashTitle"><h2>Meus produtos</h2><button class="btn primary" onclick="showDash('add')">+ Adicionar</button></div>${arr.length?'<div class="myProducts">'+arr.map(p=>`<div class="myProduct"><div style="width:75px;height:65px;background:#eaf1ee;border-radius:10px;overflow:hidden">${p.imagemUrl?`<img src="${esc(p.imagemUrl)}" onerror="this.style.display='none'">`:'🛍️'}</div><div style="min-width:0"><h4>${esc(p.nome)}</h4><small>${money(p.preco)} · ${esc(p.tipo)} · ${esc(p.status)}</small><div class="rowBtns"><button onclick="viewProduct('${js(p.produtoId)}')">Ver</button><button onclick="editProduct('${js(p.produtoId)}')">Editar</button><button onclick="removeProduct('${js(p.produtoId)}')">Remover</button></div></div></div>`).join('')+'</div>':'<div class="empty" style="margin-top:12px"><strong>Ainda não tens produtos.</strong>Adiciona o teu primeiro produto.</div>'}`}catch(e){$('dashProducts').innerHTML='<div class="notice error">'+esc(e.message)+'</div>'}
-}
-function showDash(which,btn){
- ['dashOverview','dashProducts','dashAdd','dashReputation'].forEach(id=>$(id).classList.add('hidden'));
- const map={overview:'dashOverview',products:'dashProducts',add:'dashAdd',reputation:'dashReputation'};$(map[which]||'dashOverview').classList.remove('hidden');
- document.querySelectorAll('.side button').forEach(x=>x.classList.remove('active'));if(btn?.classList)btn.classList.add('active');
- if(which==='add')renderAddForm();if(which==='reputation')loadSellerReputation();
-}
-function renderAddForm(p={}){
- $('dashAdd').innerHTML=`<div class="dashTitle"><h2>${p.produtoId?'Editar produto':'Adicionar produto'}</h2></div>
- <form class="form" onsubmit="saveProduct(event)">
- <input type="hidden" id="prodId" value="${esc(p.produtoId||'')}"><input id="prodName" placeholder="Nome do produto" value="${esc(p.nome||'')}" required>
- <div class="grid2"><input id="prodPrice" type="number" min="0.01" step="0.01" placeholder="Preço em MT" value="${p.preco??''}" required><select id="prodType"><option value="FISICO" ${p.tipo==='FISICO'?'selected':''}>Produto físico</option><option value="DIGITAL" ${p.tipo==='DIGITAL'?'selected':''}>Produto digital</option></select></div>
- <div class="grid2"><input id="prodCategory" placeholder="Categoria" value="${esc(p.categoria||'GERAL')}"><input id="prodImage" placeholder="URL da imagem" value="${esc(p.imagemUrl||'')}"></div>
- <textarea id="prodDesc" placeholder="Descrição completa">${esc(p.descricao||'')}</textarea>
- <input id="prodWhatsapp" placeholder="WhatsApp para entrega/contacto" value="${esc(p.whatsapp||'')}"><input id="prodDigital" placeholder="Link do ficheiro digital (se aplicável)" value="${esc(p.linkDigital||'')}">
- <div id="prodMsg"></div><button class="btn primary">${p.produtoId?'Guardar alterações':'Publicar produto'}</button></form>`;
-}
-async function saveProduct(ev){
- ev.preventDefault();const id=$('prodId').value;const data={vendedorId:localStorage.getItem('mz1_vendedor_id'),nome:$('prodName').value.trim(),preco:$('prodPrice').value,tipo:$('prodType').value,categoria:$('prodCategory').value.trim(),imagem:$('prodImage').value.trim(),descricao:$('prodDesc').value.trim(),whatsapp:$('prodWhatsapp').value.trim(),linkDigital:$('prodDigital').value.trim()};
- try{
-  const r=await apiPost(id?'EDITAR_PRODUTO':'CRIAR_PRODUTO',id?{...data,produtoId:id}:data);if(!r.ok)throw Error(r.message||r.erro||'Não foi possível guardar.');
-  msg($('prodMsg'),id?'Produto atualizado.':'Produto publicado com sucesso.',true);toast(id?'Produto atualizado!':'Produto publicado!');
-  await loadProducts();await loadMyProducts();setTimeout(()=>showDash('products'),700);
- }catch(e){msg($('prodMsg'),esc(e.message))}
-}
-async function editProduct(id){
- const p=products.find(x=>String(x.produtoId)===String(id));renderAddForm(p||{produtoId:id});showDash('add');
-}
-async function removeProduct(id){
- if(!confirm('Remover este produto?'))return;
- try{const r=await apiPost('REMOVER_PRODUTO',{produtoId:id,vendedorId:localStorage.getItem('mz1_vendedor_id')});if(!r.ok)throw Error(r.message||r.erro);toast('Produto removido.');await loadProducts();await loadMyProducts()}catch(e){toast(e.message,false)}
-}
-async function loadSellerReputation(){
- const id=localStorage.getItem('mz1_vendedor_id');if(!id)return;
- try{const r=await apiGet('avaliacoesEmpresa',{vendedorId:id,limite:20}),d=r?.data||{},rep=d.reputacao||{};$('dashReputation').innerHTML=`<div class="dashTitle"><h2>Minha reputação</h2></div><div class="stats"><div class="stat"><b>${Number(rep.media)||0}/5</b><span>Média</span></div><div class="stat"><b>${Number(rep.totalAvaliacoes)||0}</b><span>Avaliações</span></div><div class="stat"><b>${Number(rep.recomendacao)||0}%</b><span>Recomendação</span></div></div>${(d.avaliacoes||[]).map(a=>`<div class="review"><b>★ ${esc(a.nota||'—')}</b><p>${esc(a.comentario||'Sem comentário.')}</p></div>`).join('')||'<div class="notice">Ainda não existem avaliações.</div>'}`}catch(e){$('dashReputation').innerHTML='<div class="notice error">'+esc(e.message)+'</div>'}
-}
+    <!-- Filtros de Categorias -->
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-bold text-gray-900" id="lojas">Vitrine de Lojas e Produtos</h2>
+      <select id="categoriaFilter" onchange="carregarProdutos()" class="border border-gray-300 rounded-lg text-sm p-2 bg-white focus:ring-brand-500">
+        <option value="">Todas as Categorias</option>
+        <option value="GERAL">Geral</option>
+        <option value="ELETRONICOS">Eletrónicos</option>
+        <option value="MODA">Moda & Calçado</option>
+        <option value="DIGITAL">Produtos Digitais (PDF/Ebook)</option>
+      </select>
+    </div>
 
-/* Permite abrir o painel sem ocupar a página inicial. */
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.show').forEach(m=>m.classList.remove('show'))});
-loadProducts();
-</script>
+    <!-- Grelha de Blocos de Lojas e Produtos -->
+    <div id="lojasContainer" class="space-y-12">
+      <!-- Skeleton Loader -->
+      <div class="animate-pulse flex space-x-4 p-6 bg-white rounded-xl border border-gray-200">
+        <div class="rounded-full bg-gray-200 h-12 w-12"></div>
+        <div class="flex-1 space-y-4 py-1">
+          <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div class="space-y-2">
+            <div class="h-4 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       MODAL DE CHECKOUT / PAGAMENTO NETSHOP
+  ========================================== -->
+  <div id="modalCheckout" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
+      <button onclick="toggleModal('modalCheckout')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+        <i data-lucide="x" class="h-5 w-5"></i>
+      </button>
+
+      <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+        <i data-lucide="credit-card" class="mr-2 h-5 w-5 text-brand-600"></i> Finalizar Compra
+      </h3>
+
+      <div id="detalhesProdutoCheckout" class="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200 text-sm">
+        <!-- Preenchido via JavaScript -->
+      </div>
+
+      <form id="formCheckout" onsubmit="processarPagamento(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Seu Número de Telefone (M-Pesa / e-Mola)</label>
+          <input type="tel" id="checkoutTelefone" placeholder="+258 84/85/86/87..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Método de Pagamento</label>
+          <select id="checkoutMetodo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+            <option value="mpesa">M-Pesa (NetShop)</option>
+            <option value="emola">e-Mola (NetShop)</option>
+          </select>
+        </div>
+
+        <button type="submit" id="btnPagar" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition flex items-center justify-center">
+          <span>Pagar via NetShop</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       RODAPÉ: TUTORIAL, TERMOS & LEGISLAÇÃO
+  ========================================== -->
+  <footer class="bg-gray-900 text-gray-300 border-t border-gray-800">
+    
+    <!-- Tutorial: Como Funciona -->
+    <section id="como-funciona" class="border-b border-gray-800 py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h3 class="text-xl font-bold text-white mb-8 text-center">Como Funciona a Plataforma</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+          <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50">
+            <div class="w-12 h-12 bg-brand-600/20 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">1</div>
+            <h4 class="font-bold text-white mb-2">Escolha o Produto</h4>
+            <p class="text-xs text-gray-400">Navegue pelas lojas oficiais dos vendedores moçambicanos e selecione o artigo desejado.</p>
+          </div>
+
+          <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50">
+            <div class="w-12 h-12 bg-brand-600/20 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">2</div>
+            <h4 class="font-bold text-white mb-2">Pagamento Seguro</h4>
+            <p class="text-xs text-gray-400">Efetue o pagamento através do gateway integrado NetShop utilizando M-Pesa ou e-Mola.</p>
+          </div>
+
+          <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50">
+            <div class="w-12 h-12 bg-brand-600/20 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">3</div>
+            <h4 class="font-bold text-white mb-2">Prazo de Entrega</h4>
+            <p class="text-xs text-gray-400">Consulte o prazo estimado definido pelo vendedor no momento da compra (produtos físicos).</p>
+          </div>
+
+          <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50">
+            <div class="w-12 h-12 bg-brand-600/20 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">4</div>
+            <h4 class="font-bold text-white mb-2">Contacto & Suporte</h4>
+            <p class="text-xs text-gray-400">Acompanhe a sua encomenda ou tire dúvidas diretamente no WhatsApp do Vendedor.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Termos, Condições e Proibições Legais (Lei de Moçambique) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 text-xs leading-relaxed text-gray-400">
+      <div>
+        <h4 class="text-sm font-bold text-white mb-3 flex items-center">
+          <i data-lucide="shield-check" class="mr-2 h-4 w-4 text-brand-500"></i> Termos & Condições de Uso
+        </h4>
+        <p class="mb-2">A plataforma MOZ1VENDAS atua como intermediária de serviços de marketplace no território moçambicano, facilitando a ligação entre compradores e vendedores registados.</p>
+        <p>Todos os pagamentos são processados em Meticais (MZN) através de parceiros financeiros autorizados. O tempo de entrega e a qualidade do produto físico são da inteira responsabilidade do vendedor anunciante.</p>
+      </div>
+
+      <div>
+        <h4 class="text-sm font-bold text-white mb-3 flex items-center">
+          <i data-lucide="alert-triangle" class="mr-2 h-4 w-4 text-amber-500"></i> Artigos Proibidos (Legislação Moçambicana)
+        </h4>
+        <p class="mb-2">Em conformidade com a legislação comercial e penal da República de Moçambique, é estritamente proibido anunciar ou transacionar:</p>
+        <ul class="list-disc pl-4 space-y-1">
+          <li>Armas de fogo, munições ou material explosivo.</li>
+          <li>Substâncias estupefacientes, narcóticos ou medicamentos não autorizados pela MISAU.</li>
+          <li>Artigos contrafeitos, pirateados ou que violem Direitos de Autor e Propriedade Intelectual.</li>
+          <li>Documentos oficiais de identificação, moedas ou títulos financeiros.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Direitos de Autor -->
+    <div class="border-t border-gray-800 py-6 text-center text-xs text-gray-500">
+      &copy; 2026 MOZ1VENDAS. Todos os direitos reservados. Licenciado para operar em Moçambique.
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       LÓGICA JAVASCRIPT / INTEGRAÇÃO GAS 4.0
+  ========================================== -->
+  <script>
+    // Configuração do Web App do Google Apps Script
+    // Substitua o URL abaixo pela sua implementação publicada do GAS
+    const GAS_API_URL = "https://script.google.com/macros/s/SUO_MEU_SCRIPT_ID/exec";
+
+    let estadoGeral = {
+      blocos: [],
+      produtoSelecionado: null
+    };
+
+    // Inicialização
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      carregarProdutos();
+    });
+
+    // Controlar Modais
+    function toggleModal(modalId) {
+      const el = document.getElementById(modalId);
+      if (el) el.classList.toggle('hidden');
+    }
+
+    // Carregar Lojas e Produtos via doGet (homeBlocos)
+    async function carregarProdutos() {
+      const container = document.getElementById('lojasContainer');
+      const cat = document.getElementById('categoriaFilter').value;
+
+      try {
+        let url = `${GAS_API_URL}?action=homeBlocos`;
+        if (cat) url = `${GAS_API_URL}?action=produtosPorCategoria&categoria=${encodeURIComponent(cat)}`;
+
+        const response = await fetch(url);
+        const res = await response.json();
+
+        if (res.ok) {
+          estadoGeral.blocos = res.data.blocos || [];
+          renderizarLojas(estadoGeral.blocos);
+        } else {
+          container.innerHTML = `<p class="text-center text-red-500 py-8">Erro ao carregar produtos: ${res.message}</p>`;
+        }
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<p class="text-center text-gray-500 py-8">Não foi possível carregar a vitrine. Verifique o URL da API GAS.</p>`;
+      }
+    }
+
+    // Renderizar Blocos de Lojas e Produtos
+    function renderizarLojas(blocos) {
+      const container = document.getElementById('lojasContainer');
+      container.innerHTML = '';
+
+      if (!blocos || blocos.length === 0) {
+        container.innerHTML = `<div class="text-center py-12 text-gray-500">Nenhum produto ou loja encontrada.</div>`;
+        return;
+      }
+
+      blocos.forEach(bloco => {
+        const lojaEl = document.createElement('div');
+        lojaEl.className = 'bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden p-6';
+
+        // Cabeçalho do Vendedor
+        const reputacao = bloco.reputacao || { gosta: 0, recomendacao: 100 };
+        const logoUrl = bloco.logo || 'https://via.placeholder.com/60?text=LOJA';
+
+        let produtosHTML = '';
+        bloco.produtos.forEach(prod => {
+          const isFisico = String(prod.tipo).toUpperCase() === 'FISICO';
+          const prazoEntrega = isFisico ? (prod.prazoEntrega || '24h - 48h (a combinar)') : 'Download Imediato';
+
+          produtosHTML += `
+            <div class="border border-gray-100 rounded-xl p-4 flex flex-col justify-between hover:shadow-md transition bg-gray-50/50">
+              <div>
+                <img src="${prod.imagemUrl || 'https://via.placeholder.com/300'}" alt="${prod.nome}" class="w-full h-40 object-cover rounded-lg mb-3">
+                <span class="inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-gray-200 text-gray-700 mb-2">${prod.tipo}</span>
+                <h4 class="font-bold text-gray-900 text-sm mb-1">${prod.nome}</h4>
+                <p class="text-xs text-gray-500 mb-2 line-clamp-2">${prod.descricao || ''}</p>
+                <div class="text-xs text-gray-600 mb-3 flex items-center">
+                  <i data-lucide="clock" class="h-3 w-3 mr-1 text-gray-400"></i>
+                  <span>Entrega: <strong>${prazoEntrega}</strong></span>
+                </div>
+              </div>
+              
+              <div>
+                <div class="text-base font-extrabold text-brand-700 mb-3">${Number(prod.preco).toLocaleString('pt-MZ')} MZN</div>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="abrirCheckout('${prod.produtoId}', '${bloco.vendedorId}')" class="w-full py-2 bg-brand-600 text-white rounded-lg text-xs font-bold hover:bg-brand-700 transition">Comprar</button>
+                  <a href="https://wa.me/${limparTelefone(prod.whatsapp || bloco.empresa)}?text=Olá,%20tenho%20interesse%20no%20produto:%20${encodeURIComponent(prod.nome)}" target="_blank" class="w-full py-2 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-200 transition flex items-center justify-center">
+                    <i data-lucide="message-circle" class="h-3 w-3 mr-1"></i> WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        lojaEl.innerHTML = `
+          <!-- Marca do Vendedor -->
+          <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
+            <div class="flex items-center space-x-3">
+              <img src="${logoUrl}" alt="${bloco.empresa}" class="w-12 h-12 rounded-full object-cover border border-gray-200">
+              <div>
+                <h3 class="font-bold text-gray-900 text-base">${bloco.empresa || bloco.nomeVendedor}</h3>
+                <div class="flex items-center text-xs text-gray-500 space-x-2">
+                  <span class="flex items-center text-amber-500 font-semibold"><i data-lucide="thumbs-up" class="h-3 w-3 mr-1"></i> ${reputacao.recomendacao}% Recomendações</span>
+                </div>
+              </div>
+            </div>
+            <a href="https://wa.me/${limparTelefone(bloco.empresa)}?text=Olá!" target="_blank" class="hidden sm:flex items-center text-xs text-brand-600 border border-brand-200 px-3 py-1.5 rounded-full hover:bg-brand-50">
+              Contactar Vendedor
+            </a>
+          </div>
+
+          <!-- Grelha de Produtos da Loja -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            ${produtosHTML}
+          </div>
+        `;
+
+        container.appendChild(lojaEl);
+      });
+
+      lucide.createIcons();
+    }
+
+    // Abrir Modal de Pagamento
+    function abrirCheckout(produtoId, vendedorId) {
+      let prodAchado = null;
+      
+      for (const bloco of estadoGeral.blocos) {
+        const f = bloco.produtos.find(p => String(p.produtoId) === String(produtoId));
+        if (f) { prodAchado = f; break; }
+      }
+
+      if (!prodAchado) return alert('Produto não encontrado.');
+
+      estadoGeral.produtoSelecionado = prodAchado;
+
+      const container = document.getElementById('detalhesProdutoCheckout');
+      container.innerHTML = `
+        <div class="flex justify-between font-bold text-gray-900 mb-1">
+          <span>${prodAchado.nome}</span>
+          <span>${Number(prodAchado.preco).toLocaleString('pt-MZ')} MZN</span>
+        </div>
+        <div class="text-xs text-gray-500">
+          Tipo: ${prodAchado.tipo} | Prazo de Entrega: ${prodAchado.prazoEntrega || 'A combinar'}
+        </div>
+      `;
+
+      toggleModal('modalCheckout');
+    }
+
+    // Processar Pagamento NetShop no GAS
+    async function processarPagamento(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnPagar');
+      const telefone = document.getElementById('checkoutTelefone').value;
+      const metodo = document.getElementById('checkoutMetodo').value;
+
+      if (!estadoGeral.produtoSelecionado) return;
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin mr-2">🌀</span> Processando...`;
+
+      try {
+        const payload = {
+          action: 'COMPRAR_PRODUTO',
+          produtoId: estadoGeral.produtoSelecionado.produtoId,
+          telefone: telefone,
+          metodo: metodo
+        };
+
+        const response = await fetch(GAS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const res = await response.json();
+
+        if (res.ok) {
+          alert(`Solicitação enviada com sucesso!\n\nConfirme a transação de ${res.data.valor} MZN no seu telemóvel.`);
+          toggleModal('modalCheckout');
+        } else {
+          alert(`Erro no pagamento: ${res.message}`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Falha na comunicação com o servidor de pagamento NetShop.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Pagar via NetShop</span>`;
+      }
+    }
+
+    // Utilitários
+    function limparTelefone(tel) {
+      return String(tel || '').replace(/[^\d]/g, '');
+    }
+
+    function filtrarProdutos() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const filtrados = estadoGeral.blocos.map(b => {
+        const prods = b.produtos.filter(p => p.nome.toLowerCase().includes(q) || b.empresa.toLowerCase().includes(q));
+        return { ...b, produtos: prods };
+      }).filter(b => b.produtos.length > 0);
+
+      renderizarLojas(filtrados);
+    }
+  </script>
 </body>
 </html>
