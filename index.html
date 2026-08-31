@@ -30,77 +30,250 @@
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen font-sans">
 
   <!-- ==========================================
-       HEADER & NAVEGAÇÃO
+       HEADER & NAVEGAÇÃO COM ÁREA DO VENDEDOR
   ========================================== -->
   <header class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
+      
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="exibirAbaGeral()">
         <div class="bg-brand-600 text-white font-black text-xl px-3 py-1 rounded-lg tracking-wider">
           MOZ1
         </div>
         <span class="text-xl font-bold text-gray-900 tracking-tight">VENDAS</span>
       </div>
 
-      <!-- Barra de Pesquisa -->
-      <div class="hidden md:flex flex-1 max-w-md mx-8">
+      <!-- Barra de Pesquisa (Visível na Vitrine Principal) -->
+      <div id="wrapperPesquisa" class="hidden md:flex flex-1 max-w-md mx-8">
         <div class="relative w-full">
           <input type="text" id="searchInput" onkeyup="filtrarProdutos()" placeholder="Pesquisar produtos ou lojas..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
           <i data-lucide="search" class="absolute left-3 top-2.5 h-4 w-4 text-gray-400"></i>
         </div>
       </div>
 
-      <!-- Ações do Utilizador -->
-      <div class="flex items-center space-x-4">
+      <!-- Ações do Utilizador & Área do Vendedor -->
+      <div class="flex items-center space-x-3">
+        <!-- Carrinho -->
         <button onclick="toggleModal('modalCheckout')" class="relative p-2 text-gray-600 hover:text-brand-600">
           <i data-lucide="shopping-bag" class="h-6 w-6"></i>
           <span id="cartCount" class="absolute top-0 right-0 bg-brand-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
         </button>
-        <a href="#como-funciona" class="hidden sm:inline-block text-sm font-medium text-gray-600 hover:text-brand-600">Como Funciona</a>
+
+        <!-- Botão Entrar / Área do Vendedor -->
+        <div id="areaAuthVendedor">
+          <button onclick="abrirModalAuth()" class="flex items-center space-x-1 px-4 py-2 border border-brand-600 text-brand-600 font-bold rounded-lg text-xs hover:bg-brand-50 transition">
+            <i data-lucide="store" class="h-4 w-4"></i>
+            <span>Área do Vendedor</span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
 
   <!-- ==========================================
-       CONTEÚDO PRINCIPAL / Vitrine Multivendor
+       CONTEÚDO PRINCIPAL / VITRINE E PAINEL
   ========================================== -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
-    <!-- Banner de Boas-Vindas -->
-    <div class="bg-gradient-to-r from-brand-900 to-brand-700 rounded-2xl p-6 sm:p-10 text-white mb-10 shadow-lg relative overflow-hidden">
-      <div class="relative z-10 max-w-2xl">
-        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">Compre e Venda com Segurança em Moçambique</h1>
-        <p class="text-brand-100 text-sm sm:text-base mb-6">Pagamentos rápidos via M-Pesa/e-Mola com NetShop. Entrega garantida e suporte direto via WhatsApp.</p>
-        <a href="#lojas" class="inline-flex items-center px-5 py-2.5 bg-white text-brand-900 rounded-lg font-bold text-sm hover:bg-brand-50 transition">Ver Produtos Disponíveis</a>
+    <!-- SEÇÃO: DASHBOARD DO VENDEDOR (Exibido após Login) -->
+    <section id="painelVendedorContainer" class="hidden space-y-8 mb-12">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900" id="dashNomeLoja">Painel do Vendedor</h2>
+          <p class="text-xs text-gray-500">Acompanhe suas vendas e gira os seus produtos publicados no MOZ1VENDAS.</p>
+        </div>
+        <div class="mt-4 sm:mt-0 flex space-x-3">
+          <button onclick="toggleModal('modalNovoProduto')" class="px-4 py-2 bg-brand-600 text-white text-xs font-bold rounded-lg hover:bg-brand-700 flex items-center">
+            <i data-lucide="plus" class="h-4 w-4 mr-1"></i> Adicionar Produto
+          </button>
+          <button onclick="exibirAbaGeral()" class="px-4 py-2 border border-gray-300 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-50">
+            Ver Vitrine Pública
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- Filtros de Categorias -->
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-xl font-bold text-gray-900" id="lojas">Vitrine de Lojas e Produtos</h2>
-      <select id="categoriaFilter" onchange="carregarProdutos()" class="border border-gray-300 rounded-lg text-sm p-2 bg-white focus:ring-brand-500">
-        <option value="">Todas as Categorias</option>
-        <option value="GERAL">Geral</option>
-        <option value="ELETRONICOS">Eletrónicos</option>
-        <option value="MODA">Moda & Calçado</option>
-        <option value="DIGITAL">Produtos Digitais (PDF/Ebook)</option>
-      </select>
-    </div>
+      <!-- Indicadores de Vendas (Métricas) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center space-x-4">
+          <div class="p-3 bg-brand-100 text-brand-600 rounded-xl">
+            <i data-lucide="package" class="h-6 w-6"></i>
+          </div>
+          <div>
+            <div class="text-2xl font-black text-gray-900" id="statProdutosPublicados">0</div>
+            <div class="text-xs text-gray-500">Produtos Publicados</div>
+          </div>
+        </div>
 
-    <!-- Grelha de Blocos de Lojas e Produtos -->
-    <div id="lojasContainer" class="space-y-12">
-      <!-- Skeleton Loader -->
-      <div class="animate-pulse flex space-x-4 p-6 bg-white rounded-xl border border-gray-200">
-        <div class="rounded-full bg-gray-200 h-12 w-12"></div>
-        <div class="flex-1 space-y-4 py-1">
-          <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-          <div class="space-y-2">
-            <div class="h-4 bg-gray-200 rounded"></div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center space-x-4">
+          <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl">
+            <i data-lucide="shopping-cart" class="h-6 w-6"></i>
+          </div>
+          <div>
+            <div class="text-2xl font-black text-gray-900" id="statProdutosVendidos">0</div>
+            <div class="text-xs text-gray-500">Produtos Vendidos</div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center space-x-4">
+          <div class="p-3 bg-amber-100 text-amber-600 rounded-xl">
+            <i data-lucide="banknote" class="h-6 w-6"></i>
+          </div>
+          <div>
+            <div class="text-2xl font-black text-gray-900" id="statTotalFaturado">0 MZN</div>
+            <div class="text-xs text-gray-500">Receita Total Acumulada</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO: VITRINE PRINCIPAL -->
+    <div id="vitrineContainer">
+      <!-- Banner de Boas-Vindas -->
+      <div class="bg-gradient-to-r from-brand-900 to-brand-700 rounded-2xl p-6 sm:p-10 text-white mb-10 shadow-lg relative overflow-hidden">
+        <div class="relative z-10 max-w-2xl">
+          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">Compre e Venda com Segurança em Moçambique</h1>
+          <p class="text-brand-100 text-sm sm:text-base mb-6">Pagamentos rápidos via M-Pesa/e-Mola com NetShop. Registe a sua loja e comece a vender hoje mesmo.</p>
+          <div class="flex flex-wrap gap-3">
+            <a href="#lojas" class="inline-flex items-center px-5 py-2.5 bg-white text-brand-900 rounded-lg font-bold text-sm hover:bg-brand-50 transition">Ver Produtos Disponíveis</a>
+            <button onclick="abrirModalAuth('registo')" class="inline-flex items-center px-5 py-2.5 bg-brand-500 text-white rounded-lg font-bold text-sm hover:bg-brand-600 transition">Cadastrar Minha Loja</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros de Categorias -->
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-gray-900" id="lojas">Vitrine de Lojas e Produtos</h2>
+        <select id="categoriaFilter" onchange="carregarProdutos()" class="border border-gray-300 rounded-lg text-sm p-2 bg-white focus:ring-brand-500">
+          <option value="">Todas as Categorias</option>
+          <option value="GERAL">Geral</option>
+          <option value="ELETRONICOS">Eletrónicos</option>
+          <option value="MODA">Moda & Calçado</option>
+          <option value="DIGITAL">Produtos Digitais (PDF/Ebook)</option>
+        </select>
+      </div>
+
+      <!-- Grelha de Lojas e Produtos -->
+      <div id="lojasContainer" class="space-y-12">
+        <div class="animate-pulse flex space-x-4 p-6 bg-white rounded-xl border border-gray-200">
+          <div class="rounded-full bg-gray-200 h-12 w-12"></div>
+          <div class="flex-1 space-y-4 py-1">
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="space-y-2"><div class="h-4 bg-gray-200 rounded"></div></div>
           </div>
         </div>
       </div>
     </div>
 
   </main>
+
+  <!-- ==========================================
+       MODAL: ADICIONAR NOVO PRODUTO (VENDEDOR)
+  ========================================== -->
+  <div id="modalNovoProduto" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
+      <button onclick="toggleModal('modalNovoProduto')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+        <i data-lucide="x" class="h-5 w-5"></i>
+      </button>
+
+      <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+        <i data-lucide="plus-circle" class="mr-2 h-5 w-5 text-brand-600"></i> Cadastrar Novo Produto
+      </h3>
+
+      <form id="formNovoProduto" onsubmit="processarNovoProduto(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Nome do Produto</label>
+          <input type="text" id="prodNome" placeholder="Ex: Sapatilhas Nike Air" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Preço (MZN)</label>
+          <input type="number" id="prodPreco" placeholder="1500" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Tipo de Produto</label>
+          <select id="prodTipo" onchange="alternarCampoPrazo()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+            <option value="FISICO">Físico</option>
+            <option value="DIGITAL">Digital (PDF / Download)</option>
+          </select>
+        </div>
+
+        <div id="containerPrazoEntrega">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Prazo de Entrega Estimado</label>
+          <input type="text" id="prodPrazo" placeholder="Ex: 24h em Maputo / 48h Províncias" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">URL da Imagem do Produto</label>
+          <input type="url" id="prodImagem" placeholder="https://..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Descrição</label>
+          <textarea id="prodDescricao" rows="3" placeholder="Detalhes do artigo..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500"></textarea>
+        </div>
+
+        <button type="submit" id="btnSalvarProduto" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
+          Publicar Produto
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL DE AUTENTICAÇÃO DO VENDEDOR
+  ========================================== -->
+  <div id="modalAuthVendedor" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
+      <button onclick="toggleModal('modalAuthVendedor')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+        <i data-lucide="x" class="h-5 w-5"></i>
+      </button>
+
+      <div class="flex border-b border-gray-200 mb-6">
+        <button id="tabLoginBtn" onclick="alternarAbaAuth('login')" class="flex-1 pb-3 text-center text-sm font-bold border-b-2 border-brand-600 text-brand-600">
+          Entrar na Loja
+        </button>
+        <button id="tabRegistoBtn" onclick="alternarAbaAuth('registo')" class="flex-1 pb-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+          Registar Nova Loja
+        </button>
+      </div>
+
+      <form id="formLoginVendedor" onsubmit="processarLoginVendedor(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Telefone da Loja (WhatsApp / M-Pesa)</label>
+          <input type="tel" id="loginTelefone" placeholder="+258 84/85/86/87..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Palavra-passe</label>
+          <input type="password" id="loginSenha" placeholder="******" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+        <button type="submit" id="btnSubmitLogin" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
+          Aceder à Minha Loja
+        </button>
+      </form>
+
+      <form id="formRegistoVendedor" onsubmit="processarRegistoVendedor(event)" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Nome da Marca / Loja</label>
+          <input type="text" id="registoNomeLoja" placeholder="Ex: MozTech Digital" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Nome Completo do Proprietário</label>
+          <input type="text" id="registoNomeProprietario" placeholder="Ex: Elidio Nelson" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Telefone Principal (WhatsApp & NetShop)</label>
+          <input type="tel" id="registoTelefone" placeholder="+258 84/85/86/87..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Criar Palavra-passe</label>
+          <input type="password" id="registoSenha" placeholder="Atribua uma palavra-passe segura" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+        </div>
+        <button type="submit" id="btnSubmitRegisto" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
+          Criar Loja no MOZ1VENDAS
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- ==========================================
        MODAL DE CHECKOUT / PAGAMENTO NETSHOP
@@ -115,9 +288,7 @@
         <i data-lucide="credit-card" class="mr-2 h-5 w-5 text-brand-600"></i> Finalizar Compra
       </h3>
 
-      <div id="detalhesProdutoCheckout" class="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200 text-sm">
-        <!-- Preenchido via JavaScript -->
-      </div>
+      <div id="detalhesProdutoCheckout" class="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200 text-sm"></div>
 
       <form id="formCheckout" onsubmit="processarPagamento(event)" class="space-y-4">
         <div>
@@ -144,8 +315,6 @@
        RODAPÉ: TUTORIAL, TERMOS & LEGISLAÇÃO
   ========================================== -->
   <footer class="bg-gray-900 text-gray-300 border-t border-gray-800">
-    
-    <!-- Tutorial: Como Funciona -->
     <section id="como-funciona" class="border-b border-gray-800 py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h3 class="text-xl font-bold text-white mb-8 text-center">Como Funciona a Plataforma</h3>
@@ -177,8 +346,7 @@
       </div>
     </section>
 
-    <!-- Termos, Condições e Proibições Legais (Lei de Moçambique) -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 text-xs leading-relaxed text-gray-400">
+    <div id="termos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 text-xs leading-relaxed text-gray-400">
       <div>
         <h4 class="text-sm font-bold text-white mb-3 flex items-center">
           <i data-lucide="shield-check" class="mr-2 h-4 w-4 text-brand-500"></i> Termos & Condições de Uso
@@ -201,7 +369,6 @@
       </div>
     </div>
 
-    <!-- Direitos de Autor -->
     <div class="border-t border-gray-800 py-6 text-center text-xs text-gray-500">
       &copy; 2026 MOZ1VENDAS. Todos os direitos reservados. Licenciado para operar em Moçambique.
     </div>
@@ -211,28 +378,246 @@
        LÓGICA JAVASCRIPT / INTEGRAÇÃO GAS 4.0
   ========================================== -->
   <script>
-    // Configuração do Web App do Google Apps Script
-    // Substitua o URL abaixo pela sua implementação publicada do GAS
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzKOTM8SQin4DgH_O_mFbeiUlMPWVQ3iu7WnhYR4ujvaMkJmW3SLSqGcLeknq9fKK9PIw/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/SUO_MEU_SCRIPT_ID/exec";
 
     let estadoGeral = {
       blocos: [],
-      produtoSelecionado: null
+      produtoSelecionado: null,
+      vendedorLogado: null
     };
 
-    // Inicialização
     document.addEventListener("DOMContentLoaded", () => {
       lucide.createIcons();
+      verificarSessaoVendedor();
       carregarProdutos();
     });
 
-    // Controlar Modais
     function toggleModal(modalId) {
       const el = document.getElementById(modalId);
       if (el) el.classList.toggle('hidden');
     }
 
-    // Carregar Lojas e Produtos via doGet (homeBlocos)
+    function alternarCampoPrazo() {
+      const tipo = document.getElementById('prodTipo').value;
+      const container = document.getElementById('containerPrazoEntrega');
+      container.classList.toggle('hidden', tipo === 'DIGITAL');
+    }
+
+    function abrirDashboardVendedor() {
+      if (!estadoGeral.vendedorLogado) return abrirModalAuth();
+      document.getElementById('painelVendedorContainer').classList.remove('hidden');
+      carregarEstatisticasVendedor();
+    }
+
+    function exibirAbaGeral() {
+      document.getElementById('painelVendedorContainer').classList.add('hidden');
+    }
+
+    // Carregar Métricas do Vendedor a partir do GAS
+    async function carregarEstatisticasVendedor() {
+      if (!estadoGeral.vendedorLogado) return;
+
+      document.getElementById('dashNomeLoja').innerText = `Painel: ${estadoGeral.vendedorLogado.nomeLoja}`;
+
+      try {
+        const response = await fetch(`${GAS_API_URL}?action=obterEstatisticasVendedor&vendedorId=${estadoGeral.vendedorLogado.vendedorId}`);
+        const res = await response.json();
+
+        if (res.ok && res.stats) {
+          document.getElementById('statProdutosPublicados').innerText = res.stats.produtosPublicados || 0;
+          document.getElementById('statProdutosVendidos').innerText = res.stats.produtosVendidos || 0;
+          document.getElementById('statTotalFaturado').innerText = `${Number(res.stats.totalFaturado || 0).toLocaleString('pt-MZ')} MZN`;
+        }
+      } catch (err) {
+        console.error("Erro ao carregar estatísticas do vendedor:", err);
+      }
+    }
+
+    // Processar Novo Produto no GAS
+    async function processarNovoProduto(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSalvarProduto');
+      btn.disabled = true;
+      btn.innerText = "A guardar produto...";
+
+      const payload = {
+        action: 'CADASTRAR_PRODUTO',
+        vendedorId: estadoGeral.vendedorLogado.vendedorId,
+        nome: document.getElementById('prodNome').value,
+        preco: document.getElementById('prodPreco').value,
+        tipo: document.getElementById('prodTipo').value,
+        prazoEntrega: document.getElementById('prodPrazo').value || 'Download Imediato',
+        imagemUrl: document.getElementById('prodImagem').value,
+        descricao: document.getElementById('prodDescricao').value
+      };
+
+      try {
+        const response = await fetch(GAS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const res = await response.json();
+
+        if (res.ok) {
+          alert('Produto publicado com sucesso!');
+          toggleModal('modalNovoProduto');
+          document.getElementById('formNovoProduto').reset();
+          carregarEstatisticasVendedor();
+          carregarProdutos();
+        } else {
+          alert(`Erro: ${res.message}`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Falha ao registar produto.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Publicar Produto";
+      }
+    }
+
+    // Modal de Autenticação
+    function abrirModalAuth(aba = 'login') {
+      alternarAbaAuth(aba);
+      toggleModal('modalAuthVendedor');
+    }
+
+    function alternarAbaAuth(aba) {
+      const formLogin = document.getElementById('formLoginVendedor');
+      const formRegisto = document.getElementById('formRegistoVendedor');
+      const tabLoginBtn = document.getElementById('tabLoginBtn');
+      const tabRegistoBtn = document.getElementById('tabRegistoBtn');
+
+      if (aba === 'login') {
+        formLogin.classList.remove('hidden');
+        formRegisto.classList.add('hidden');
+        tabLoginBtn.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-brand-600 text-brand-600";
+        tabRegistoBtn.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-500 hover:text-gray-700";
+      } else {
+        formRegisto.classList.remove('hidden');
+        formLogin.classList.add('hidden');
+        tabRegistoBtn.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-brand-600 text-brand-600";
+        tabLoginBtn.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-500 hover:text-gray-700";
+      }
+    }
+
+    async function processarRegistoVendedor(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitRegisto');
+      btn.disabled = true;
+      btn.innerText = "A registar...";
+
+      const payload = {
+        action: 'REGISTRAR_VENDEDOR',
+        nomeLoja: document.getElementById('registoNomeLoja').value,
+        nomeProprietario: document.getElementById('registoNomeProprietario').value,
+        telefone: document.getElementById('registoTelefone').value,
+        senha: document.getElementById('registoSenha').value
+      };
+
+      try {
+        const response = await fetch(GAS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const res = await response.json();
+
+        if (res.ok) {
+          alert('Loja criada! Faça login para aceder ao seu painel.');
+          alternarAbaAuth('login');
+        } else {
+          alert(`Erro: ${res.message}`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro de comunicação.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Criar Loja no MOZ1VENDAS";
+      }
+    }
+
+    async function processarLoginVendedor(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitLogin');
+      btn.disabled = true;
+      btn.innerText = "A autenticar...";
+
+      const payload = {
+        action: 'LOGIN_VENDEDOR',
+        telefone: document.getElementById('loginTelefone').value,
+        senha: document.getElementById('loginSenha').value
+      };
+
+      try {
+        const response = await fetch(GAS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const res = await response.json();
+
+        if (res.ok && res.vendedor) {
+          estadoGeral.vendedorLogado = res.vendedor;
+          localStorage.setItem('moz1_vendedor', JSON.stringify(res.vendedor));
+          atualizarInterfaceSessao();
+          toggleModal('modalAuthVendedor');
+          abrirDashboardVendedor();
+        } else {
+          alert(`Erro no login: ${res.message || 'Dados inválidos'}`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao realizar login.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Aceder à Minha Loja";
+      }
+    }
+
+    function verificarSessaoVendedor() {
+      const sessao = localStorage.getItem('moz1_vendedor');
+      if (sessao) {
+        estadoGeral.vendedorLogado = JSON.parse(sessao);
+        atualizarInterfaceSessao();
+      }
+    }
+
+    function terminarSessao() {
+      localStorage.removeItem('moz1_vendedor');
+      estadoGeral.vendedorLogado = null;
+      atualizarInterfaceSessao();
+      exibirAbaGeral();
+    }
+
+    function atualizarInterfaceSessao() {
+      const container = document.getElementById('areaAuthVendedor');
+      if (estadoGeral.vendedorLogado) {
+        container.innerHTML = `
+          <div class="flex items-center space-x-2">
+            <button onclick="abrirDashboardVendedor()" class="text-xs font-bold text-gray-800 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg flex items-center">
+              <i data-lucide="layout-dashboard" class="h-3.5 w-3.5 mr-1 text-brand-600"></i>
+              <span>${estadoGeral.vendedorLogado.nomeLoja}</span>
+            </button>
+            <button onclick="terminarSessao()" class="p-1.5 text-red-500 hover:text-red-700" title="Sair">
+              <i data-lucide="log-out" class="h-4 w-4"></i>
+            </button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <button onclick="abrirModalAuth()" class="flex items-center space-x-1 px-4 py-2 border border-brand-600 text-brand-600 font-bold rounded-lg text-xs hover:bg-brand-50 transition">
+            <i data-lucide="store" class="h-4 w-4"></i>
+            <span>Área do Vendedor</span>
+          </button>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    // Carregar Lojas e Produtos via doGet
     async function carregarProdutos() {
       const container = document.getElementById('lojasContainer');
       const cat = document.getElementById('categoriaFilter').value;
@@ -252,11 +637,10 @@
         }
       } catch (err) {
         console.error(err);
-        container.innerHTML = `<p class="text-center text-gray-500 py-8">Não foi possível carregar a vitrine. Verifique o URL da API GAS.</p>`;
+        container.innerHTML = `<p class="text-center text-gray-500 py-8">Não foi possível carregar a vitrine.</p>`;
       }
     }
 
-    // Renderizar Blocos de Lojas e Produtos
     function renderizarLojas(blocos) {
       const container = document.getElementById('lojasContainer');
       container.innerHTML = '';
@@ -270,8 +654,7 @@
         const lojaEl = document.createElement('div');
         lojaEl.className = 'bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden p-6';
 
-        // Cabeçalho do Vendedor
-        const reputacao = bloco.reputacao || { gosta: 0, recomendacao: 100 };
+        const reputacao = bloco.reputacao || { recomendacao: 100 };
         const logoUrl = bloco.logo || 'https://via.placeholder.com/60?text=LOJA';
 
         let produtosHTML = '';
@@ -306,7 +689,6 @@
         });
 
         lojaEl.innerHTML = `
-          <!-- Marca do Vendedor -->
           <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
             <div class="flex items-center space-x-3">
               <img src="${logoUrl}" alt="${bloco.empresa}" class="w-12 h-12 rounded-full object-cover border border-gray-200">
@@ -317,12 +699,7 @@
                 </div>
               </div>
             </div>
-            <a href="https://wa.me/${limparTelefone(bloco.empresa)}?text=Olá!" target="_blank" class="hidden sm:flex items-center text-xs text-brand-600 border border-brand-200 px-3 py-1.5 rounded-full hover:bg-brand-50">
-              Contactar Vendedor
-            </a>
           </div>
-
-          <!-- Grelha de Produtos da Loja -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             ${produtosHTML}
           </div>
@@ -334,21 +711,16 @@
       lucide.createIcons();
     }
 
-    // Abrir Modal de Pagamento
     function abrirCheckout(produtoId, vendedorId) {
       let prodAchado = null;
-      
       for (const bloco of estadoGeral.blocos) {
         const f = bloco.produtos.find(p => String(p.produtoId) === String(produtoId));
         if (f) { prodAchado = f; break; }
       }
-
       if (!prodAchado) return alert('Produto não encontrado.');
 
       estadoGeral.produtoSelecionado = prodAchado;
-
-      const container = document.getElementById('detalhesProdutoCheckout');
-      container.innerHTML = `
+      document.getElementById('detalhesProdutoCheckout').innerHTML = `
         <div class="flex justify-between font-bold text-gray-900 mb-1">
           <span>${prodAchado.nome}</span>
           <span>${Number(prodAchado.preco).toLocaleString('pt-MZ')} MZN</span>
@@ -357,21 +729,17 @@
           Tipo: ${prodAchado.tipo} | Prazo de Entrega: ${prodAchado.prazoEntrega || 'A combinar'}
         </div>
       `;
-
       toggleModal('modalCheckout');
     }
 
-    // Processar Pagamento NetShop no GAS
     async function processarPagamento(e) {
       e.preventDefault();
       const btn = document.getElementById('btnPagar');
       const telefone = document.getElementById('checkoutTelefone').value;
       const metodo = document.getElementById('checkoutMetodo').value;
 
-      if (!estadoGeral.produtoSelecionado) return;
-
       btn.disabled = true;
-      btn.innerHTML = `<span class="animate-spin mr-2">🌀</span> Processando...`;
+      btn.innerHTML = `<span>Processando...</span>`;
 
       try {
         const payload = {
@@ -386,28 +754,24 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
         const res = await response.json();
 
         if (res.ok) {
-          alert(`Solicitação enviada com sucesso!\n\nConfirme a transação de ${res.data.valor} MZN no seu telemóvel.`);
+          alert(`Solicitação enviada! Confirme a transação de ${res.data.valor} MZN no seu telemóvel.`);
           toggleModal('modalCheckout');
         } else {
-          alert(`Erro no pagamento: ${res.message}`);
+          alert(`Erro: ${res.message}`);
         }
       } catch (err) {
         console.error(err);
-        alert('Falha na comunicação com o servidor de pagamento NetShop.');
+        alert('Erro ao conectar com NetShop.');
       } finally {
         btn.disabled = false;
         btn.innerHTML = `<span>Pagar via NetShop</span>`;
       }
     }
 
-    // Utilitários
-    function limparTelefone(tel) {
-      return String(tel || '').replace(/[^\d]/g, '');
-    }
+    function limparTelefone(tel) { return String(tel || '').replace(/[^\d]/g, ''); }
 
     function filtrarProdutos() {
       const q = document.getElementById('searchInput').value.toLowerCase();
@@ -415,7 +779,6 @@
         const prods = b.produtos.filter(p => p.nome.toLowerCase().includes(q) || b.empresa.toLowerCase().includes(q));
         return { ...b, produtos: prods };
       }).filter(b => b.produtos.length > 0);
-
       renderizarLojas(filtrados);
     }
   </script>
