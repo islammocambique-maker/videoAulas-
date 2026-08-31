@@ -1,252 +1,493 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moz1Vendas</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-    body { background-color: #f4f4f9; padding: 15px; }
-
-    /* Layout do Cabeçalho e Botões */
-    header { display: flex; justify-content: space-between; align-items: center; max-width: 800px; margin: 0 auto 20px auto; padding: 10px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    .logo-app { font-weight: bold; font-size: 18px; color: #046A38; }
-
-    /* Modais */
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
-    .modal-content { background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; position: relative; }
-    .close-btn { position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 20px; }
-    
-    /* Grade de Lojas */
-    .lojas-container { display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; min-height: 200px; }
-    .card-loja { background: #fff; border-radius: 10px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .header-loja { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
-    .info-loja { display: flex; align-items: center; gap: 10px; }
-    .logo-loja { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
-    
-    /* Slideshow */
-    .slideshow-container { position: relative; width: 100%; height: 250px; overflow: hidden; border-radius: 8px; background: #eaedf1; }
-    .slide-item { display: none; width: 100%; height: 100%; text-align: center; }
-    .slide-item.active { display: block; }
-    .slide-item img { width: 100%; height: 180px; object-fit: cover; }
-    .slide-details { padding: 5px; background: #fff; }
-    
-    /* Estado Vazio ou Mensagens */
-    .mensagem-alerta { text-align: center; padding: 40px 20px; background: #fff; border-radius: 8px; color: #555; }
-
-    /* Botões e Formulários */
-    .btn { background: #046A38; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
-    .btn-header { background: #046A38; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-    .btn-rec { background: #f0a500; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-    input { width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moz1Vendas - Marketplace</title>
+  <!-- Tailwind CSS CDN para estilização moderna e responsiva -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
-<body>
+<body class="bg-gray-100 font-sans text-gray-800">
 
-  <!-- Topo da Aplicação -->
-  <header>
-    <div class="logo-app">Moz1Vendas</div>
-    <button class="btn-header" onclick="abrirModal('modalRegistro')">+ Criar Loja</button>
+  <!-- NAVBAR -->
+  <header class="bg-blue-700 text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <h1 class="text-2xl font-bold cursor-pointer" onclick="carregarHome()">Moz1Vendas</h1>
+      <nav class="space-x-4 flex items-center">
+        <button onclick="carregarHome()" class="hover:underline"><i class="fa-solid fa-house"></i> Home</button>
+        <button onclick="abrirModalVendedor()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold px-3 py-1.5 rounded-lg transition">
+          <i class="fa-solid fa-store"></i> Area do Vendedor
+        </button>
+      </nav>
+    </div>
   </header>
 
-  <!-- Modal de Registro de Loja -->
-  <div id="modalRegistro" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="fecharModal('modalRegistro')">&times;</span>
-      <h3>Registrar Nova Loja</h3>
-      <form id="formRegistro">
-        <input type="text" id="regNome" placeholder="Nome do Proprietário" required>
-        <input type="text" id="regEmpresa" placeholder="Nome da Loja / Empresa" required>
-        <input type="tel" id="regTelefone" placeholder="Telefone (8X / +258)" required>
-        <input type="password" id="regPin" placeholder="PIN (4 a 6 dígitos)" maxlength="6" required>
-        <button type="submit" class="btn">Cadastrar Loja</button>
-      </form>
-    </div>
-  </div>
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-8">
+    
+    <!-- CATEGORIAS -->
+    <section class="bg-white p-4 rounded-xl shadow-sm">
+      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Categorias</h2>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="filtrarCategoria('')" class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-medium hover:bg-blue-200">Todas</button>
+        <button onclick="filtrarCategoria('GERAL')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200">Geral</button>
+        <button onclick="filtrarCategoria('DIGITAL')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200">Produtos Digitais</button>
+        <button onclick="filtrarCategoria('FISICO')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200">Produtos Físicos</button>
+      </div>
+    </section>
 
-  <!-- Modal de Recomendação da Marca -->
-  <div id="modalRecomendacao" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="fecharModal('modalRecomendacao')">&times;</span>
-      <h3>Recomendar Marca</h3>
-      <input type="hidden" id="recVendedorId">
-      <p>Você recomenda esta loja?</p>
-      <button class="btn" onclick="enviarRecomendacao('GOSTO')">👍 Recomendar (Gosto)</button>
-      <button class="btn" style="background:#c0392b;" onclick="enviarRecomendacao('NAO_GOSTO')">👎 Não Recomendar</button>
-    </div>
-  </div>
+    <!-- SLIDESHOW / DESTAQUES -->
+    <section id="sec-destaques" class="hidden">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-star text-yellow-500"></i> Produtos em Destaque</h2>
+      <div id="container-destaques" class="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">
+        <!-- Injetado via JavaScript -->
+      </div>
+    </section>
 
-  <!-- Container Principal das Lojas -->
-  <main class="lojas-container" id="containerLojas">
-    <div class="mensagem-alerta">Carregando lojas e produtos...</div>
+    <!-- BLOCOS DA HOME (LOJAS E PRODUTOS) -->
+    <section>
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-shop text-blue-600"></i> Lojas Parceiras</h2>
+      <div id="container-home" class="space-y-8">
+        <p class="text-gray-500 italic">Carregando marketplace...</p>
+      </div>
+    </section>
+
   </main>
 
-  <script>
-    // IMPORTANTE: Insira a URL do seu Web App implantado no Google Apps Script aqui
-    const GAS_URL = "https://script.google.com/macros/s/SEU_SCRIPT_ID/exec";
-
-    document.addEventListener("DOMContentLoaded", () => {
-      carregarBlocosHome();
-
-      document.getElementById("formRegistro").addEventListener("submit", async (e) => {
-        e.preventDefault();
+  <!-- MODAL DE COMPRA / CHECKOUT NETSHOP -->
+  <div id="modal-compra" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 relative shadow-xl">
+      <button onclick="fecharModal('modal-compra')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+      
+      <div id="checkout-etapa-1">
+        <h3 class="text-xl font-bold text-gray-900 mb-1" id="checkout-produto-nome">Nome do Produto</h3>
+        <p class="text-2xl font-bold text-green-600 mb-4" id="checkout-produto-preco">0.00 MT</p>
         
-        const payload = {
-          action: "CRIAR_LOJA",
-          nome: document.getElementById("regNome").value,
-          empresa: document.getElementById("regEmpresa").value,
-          telefone: document.getElementById("regTelefone").value,
-          pin: document.getElementById("regPin").value
-        };
+        <form id="form-pagamento" onsubmit="iniciarPagamento(event)" class="space-y-4">
+          <input type="hidden" id="checkout-produto-id" />
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Telefone M-Pesa / E-Mola</label>
+            <input type="tel" id="checkout-telefone" required placeholder="841234567 ou +258841234567" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Método de Pagamento</label>
+            <select id="checkout-metodo" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+              <option value="mpesa">M-Pesa</option>
+              <option value="emola">e-Mola</option>
+            </select>
+          </div>
+          <button type="submit" id="btn-pagar" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-lg">
+            Pagar com NetShop
+          </button>
+        </form>
+      </div>
 
-        try {
-          const res = await fetch(GAS_URL, {
-            method: "POST",
-            body: JSON.stringify(payload)
-          });
-          const data = await res.json();
-          
-          if (data.ok) {
-            alert(data.message || "Loja cadastrada com sucesso!");
-            fecharModal("modalRegistro");
-            carregarBlocosHome();
-          } else {
-            alert("Erro no registo: " + (data.message || "Ação não processada."));
-          }
-        } catch (err) {
-          alert("Erro ao conectar com o servidor.");
-        }
-      });
+      <!-- ETAPA 2: AGUARDANDO CONFIRMAÇÃO DO PAGAMENTO -->
+      <div id="checkout-etapa-2" class="hidden text-center py-6 space-y-4">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+        <h4 class="text-lg font-semibold text-gray-800">Aguardando confirmação do pagamento...</h4>
+        <p class="text-sm text-gray-500">Por favor, confirme o PIN no seu telemóvel para concluir a transação.</p>
+        <p id="checkout-status-msg" class="text-xs text-blue-600 font-mono"></p>
+      </div>
+
+      <!-- ETAPA 3: SUCESSO / ENTREGA -->
+      <div id="checkout-etapa-3" class="hidden text-center py-4 space-y-4">
+        <div class="text-green-500 text-5xl"><i class="fa-solid fa-circle-check"></i></div>
+        <h4 class="text-2xl font-bold text-gray-900">Pagamento Confirmado!</h4>
+        <div id="checkout-resultado-entrega" class="bg-gray-50 p-4 rounded-xl text-left border">
+          <!-- Conteúdo da entrega injetado via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL VENDEDOR (LOGIN / REGISTO / PRODUTO) -->
+  <div id="modal-vendedor" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto">
+      <button onclick="fecharModal('modal-vendedor')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+
+      <!-- SEÇÃO: LOGIN VENDEDOR -->
+      <div id="vendedor-login-box" class="space-y-4">
+        <h3 class="text-xl font-bold">Login do Vendedor</h3>
+        <form onsubmit="realizarLogin(event)" class="space-y-3">
+          <input type="tel" id="login-telefone" placeholder="Telefone" required class="w-full border p-2 rounded-lg" />
+          <input type="password" id="login-pin" placeholder="PIN" required class="w-full border p-2 rounded-lg" />
+          <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg">Entrar</button>
+        </form>
+        <hr/>
+        <p class="text-sm text-center">Ainda não tem loja? <button onclick="alternarAbasVendedor('registo')" class="text-blue-600 font-semibold">Criar Loja</button></p>
+      </div>
+
+      <!-- SEÇÃO: CRIAR LOJA -->
+      <div id="vendedor-registo-box" class="hidden space-y-4">
+        <h3 class="text-xl font-bold">Registar Nova Loja</h3>
+        <form onsubmit="criarLoja(event)" class="space-y-3">
+          <input type="text" id="reg-nome" placeholder="Seu Nome Completo" required class="w-full border p-2 rounded-lg" />
+          <input type="tel" id="reg-telefone" placeholder="Telefone" required class="w-full border p-2 rounded-lg" />
+          <input type="text" id="reg-bi" placeholder="Número de B.I." required class="w-full border p-2 rounded-lg" />
+          <input type="text" id="reg-empresa" placeholder="Nome da Empresa / Marca" required class="w-full border p-2 rounded-lg" />
+          <input type="email" id="reg-email" placeholder="E-mail" required class="w-full border p-2 rounded-lg" />
+          <input type="password" id="reg-pin" placeholder="Crie um PIN de Acesso" required class="w-full border p-2 rounded-lg" />
+          <input type="url" id="reg-logo" placeholder="URL do Logo/Imagem da Loja" class="w-full border p-2 rounded-lg" />
+          <button type="submit" class="w-full bg-green-600 text-white font-bold py-2 rounded-lg">Criar Minha Loja</button>
+        </form>
+        <p class="text-sm text-center"><button onclick="alternarAbasVendedor('login')" class="text-blue-600">Voltar ao Login</button></p>
+      </div>
+
+      <!-- SEÇÃO: PAINEL / CRIAR PRODUTO -->
+      <div id="vendedor-painel-box" class="hidden space-y-4">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="text-xl font-bold" id="painel-loja-nome">Painel da Loja</h3>
+          <button onclick="logoutVendedor()" class="text-red-500 text-sm"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+        </div>
+        <h4 class="font-semibold text-gray-700">Cadastrar Novo Produto</h4>
+        <form onsubmit="criarProduto(event)" class="space-y-3">
+          <input type="text" id="prod-nome" placeholder="Nome do Produto" required class="w-full border p-2 rounded-lg" />
+          <textarea id="prod-desc" placeholder="Descrição do Produto" class="w-full border p-2 rounded-lg"></textarea>
+          <input type="number" id="prod-preco" placeholder="Preço (MZN)" required class="w-full border p-2 rounded-lg" />
+          <input type="url" id="prod-imagem" placeholder="URL da Imagem do Produto" class="w-full border p-2 rounded-lg" />
+          <select id="prod-tipo" class="w-full border p-2 rounded-lg">
+            <option value="FISICO">Produto Físico</option>
+            <option value="DIGITAL">Produto Digital (Download/E-book)</option>
+          </select>
+          <select id="prod-categoria" class="w-full border p-2 rounded-lg">
+            <option value="GERAL">Geral</option>
+            <option value="DIGITAL">Digital</option>
+            <option value="FISICO">Físico</option>
+          </select>
+          <input type="tel" id="prod-whatsapp" placeholder="WhatsApp para contacto (Produtos Físicos)" class="w-full border p-2 rounded-lg" />
+          <input type="url" id="prod-linkdigital" placeholder="URL para Download (Produtos Digitais)" class="w-full border p-2 rounded-lg" />
+          <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg">Cadastrar Produto</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCRIPT FRONTEND -->
+  <script>
+    // URL da sua implantação do Apps Script (Web App)
+    const API_URL = 'COLE_AQUI_O_URL_DO_SEU_WEB_APP_GAS';
+
+    let vendedorSessao = JSON.parse(localStorage.getItem('mzv_vendedor')) || null;
+    let intervaloStatusVenda = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      carregarHome();
+      carregarDestaques();
     });
 
-    async function carregarBlocosHome() {
-      const container = document.getElementById("containerLojas");
+    // --- CARREGAMENTO DE DADOS ---
+    async function carregarHome() {
+      const container = document.getElementById('container-home');
+      container.innerHTML = '<p class="text-gray-500 italic">Carregando marketplace...</p>';
       
-      if (!GAS_URL || GAS_URL.includes("SEU_SCRIPT_ID")) {
-        container.innerHTML = `<div class="mensagem-alerta"><strong>Atenção:</strong> Insira a URL válida do seu Web App no código JavaScript.</div>`;
-        return;
-      }
-
       try {
-        const res = await fetch(`${GAS_URL}?action=homeBlocos`);
-        const result = await res.json();
-
-        if (result.ok && result.data && result.data.blocos && result.data.blocos.length > 0) {
-          renderizarBlocos(result.data.blocos);
-        } else {
-          container.innerHTML = `
-            <div class="mensagem-alerta">
-              <h3>Nenhuma loja encontrada</h3>
-              <p style="margin-top: 8px;">Ainda não existem lojas cadastradas na plataforma.</p>
-              <button class="btn-header" style="margin-top: 15px;" onclick="abrirModal('modalRegistro')">Cadastrar Primeira Loja</button>
-            </div>`;
-        }
-      } catch (err) {
-        console.error("Erro na busca dos dados:", err);
-        container.innerHTML = `<div class="mensagem-alerta">Erro ao carregar lojas. Verifique a conexão ou a URL do Apps Script.</div>`;
-      }
-    }
-
-    function renderizarBlocos(blocos) {
-      const container = document.getElementById("containerLojas");
-      container.innerHTML = "";
-
-      blocos.forEach((bloco, bIndex) => {
-        const card = document.createElement("div");
-        card.className = "card-loja";
-
-        let slidesHTML = "";
-        const produtos = bloco.produtos || [];
-
-        if (produtos.length > 0) {
-          produtos.forEach((prod, pIndex) => {
-            slidesHTML += `
-              <div class="slide-item slide-block-${bIndex} ${pIndex === 0 ? 'active' : ''}">
-                <img src="${prod.imagemUrl || 'https://via.placeholder.com/300?text=Sem+Imagem'}" alt="${prod.nome}">
-                <div class="slide-details">
-                  <strong>${prod.nome}</strong>
-                  <p>${prod.preco} MZN</p>
-                </div>
-              </div>
-            `;
-          });
-        } else {
-          slidesHTML = `<div class="slide-item active"><div class="slide-details" style="padding: 50px 0;">Esta loja ainda não possui produtos.</div></div>`;
+        const res = await fetch(`${API_URL}?action=homeBlocos`);
+        const json = await res.json();
+        
+        if (!json.ok || !json.blocos || json.blocos.length === 0) {
+          container.innerHTML = '<p class="text-gray-500">Nenhum produto ou loja encontrada momento.</p>';
+          return;
         }
 
-        card.innerHTML = `
-          <div class="header-loja">
-            <div class="info-loja">
-              <img class="logo-loja" src="${bloco.logo || 'https://via.placeholder.com/50?text=Loja'}" alt="Logo">
+        container.innerHTML = json.blocos.map(bloco => `
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex items-center gap-4 mb-4">
+              <img src="${bloco.logo || 'https://via.placeholder.com/50'}" class="w-12 h-12 rounded-full object-cover border" />
               <div>
-                <h4>${bloco.empresa || bloco.nomeVendedor || 'Loja Sem Nome'}</h4>
-                <small>👍 ${(bloco.reputacao && bloco.reputacao.recomendacao) ? bloco.reputacao.recomendacao : 0}% de recomendações</small>
+                <h3 class="text-lg font-bold">${bloco.empresa}</h3>
+                <span class="text-xs bg-green-100 text-green-700 font-semibold px-2 py-0.5 rounded-full">Loja Verificada</span>
               </div>
             </div>
-            <button class="btn-rec" onclick="abrirModalRecomendacao('${bloco.vendedorId || ''}')">⭐ Recomendar</button>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              ${bloco.slideshowProdutos.map(prod => cardProdutoHTML(prod)).join('')}
+            </div>
           </div>
-          <div class="slideshow-container">
-            ${slidesHTML}
+        `).join('');
+
+      } catch (err) {
+        container.innerHTML = '<p class="text-red-500">Erro ao carregar os dados do servidor.</p>';
+      }
+    }
+
+    async function carregarDestaques() {
+      try {
+        const res = await fetch(`${API_URL}?action=produtosDestaque`);
+        const json = await res.json();
+        if (json.ok && json.destaques && json.destaques.length > 0) {
+          document.getElementById('sec-destaques').classList.remove('hidden');
+          document.getElementById('container-destaques').innerHTML = json.destaques.map(prod => `
+            <div class="min-w-[220px] max-w-[220px] bg-white p-3 rounded-xl shadow border">
+              <img src="${prod.imagemUrl || 'https://via.placeholder.com/150'}" class="w-full h-32 object-cover rounded-lg mb-2" />
+              <h4 class="font-bold text-sm truncate">${prod.nome}</h4>
+              <p class="text-blue-600 font-bold text-sm">${prod.preco} MZN</p>
+              <button onclick="abrirCheckout('${prod.produtoId}', '${prod.nome}', ${prod.preco})" class="mt-2 w-full bg-blue-600 text-white text-xs font-bold py-1.5 rounded-lg">Comprar</button>
+            </div>
+          `).join('');
+        }
+      } catch (e) {}
+    }
+
+    async function filtrarCategoria(cat) {
+      if (!cat) return carregarHome();
+      const container = document.getElementById('container-home');
+      container.innerHTML = '<p class="text-gray-500 italic">Filtrando produtos...</p>';
+      
+      try {
+        const res = await fetch(`${API_URL}?action=produtosPorCategoria&categoria=${encodeURIComponent(cat)}`);
+        const json = await res.json();
+        
+        if (!json.ok || !json.produtos || json.produtos.length === 0) {
+          container.innerHTML = '<p class="text-gray-500">Nenhum produto encontrado nesta categoria.</p>';
+          return;
+        }
+
+        container.innerHTML = `
+          <div class="bg-white p-6 rounded-2xl shadow-sm border">
+            <h3 class="text-lg font-bold mb-4">Produtos na categoria: ${cat}</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              ${json.produtos.map(prod => cardProdutoHTML(prod)).join('')}
+            </div>
           </div>
         `;
+      } catch (e) {
+        container.innerHTML = '<p class="text-red-500">Erro ao filtrar produtos.</p>';
+      }
+    }
 
-        container.appendChild(card);
-        if (produtos.length > 1) {
-          iniciarSlideshow(bIndex, produtos.length);
+    function cardProdutoHTML(prod) {
+      return `
+        <div class="border rounded-xl p-3 flex flex-col justify-between bg-white hover:shadow-md transition">
+          <div>
+            <img src="${prod.imagemUrl || 'https://via.placeholder.com/200'}" class="w-full h-40 object-cover rounded-lg mb-3" />
+            <span class="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 bg-gray-100 rounded-md text-gray-600">${prod.tipo}</span>
+            <h4 class="font-bold text-gray-800 mt-1 line-clamp-1">${prod.nome}</h4>
+            <p class="text-xs text-gray-500 line-clamp-2 mt-1">${prod.descricao || ''}</p>
+          </div>
+          <div class="mt-4 pt-2 border-t flex items-center justify-between">
+            <span class="text-lg font-extrabold text-green-600">${prod.preco} MT</span>
+            <button onclick="abrirCheckout('${prod.produtoId}', '${prod.nome}', ${prod.preco})" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg text-sm transition">
+              Comprar
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // --- FLUXO DE COMPRA E PAGAMENTO (NETSHOP) ---
+    function abrirCheckout(id, nome, preco) {
+      document.getElementById('checkout-produto-id').value = id;
+      document.getElementById('checkout-produto-nome').innerText = nome;
+      document.getElementById('checkout-produto-preco').innerText = `${preco} MZN`;
+      
+      document.getElementById('checkout-etapa-1').classList.remove('hidden');
+      document.getElementById('checkout-etapa-2').classList.add('hidden');
+      document.getElementById('checkout-etapa-3').classList.add('hidden');
+      
+      document.getElementById('modal-compra').classList.remove('hidden');
+      document.getElementById('modal-compra').classList.add('flex');
+    }
+
+    async function iniciarPagamento(e) {
+      e.preventDefault();
+      const produtoId = document.getElementById('checkout-produto-id').value;
+      const telefone = document.getElementById('checkout-telefone').value;
+      const metodo = document.getElementById('checkout-metodo').value;
+
+      document.getElementById('checkout-etapa-1').classList.add('hidden');
+      document.getElementById('checkout-etapa-2').classList.remove('hidden');
+      document.getElementById('checkout-status-msg').innerText = "Iniciando gateway NetShop...";
+
+      try {
+        const payload = {
+          action: 'COMPRAR_PRODUTO',
+          produtoId: produtoId,
+          telefone: telefone,
+          metodo: metodo
+        };
+
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (json.ok && json.vendaId) {
+          // Iniciar polling de verificação do pagamento
+          monitorarStatusVenda(json.vendaId);
+        } else {
+          alert('Erro ao iniciar pagamento: ' + (json.erro || 'Falha na requisição.'));
+          fecharModal('modal-compra');
         }
-      });
+      } catch (err) {
+        alert('Erro ao processar requisição.');
+        fecharModal('modal-compra');
+      }
     }
 
-    function iniciarSlideshow(blocoIndex, totalSlides) {
-      let currentIndex = 0;
-      setInterval(() => {
-        const slides = document.querySelectorAll(`.slide-block-${blocoIndex}`);
-        if (slides.length > 0) {
-          slides[currentIndex].classList.remove("active");
-          currentIndex = (currentIndex + 1) % totalSlides;
-          slides[currentIndex].classList.add("active");
+    function monitorarStatusVenda(vendaId) {
+      if (intervaloStatusVenda) clearInterval(intervaloStatusVenda);
+      
+      let tentativas = 0;
+      intervaloStatusVenda = setInterval(async () => {
+        tentativas++;
+        try {
+          const res = await fetch(`${API_URL}?action=consultarVenda&vendaId=${vendaId}`);
+          const json = await res.json();
+          
+          if (json.ok && json.venda) {
+            const status = json.venda.status;
+            document.getElementById('checkout-status-msg').innerText = `Status actual: ${status}`;
+
+            if (status === 'PAGO' || status === 'CONCLUIDO') {
+              clearInterval(intervaloStatusVenda);
+              exibirSucessoEntrega(json.entrega);
+            } else if (status === 'RECUSADO' || status === 'CANCELADO' || status === 'ERRO_PAGAMENTO') {
+              clearInterval(intervaloStatusVenda);
+              alert('O pagamento foi recusado ou cancelado.');
+              fecharModal('modal-compra');
+            }
+          }
+        } catch (e) {}
+
+        if (tentativas > 30) { // Timeout de ~2.5 minutos
+          clearInterval(intervaloStatusVenda);
+          alert('Tempo limite esgotado. Verifique a confirmação mais tarde.');
+          fecharModal('modal-compra');
         }
-      }, 6000);
+      }, 5000);
     }
 
-    function abrirModal(id) {
-      document.getElementById(id).style.display = "flex";
+    function exibirSucessoEntrega(entrega) {
+      document.getElementById('checkout-etapa-2').classList.add('hidden');
+      document.getElementById('checkout-etapa-3').classList.remove('hidden');
+
+      const container = document.getElementById('checkout-resultado-entrega');
+      if (entrega && entrega.tipo === 'DIGITAL') {
+        container.innerHTML = `
+          <p class="text-sm font-semibold text-gray-700 mb-2">Seu produto digital está disponível:</p>
+          <a href="${entrega.downloadUrl}" target="_blank" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg">
+            <i class="fa-solid fa-download"></i> Baixar Conteúdo
+          </a>
+        `;
+      } else if (entrega && entrega.tipo === 'FISICO') {
+        container.innerHTML = `
+          <p class="text-sm font-semibold text-gray-700 mb-2">Entre em contacto com o vendedor para a entrega:</p>
+          <a href="https://wa.me/${entrega.whatsapp.replace(/\+/g, '')}" target="_blank" class="block w-full text-center bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg">
+            <i class="fa-brands fa-whatsapp"></i> Falar no WhatsApp
+          </a>
+        `;
+      } else {
+        container.innerHTML = `<p class="text-sm text-gray-600">Obrigado pela compra! O vendedor entrará em contacto.</p>`;
+      }
     }
 
-    function fecharModal(id) {
-      document.getElementById(id).style.display = "none";
+    // --- PAINEL DO VENDEDOR ---
+    function abrirModalVendedor() {
+      document.getElementById('modal-vendedor').classList.remove('hidden');
+      document.getElementById('modal-vendedor').classList.add('flex');
+      
+      if (vendedorSessao) {
+        alternarAbasVendedor('painel');
+        document.getElementById('painel-loja-nome').innerText = vendedorSessao.empresa || 'Minha Loja';
+      } else {
+        alternarAbasVendedor('login');
+      }
     }
 
-    function abrirModalRecomendacao(vendedorId) {
-      document.getElementById("recVendedorId").value = vendedorId;
-      abrirModal("modalRecomendacao");
+    function alternarAbasVendedor(aba) {
+      document.getElementById('vendedor-login-box').classList.toggle('hidden', aba !== 'login');
+      document.getElementById('vendedor-registo-box').classList.toggle('hidden', aba !== 'registo');
+      document.getElementById('vendedor-painel-box').classList.toggle('hidden', aba !== 'painel');
     }
 
-    async function enviarRecomendacao(tipo) {
-      const vendedorId = document.getElementById("recVendedorId").value;
+    async function realizarLogin(e) {
+      e.preventDefault();
       const payload = {
-        action: "AVALIAR_EMPRESA",
-        vendedorId: vendedorId,
-        tipo: tipo
+        action: 'LOGIN',
+        telefone: document.getElementById('login-telefone').value,
+        pin: document.getElementById('login-pin').value
       };
 
       try {
-        const res = await fetch(GAS_URL, {
-          method: "POST",
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-
-        if (data.ok) {
-          alert("Recomendação registrada!");
-          fecharModal("modalRecomendacao");
-          carregarBlocosHome();
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const json = await res.json();
+        if (json.status === 'SUCCESS') {
+          vendedorSessao = json.vendedor;
+          localStorage.setItem('mzv_vendedor', JSON.stringify(vendedorSessao));
+          abrirModalVendedor();
         } else {
-          alert(data.message || "Erro ao registrar recomendação.");
+          alert(json.message || 'Dados inválidos.');
         }
-      } catch (err) {
-        alert("Erro na comunicação com o servidor.");
-      }
+      } catch (e) { alert('Erro no servidor.'); }
+    }
+
+    async function criarLoja(e) {
+      e.preventDefault();
+      const payload = {
+        action: 'CRIAR_LOJA',
+        nome: document.getElementById('reg-nome').value,
+        telefone: document.getElementById('reg-telefone').value,
+        bi: document.getElementById('reg-bi').value,
+        empresa: document.getElementById('reg-empresa').value,
+        email: document.getElementById('reg-email').value,
+        pin: document.getElementById('reg-pin').value,
+        logo: document.getElementById('reg-logo').value
+      };
+
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const json = await res.json();
+        if (json.status === 'SUCCESS') {
+          alert('Loja criada com sucesso! Faça login para continuar.');
+          alternarAbasVendedor('login');
+        } else {
+          alert('Erro ao registar a loja.');
+        }
+      } catch (e) { alert('Erro na comunicação.'); }
+    }
+
+    async function criarProduto(e) {
+      e.preventDefault();
+      if (!vendedorSessao) return alert('Sessão expirada.');
+
+      const payload = {
+        action: 'CRIAR_PRODUTO',
+        vendedorId: vendedorSessao.id,
+        nome: document.getElementById('prod-nome').value,
+        descricao: document.getElementById('prod-desc').value,
+        preco: document.getElementById('prod-preco').value,
+        imagem: document.getElementById('prod-imagem').value,
+        tipo: document.getElementById('prod-tipo').value,
+        categoria: document.getElementById('prod-categoria').value,
+        whatsapp: document.getElementById('prod-whatsapp').value,
+        linkDigital: document.getElementById('prod-linkdigital').value
+      };
+
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const json = await res.json();
+        if (json.status === 'SUCCESS') {
+          alert('Produto cadastrado com sucesso!');
+          fecharModal('modal-vendedor');
+          carregarHome();
+        } else {
+          alert('Erro ao salvar produto.');
+        }
+      } catch (e) { alert('Erro no envio dos dados.'); }
+    }
+
+    function logoutVendedor() {
+      vendedorSessao = null;
+      localStorage.removeItem('mzv_vendedor');
+      alternarAbasVendedor('login');
+    }
+
+    function fecharModal(id) {
+      document.getElementById(id).classList.add('hidden');
+      document.getElementById(id).classList.remove('flex');
+      if (intervaloStatusVenda) clearInterval(intervaloStatusVenda);
     }
   </script>
 </body>
