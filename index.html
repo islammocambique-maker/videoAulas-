@@ -3,712 +3,216 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOZ1VENDAS - Marketplace Multivendor em Moçambique</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              900: '#14532d',
-            }
-          }
-        }
-      }
-    }
-  </script>
-</head>
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen font-sans">
+  <title>Moz1Vendas</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background-color: #f4f4f9; padding: 15px; }
 
-  <!-- HEADER -->
-  <header class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      
-      <div class="flex items-center space-x-3 cursor-pointer" onclick="exibirAbaGeral()">
-        <div class="bg-brand-600 text-white font-black text-xl px-3 py-1 rounded-lg tracking-wider">
-          MOZ1
-        </div>
-        <span class="text-xl font-bold text-gray-900 tracking-tight">VENDAS</span>
-      </div>
-
-      <div id="wrapperPesquisa" class="hidden md:flex flex-1 max-w-md mx-8">
-        <div class="relative w-full">
-          <input type="text" id="searchInput" onkeyup="filtrarProdutos()" placeholder="Pesquisar produtos ou lojas..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-brand-500">
-          <i data-lucide="search" class="absolute left-3 top-2.5 h-4 w-4 text-gray-400"></i>
-        </div>
-      </div>
-
-      <div class="flex items-center space-x-3">
-        <button onclick="toggleModal('modalCheckout')" class="relative p-2 text-gray-600 hover:text-brand-600">
-          <i data-lucide="shopping-bag" class="h-6 w-6"></i>
-          <span id="cartCount" class="absolute top-0 right-0 bg-brand-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
-        </button>
-
-        <div id="areaAuthVendedor">
-          <button onclick="abrirModalAuth()" class="flex items-center space-x-1 px-4 py-2 border border-brand-600 text-brand-600 font-bold rounded-lg text-xs hover:bg-brand-50 transition">
-            <i data-lucide="store" class="h-4 w-4"></i>
-            <span>Área do Vendedor</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- PRINCIPAL -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    /* Modais */
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+    .modal-content { background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; position: relative; }
+    .close-btn { position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 20px; }
     
-    <!-- DASHBOARD DO VENDEDOR -->
-    <section id="painelVendedorContainer" class="hidden space-y-8 mb-12">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
-        <div>
-          <h2 class="text-2xl font-bold text-gray-900" id="dashNomeLoja">Painel do Vendedor</h2>
-          <p class="text-xs text-gray-500">Gira seus artigos e monitore suas vendas.</p>
-        </div>
-        <div class="mt-4 sm:mt-0 flex space-x-3">
-          <button onclick="toggleModal('modalNovoProduto')" class="px-4 py-2 bg-brand-600 text-white text-xs font-bold rounded-lg hover:bg-brand-700 flex items-center">
-            <i data-lucide="plus" class="h-4 w-4 mr-1"></i> Adicionar Produto
-          </button>
-          <button onclick="exibirAbaGeral()" class="px-4 py-2 border border-gray-300 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-50">
-            Ver Vitrine Pública
-          </button>
-        </div>
-      </div>
+    /* Grade de Lojas/Marcas */
+    .lojas-container { display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; }
+    .card-loja { background: #fff; border-radius: 10px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .header-loja { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
+    .info-loja { display: flex; align-items: center; gap: 10px; }
+    .logo-loja { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+    
+    /* Slideshow Container */
+    .slideshow-container { position: relative; width: 100%; height: 250px; overflow: hidden; border-radius: 8px; background: #eaedf1; }
+    .slide-item { display: none; width: 100%; height: 100%; text-align: center; }
+    .slide-item.active { display: block; }
+    .slide-item img { width: 100%; height: 180px; object-fit: cover; }
+    .slide-details { padding: 5px; background: #fff; }
+    
+    /* Botões */
+    .btn { background: #046A38; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
+    .btn-rec { background: #f0a500; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    input { width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
+  </style>
+</head>
+<body>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center space-x-4">
-          <div class="p-3 bg-brand-100 text-brand-600 rounded-xl">
-            <i data-lucide="package" class="h-6 w-6"></i>
-          </div>
-          <div>
-            <div class="text-2xl font-black text-gray-900" id="statProdutosPublicados">0</div>
-            <div class="text-xs text-gray-500">Produtos Publicados</div>
-          </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center space-x-4">
-          <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl">
-            <i data-lucide="shopping-cart" class="h-6 w-6"></i>
-          </div>
-          <div>
-            <div class="text-2xl font-black text-gray-900" id="statProdutosVendidos">0</div>
-            <div class="text-xs text-gray-500">Produtos Vendidos</div>
-          </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center space-x-4">
-          <div class="p-3 bg-amber-100 text-amber-600 rounded-xl">
-            <i data-lucide="banknote" class="h-6 w-6"></i>
-          </div>
-          <div>
-            <div class="text-2xl font-black text-gray-900" id="statTotalFaturado">0 MZN</div>
-            <div class="text-xs text-gray-500">Receita Total</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- VITRINE -->
-    <div id="vitrineContainer">
-      <div class="bg-gradient-to-r from-brand-900 to-brand-700 rounded-2xl p-6 sm:p-10 text-white mb-10 shadow-lg relative overflow-hidden">
-        <div class="relative z-10 max-w-2xl">
-          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">Compre e Venda com Segurança em Moçambique</h1>
-          <p class="text-brand-100 text-sm sm:text-base mb-6">Pagamentos via M-Pesa/e-Mola. Registe a sua loja e venda hoje mesmo.</p>
-          <div class="flex flex-wrap gap-3">
-            <a href="#lojas" class="inline-flex items-center px-5 py-2.5 bg-white text-brand-900 rounded-lg font-bold text-sm hover:bg-brand-50 transition">Ver Produtos</a>
-            <button onclick="abrirModalAuth('registo')" class="inline-flex items-center px-5 py-2.5 bg-brand-500 text-white rounded-lg font-bold text-sm hover:bg-brand-600 transition">Cadastrar Minha Loja</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-bold text-gray-900" id="lojas">Lojas & Produtos</h2>
-        <select id="categoriaFilter" onchange="carregarProdutos()" class="border border-gray-300 rounded-lg text-sm p-2 bg-white">
-          <option value="">Todas as Categorias</option>
-          <option value="GERAL">Geral</option>
-          <option value="ELETRONICOS">Eletrónicos</option>
-          <option value="MODA">Moda & Calçado</option>
-          <option value="DIGITAL">Produtos Digitais</option>
-        </select>
-      </div>
-
-      <div id="lojasContainer" class="space-y-12">
-        <div class="animate-pulse flex space-x-4 p-6 bg-white rounded-xl border border-gray-200">
-          <div class="rounded-full bg-gray-200 h-12 w-12"></div>
-          <div class="flex-1 space-y-4 py-1">
-            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div class="space-y-2"><div class="h-4 bg-gray-200 rounded"></div></div>
-          </div>
-        </div>
-      </div>
+  <!-- Modal de Registro de Loja -->
+  <div id="modalRegistro" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="fecharModal('modalRegistro')">&times;</span>
+      <h3>Registrar Nova Loja</h3>
+      <form id="formRegistro">
+        <input type="text" id="regNome" placeholder="Nome do Proprietário" required>
+        <input type="text" id="regEmpresa" placeholder="Nome da Loja / Empresa" required>
+        <input type="tel" id="regTelefone" placeholder="Telefone (8X / +258)" required>
+        <input type="password" id="regPin" placeholder="PIN (4 a 6 dígitos)" maxlength="6" required>
+        <button type="submit" class="btn">Cadastrar Loja</button>
+      </form>
     </div>
+  </div>
 
+  <!-- Modal de Recomendação da Marca (Acesso Público) -->
+  <div id="modalRecomendacao" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="fecharModal('modalRecomendacao')">&times;</span>
+      <h3>Recomendar Marca</h3>
+      <input type="hidden" id="recVendedorId">
+      <p>Você recomenda esta loja?</p>
+      <button class="btn" onclick="enviarRecomendacao('GOSTO')">👍 Recomendar (Gosto)</button>
+      <button class="btn" style="background:#c0392b;" onclick="enviarRecomendacao('NAO_GOSTO')">👎 Não Recomendar</button>
+    </div>
+  </div>
+
+  <!-- Exibição por Blocos de Marca -->
+  <main class="lojas-container" id="containerLojas">
+    <p>Carregando lojas e produtos...</p>
   </main>
 
-  <!-- MODAL: CADASTRAR PRODUTO -->
-  <div id="modalNovoProduto" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
-      <button onclick="toggleModal('modalNovoProduto')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-        <i data-lucide="x" class="h-5 w-5"></i>
-      </button>
-
-      <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-        <i data-lucide="plus-circle" class="mr-2 h-5 w-5 text-brand-600"></i> Publicar Novo Produto
-      </h3>
-
-      <form id="formNovoProduto" onsubmit="processarNovoProduto(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Nome do Produto</label>
-          <input type="text" id="prodNome" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Preço (MZN)</label>
-          <input type="number" id="prodPreco" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Tipo de Produto</label>
-          <select id="prodTipo" onchange="alternarCampoPrazo()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-            <option value="FISICO">Físico</option>
-            <option value="DIGITAL">Digital (Download)</option>
-          </select>
-        </div>
-
-        <div id="containerPrazoEntrega">
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Prazo de Entrega Estimado</label>
-          <input type="text" id="prodPrazo" placeholder="Ex: 24h em Maputo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">URL da Imagem</label>
-          <input type="url" id="prodImagem" placeholder="https://..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Descrição</label>
-          <textarea id="prodDescricao" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></textarea>
-        </div>
-
-        <button type="submit" id="btnSalvarProduto" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
-          Publicar Produto
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: LOGIN / REGISTO -->
-  <div id="modalAuthVendedor" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
-      <button onclick="toggleModal('modalAuthVendedor')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-        <i data-lucide="x" class="h-5 w-5"></i>
-      </button>
-
-      <div class="flex border-b border-gray-200 mb-6">
-        <button id="tabLoginBtn" onclick="alternarAbaAuth('login')" class="flex-1 pb-3 text-center text-sm font-bold border-b-2 border-brand-600 text-brand-600">
-          Entrar na Loja
-        </button>
-        <button id="tabRegistoBtn" onclick="alternarAbaAuth('registo')" class="flex-1 pb-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-500 hover:text-gray-700">
-          Registar Nova Loja
-        </button>
-      </div>
-
-      <form id="formLoginVendedor" onsubmit="processarLoginVendedor(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Telefone da Loja</label>
-          <input type="tel" id="loginTelefone" placeholder="+258..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Palavra-passe</label>
-          <input type="password" id="loginSenha" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-        <button type="submit" id="btnSubmitLogin" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
-          Entrar
-        </button>
-      </form>
-
-      <form id="formRegistoVendedor" onsubmit="processarRegistoVendedor(event)" class="space-y-4 hidden">
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Nome da Loja</label>
-          <input type="text" id="registoNomeLoja" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Nome do Proprietário</label>
-          <input type="text" id="registoNomeProprietario" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Telefone Principal</label>
-          <input type="tel" id="registoTelefone" placeholder="+258..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Palavra-passe</label>
-          <input type="password" id="registoSenha" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-        <button type="submit" id="btnSubmitRegisto" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
-          Criar Loja
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL CHECKOUT -->
-  <div id="modalCheckout" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
-      <button onclick="toggleModal('modalCheckout')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-        <i data-lucide="x" class="h-5 w-5"></i>
-      </button>
-
-      <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-        <i data-lucide="credit-card" class="mr-2 h-5 w-5 text-brand-600"></i> Finalizar Compra
-      </h3>
-
-      <div id="detalhesProdutoCheckout" class="bg-gray-50 p-4 rounded-xl mb-4 border border-gray-200 text-sm"></div>
-
-      <form id="formCheckout" onsubmit="processarPagamento(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Número de Telefone (M-Pesa / e-Mola)</label>
-          <input type="tel" id="checkoutTelefone" placeholder="+258..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Método de Pagamento</label>
-          <select id="checkoutMetodo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-            <option value="mpesa">M-Pesa (NetShop)</option>
-            <option value="emola">e-Mola (NetShop)</option>
-          </select>
-        </div>
-
-        <button type="submit" id="btnPagar" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
-          Pagar via NetShop
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- RODAPÉ -->
-  <footer class="bg-gray-900 text-gray-300 border-t border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-xs text-gray-500">
-      &copy; 2026 MOZ1VENDAS. Todos os direitos reservados.
-    </div>
-  </footer>
-
-  <!-- SCRIPT -->
   <script>
-    // URL DO SEU SCRIPT GAS
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzwVVMw_niZXRHl8PEHxRxQcBrkIksFZYaxpUE-1WIr_vomeZyRZqFeoaBiaVjQ22hGpA/exec";
-
-    let estadoGeral = {
-      blocos: [],
-      produtoSelecionado: null,
-      vendedorLogado: null
-    };
+    // URL do Web App executado no Google Apps Script
+    const GAS_URL = "SUA_WEB_APP_URL_DO_GOOGLE_APPS_SCRIPT_AQUI";
 
     document.addEventListener("DOMContentLoaded", () => {
-      lucide.createIcons();
-      verificarSessaoVendedor();
-      carregarProdutos();
+      carregarBlocosHome();
+
+      document.getElementById("formRegistro").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        // Mapeamento correto conforme o GAS espera na ação CRIAR_LOJA
+        const payload = {
+          action: "CRIAR_LOJA",
+          nome: document.getElementById("regNome").value,
+          empresa: document.getElementById("regEmpresa").value,
+          telefone: document.getElementById("regTelefone").value,
+          pin: document.getElementById("regPin").value
+        };
+
+        try {
+          const res = await fetch(GAS_URL, {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          
+          if (data.ok) {
+            alert(data.message);
+            fecharModal("modalRegistro");
+            carregarBlocosHome();
+          } else {
+            alert("Erro no registo: " + data.message);
+          }
+        } catch (err) {
+          alert("Erro na ligação ao servidor.");
+        }
+      });
     });
 
-    function toggleModal(modalId) {
-      const el = document.getElementById(modalId);
-      if (el) el.classList.toggle('hidden');
-    }
-
-    function alternarCampoPrazo() {
-      const tipo = document.getElementById('prodTipo').value;
-      document.getElementById('containerPrazoEntrega').classList.toggle('hidden', tipo === 'DIGITAL');
-    }
-
-    function abrirDashboardVendedor() {
-      if (!estadoGeral.vendedorLogado) return abrirModalAuth();
-      document.getElementById('painelVendedorContainer').classList.remove('hidden');
-      carregarEstatisticasVendedor();
-    }
-
-    function exibirAbaGeral() {
-      document.getElementById('painelVendedorContainer').classList.add('hidden');
-    }
-
-    // REGISTRO DO VENDEDOR
-    async function processarRegistoVendedor(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmitRegisto');
-      btn.disabled = true;
-      btn.innerText = "A registar...";
-
-      const payload = {
-        action: 'REGISTRAR_VENDEDOR',
-        nomeLoja: document.getElementById('registoNomeLoja').value,
-        nomeProprietario: document.getElementById('registoNomeProprietario').value,
-        telefone: document.getElementById('registoTelefone').value,
-        senha: document.getElementById('registoSenha').value
-      };
-
+    // 1. Carrega lojas com seus produtos organizados por marcas
+    async function carregarBlocosHome() {
       try {
-        const response = await fetch(GAS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        const res = await response.json();
+        const res = await fetch(`${GAS_URL}?action=homeBlocos`);
+        const result = await res.json();
 
-        if (res.ok) {
-          alert('Loja registada com sucesso! Faça login para aceder.');
-          alternarAbaAuth('login');
+        if (result.ok && result.data && result.data.blocos) {
+          renderizarBlocos(result.data.blocos);
         } else {
-          alert(`Erro no registo: ${res.message}`);
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Falha na ligação com o servidor GAS.');
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "Criar Loja";
-      }
-    }
-
-    // LOGIN DO VENDEDOR
-    async function processarLoginVendedor(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmitLogin');
-      btn.disabled = true;
-      btn.innerText = "A autenticar...";
-
-      const payload = {
-        action: 'LOGIN_VENDEDOR',
-        telefone: document.getElementById('loginTelefone').value,
-        senha: document.getElementById('loginSenha').value
-      };
-
-      try {
-        const response = await fetch(GAS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        const res = await response.json();
-
-        if (res.ok && res.vendedor) {
-          estadoGeral.vendedorLogado = res.vendedor;
-          localStorage.setItem('moz1_vendedor', JSON.stringify(res.vendedor));
-          atualizarInterfaceSessao();
-          toggleModal('modalAuthVendedor');
-          abrirDashboardVendedor();
-        } else {
-          alert(`Erro: ${res.message || 'Dados de login incorretos'}`);
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Erro ao ligar ao servidor.');
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "Entrar";
-      }
-    }
-
-    // NOVO PRODUTO
-    async function processarNovoProduto(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSalvarProduto');
-      btn.disabled = true;
-      btn.innerText = "A publicar...";
-
-      const payload = {
-        action: 'CADASTRAR_PRODUTO',
-        vendedorId: estadoGeral.vendedorLogado.vendedorId,
-        nome: document.getElementById('prodNome').value,
-        preco: document.getElementById('prodPreco').value,
-        tipo: document.getElementById('prodTipo').value,
-        prazoEntrega: document.getElementById('prodPrazo').value || 'Download Imediato',
-        imagemUrl: document.getElementById('prodImagem').value,
-        descricao: document.getElementById('prodDescricao').value
-      };
-
-      try {
-        const response = await fetch(GAS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        const res = await response.json();
-
-        if (res.ok) {
-          alert('Produto publicado!');
-          toggleModal('modalNovoProduto');
-          document.getElementById('formNovoProduto').reset();
-          carregarEstatisticasVendedor();
-          carregarProdutos();
-        } else {
-          alert(`Erro: ${res.message}`);
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Erro ao registar produto.');
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "Publicar Produto";
-      }
-    }
-
-    // CARREGAR ESTATÍSTICAS
-    async function carregarEstatisticasVendedor() {
-      if (!estadoGeral.vendedorLogado) return;
-      document.getElementById('dashNomeLoja').innerText = `Painel: ${estadoGeral.vendedorLogado.nomeLoja}`;
-
-      try {
-        const response = await fetch(`${GAS_API_URL}?action=obterEstatisticasVendedor&vendedorId=${estadoGeral.vendedorLogado.vendedorId}`);
-        const res = await response.json();
-
-        if (res.ok && res.stats) {
-          document.getElementById('statProdutosPublicados').innerText = res.stats.produtosPublicados || 0;
-          document.getElementById('statProdutosVendidos').innerText = res.stats.produtosVendidos || 0;
-          document.getElementById('statTotalFaturado').innerText = `${Number(res.stats.totalFaturado || 0).toLocaleString('pt-MZ')} MZN`;
+          document.getElementById("containerLojas").innerHTML = "<p>Nenhuma loja encontrada.</p>";
         }
       } catch (err) {
         console.error(err);
       }
     }
 
-    // CARREGAR VITRINE E TRATAR RECOMENDAÇÕES
-    async function carregarProdutos() {
-      const container = document.getElementById('lojasContainer');
-      const cat = document.getElementById('categoriaFilter').value;
+    // 2. Renderiza os blocos da marca com Slideshow de 6 segundos
+    function renderizarBlocos(blocos) {
+      const container = document.getElementById("containerLojas");
+      container.innerHTML = "";
 
-      try {
-        let url = `${GAS_API_URL}?action=homeBlocos`;
-        if (cat) url = `${GAS_API_URL}?action=produtosPorCategoria&categoria=${encodeURIComponent(cat)}`;
+      blocos.forEach((bloco, bIndex) => {
+        const card = document.createElement("div");
+        card.className = "card-loja";
 
-        const response = await fetch(url);
-        const res = await response.json();
-
-        if (res.ok) {
-          estadoGeral.blocos = res.data.blocos || [];
-          renderizarLojas(estadoGeral.blocos);
-        } else {
-          container.innerHTML = `<p class="text-center text-red-500 py-8">Erro: ${res.message}</p>`;
-        }
-      } catch (err) {
-        console.error(err);
-        container.innerHTML = `<p class="text-center text-gray-500 py-8">Não foi possível carregar as lojas.</p>`;
-      }
-    }
-
-    function renderizarLojas(blocos) {
-      const container = document.getElementById('lojasContainer');
-      container.innerHTML = '';
-
-      if (!blocos || blocos.length === 0) {
-        container.innerHTML = `<div class="text-center py-12 text-gray-500">Nenhum produto cadastrado.</div>`;
-        return;
-      }
-
-      blocos.forEach(bloco => {
-        const lojaEl = document.createElement('div');
-        lojaEl.className = 'bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden p-6';
-
-        // TRATAMENTO DA TAXA DE RECOMENDAÇÕES
-        let taxaRecomendacao = 100;
-        if (bloco.reputacao && bloco.reputacao.recomendacao !== undefined) {
-          taxaRecomendacao = bloco.reputacao.recomendacao;
-        } else if (bloco.recomendacao !== undefined) {
-          taxaRecomendacao = bloco.recomendacao;
-        }
-
-        const logoUrl = bloco.logo || 'https://via.placeholder.com/60?text=LOJA';
-
-        let produtosHTML = '';
-        (bloco.produtos || []).forEach(prod => {
-          const isFisico = String(prod.tipo).toUpperCase() === 'FISICO';
-          const prazoEntrega = isFisico ? (prod.prazoEntrega || '24h - 48h') : 'Download Imediato';
-
-          produtosHTML += `
-            <div class="border border-gray-100 rounded-xl p-4 flex flex-col justify-between bg-gray-50/50">
-              <div>
-                <img src="${prod.imagemUrl || 'https://via.placeholder.com/300'}" alt="${prod.nome}" class="w-full h-40 object-cover rounded-lg mb-3">
-                <span class="inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-gray-200 text-gray-700 mb-2">${prod.tipo}</span>
-                <h4 class="font-bold text-gray-900 text-sm mb-1">${prod.nome}</h4>
-                <p class="text-xs text-gray-500 mb-2 line-clamp-2">${prod.descricao || ''}</p>
-                <div class="text-xs text-gray-600 mb-3 flex items-center">
-                  <i data-lucide="clock" class="h-3 w-3 mr-1 text-gray-400"></i>
-                  <span>Entrega: <strong>${prazoEntrega}</strong></span>
-                </div>
-              </div>
-              
-              <div>
-                <div class="text-base font-extrabold text-brand-700 mb-3">${Number(prod.preco).toLocaleString('pt-MZ')} MZN</div>
-                <div class="grid grid-cols-2 gap-2">
-                  <button onclick="abrirCheckout('${prod.produtoId}')" class="w-full py-2 bg-brand-600 text-white rounded-lg text-xs font-bold hover:bg-brand-700 transition">Comprar</button>
-                  <a href="https://wa.me/${limparTelefone(prod.whatsapp || bloco.telefone || bloco.empresa)}?text=Olá,%20tenho%20interesse%20no%20produto:%20${encodeURIComponent(prod.nome)}" target="_blank" class="w-full py-2 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-200 transition flex items-center justify-center">
-                    <i data-lucide="message-circle" class="h-3 w-3 mr-1"></i> WhatsApp
-                  </a>
-                </div>
+        let slidesHTML = "";
+        bloco.produtos.forEach((prod, pIndex) => {
+          slidesHTML += `
+            <div class="slide-item slide-block-${bIndex} ${pIndex === 0 ? 'active' : ''}">
+              <img src="${prod.imagemUrl || 'https://via.placeholder.com/300'}" alt="${prod.nome}">
+              <div class="slide-details">
+                <strong>${prod.nome}</strong>
+                <p>${prod.preco} MZN</p>
               </div>
             </div>
           `;
         });
 
-        lojaEl.innerHTML = `
-          <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
-            <div class="flex items-center space-x-3">
-              <img src="${logoUrl}" alt="${bloco.empresa || bloco.nomeLoja}" class="w-12 h-12 rounded-full object-cover border border-gray-200">
+        card.innerHTML = `
+          <div class="header-loja">
+            <div class="info-loja">
+              <img class="logo-loja" src="${bloco.logo || 'https://via.placeholder.com/50'}" alt="Logo">
               <div>
-                <h3 class="font-bold text-gray-900 text-base">${bloco.empresa || bloco.nomeLoja || bloco.nomeVendedor}</h3>
-                <div class="flex items-center text-xs text-gray-500 space-x-2">
-                  <!-- EXIBIÇÃO DA TAXA DE RECOMENDAÇÃO -->
-                  <span class="flex items-center text-amber-500 font-semibold">
-                    <i data-lucide="thumbs-up" class="h-3.5 w-3.5 mr-1"></i> ${taxaRecomendacao}% Recomendações
-                  </span>
-                </div>
+                <h4>${bloco.empresa || bloco.nomeVendedor}</h4>
+                <small>👍 ${bloco.reputacao.recomendacao || 0}% de recomendações</small>
               </div>
             </div>
+            <button class="btn-rec" onclick="abrirModalRecomendacao('${bloco.vendedorld}')">⭐ Recomendar</button>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            ${produtosHTML}
+          <div class="slideshow-container">
+            ${slidesHTML}
           </div>
         `;
 
-        container.appendChild(lojaEl);
+        container.appendChild(card);
+        iniciarSlideshow(bIndex, bloco.produtos.length);
       });
-
-      lucide.createIcons();
     }
 
-    // CHECKOUT E SESSÃO
-    function abrirCheckout(produtoId) {
-      let prodAchado = null;
-      for (const bloco of estadoGeral.blocos) {
-        const f = (bloco.produtos || []).find(p => String(p.produtoId) === String(produtoId));
-        if (f) { prodAchado = f; break; }
-      }
-      if (!prodAchado) return alert('Produto não encontrado.');
+    // 3. Temporizador do Slideshow (Troca a cada 6 segundos)
+    function iniciarSlideshow(blocoIndex, totalSlides) {
+      if (totalSlides <= 1) return;
+      let currentIndex = 0;
 
-      estadoGeral.produtoSelecionado = prodAchado;
-      document.getElementById('detalhesProdutoCheckout').innerHTML = `
-        <div class="flex justify-between font-bold text-gray-900 mb-1">
-          <span>${prodAchado.nome}</span>
-          <span>${Number(prodAchado.preco).toLocaleString('pt-MZ')} MZN</span>
-        </div>
-        <div class="text-xs text-gray-500">Prazo: ${prodAchado.prazoEntrega || 'A combinar'}</div>
-      `;
-      toggleModal('modalCheckout');
+      setInterval(() => {
+        const slides = document.querySelectorAll(`.slide-block-${blocoIndex}`);
+        slides[currentIndex].classList.remove("active");
+        currentIndex = (currentIndex + 1) % totalSlides;
+        slides[currentIndex].classList.add("active");
+      }, 6000); // 6000ms = 6 segundos
     }
 
-    async function processarPagamento(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnPagar');
-      btn.disabled = true;
-      btn.innerText = "A processar...";
+    // 4. Sistema de Recomendação Pública por Marca
+    function abrirModalRecomendacao(vendedorId) {
+      document.getElementById("recVendedorId").value = vendedorId;
+      document.getElementById("modalRecomendacao").style.display = "flex";
+    }
+
+    async function enviarRecomendacao(tipo) {
+      const vendedorId = document.getElementById("recVendedorId").value;
+      const payload = {
+        action: "AVALIAR_EMPRESA",
+        vendedorld: vendedorId,
+        tipo: tipo
+      };
 
       try {
-        const payload = {
-          action: 'COMPRAR_PRODUTO',
-          produtoId: estadoGeral.produtoSelecionado.produtoId,
-          preco: estadoGeral.produtoSelecionado.preco,
-          telefone: document.getElementById('checkoutTelefone').value,
-          metodo: document.getElementById('checkoutMetodo').value
-        };
-
-        const response = await fetch(GAS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        const res = await fetch(GAS_URL, {
+          method: "POST",
           body: JSON.stringify(payload)
         });
-        const res = await response.json();
+        const data = await res.json();
 
-        if (res.ok) {
-          alert(`Solicitação enviada! Confirme a transação de ${estadoGeral.produtoSelecionado.preco} MZN no seu celular.`);
-          toggleModal('modalCheckout');
+        if (data.ok) {
+          alert("Recomendação registrada!");
+          fecharModal("modalRecomendacao");
+          carregarBlocosHome();
         } else {
-          alert(`Erro: ${res.message}`);
+          alert(data.message);
         }
       } catch (err) {
-        console.error(err);
-        alert('Erro ao conectar ao NetShop.');
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "Pagar via NetShop";
+        alert("Erro ao enviar recomendação.");
       }
     }
 
-    function abrirModalAuth(aba = 'login') {
-      alternarAbaAuth(aba);
-      toggleModal('modalAuthVendedor');
-    }
-
-    function alternarAbaAuth(aba) {
-      const formLogin = document.getElementById('formLoginVendedor');
-      const formRegisto = document.getElementById('formRegistoVendedor');
-      const tabLoginBtn = document.getElementById('tabLoginBtn');
-      const tabRegistoBtn = document.getElementById('tabRegistoBtn');
-
-      if (aba === 'login') {
-        formLogin.classList.remove('hidden');
-        formRegisto.classList.add('hidden');
-        tabLoginBtn.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-brand-600 text-brand-600";
-        tabRegistoBtn.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-500 hover:text-gray-700";
-      } else {
-        formRegisto.classList.remove('hidden');
-        formLogin.classList.add('hidden');
-        tabRegistoBtn.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-brand-600 text-brand-600";
-        tabLoginBtn.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-500 hover:text-gray-700";
-      }
-    }
-
-    function verificarSessaoVendedor() {
-      const sessao = localStorage.getItem('moz1_vendedor');
-      if (sessao) {
-        estadoGeral.vendedorLogado = JSON.parse(sessao);
-        atualizarInterfaceSessao();
-      }
-    }
-
-    function terminarSessao() {
-      localStorage.removeItem('moz1_vendedor');
-      estadoGeral.vendedorLogado = null;
-      atualizarInterfaceSessao();
-      exibirAbaGeral();
-    }
-
-    function atualizarInterfaceSessao() {
-      const container = document.getElementById('areaAuthVendedor');
-      if (estadoGeral.vendedorLogado) {
-        container.innerHTML = `
-          <div class="flex items-center space-x-2">
-            <button onclick="abrirDashboardVendedor()" class="text-xs font-bold text-gray-800 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg flex items-center">
-              <i data-lucide="layout-dashboard" class="h-3.5 w-3.5 mr-1 text-brand-600"></i>
-              <span>${estadoGeral.vendedorLogado.nomeLoja}</span>
-            </button>
-            <button onclick="terminarSessao()" class="p-1.5 text-red-500 hover:text-red-700" title="Sair">
-              <i data-lucide="log-out" class="h-4 w-4"></i>
-            </button>
-          </div>
-        `;
-      } else {
-        container.innerHTML = `
-          <button onclick="abrirModalAuth()" class="flex items-center space-x-1 px-4 py-2 border border-brand-600 text-brand-600 font-bold rounded-lg text-xs hover:bg-brand-50 transition">
-            <i data-lucide="store" class="h-4 w-4"></i>
-            <span>Área do Vendedor</span>
-          </button>
-        `;
-      }
-      lucide.createIcons();
-    }
-
-    function limparTelefone(tel) { return String(tel || '').replace(/[^\d]/g, ''); }
-
-    function filtrarProdutos() {
-      const q = document.getElementById('searchInput').value.toLowerCase();
-      const filtrados = estadoGeral.blocos.map(b => {
-        const prods = (b.produtos || []).filter(p => p.nome.toLowerCase().includes(q) || (b.empresa || '').toLowerCase().includes(q));
-        return { ...b, produtos: prods };
-      }).filter(b => b.produtos.length > 0);
-      renderizarLojas(filtrados);
+    function fecharModal(id) {
+      document.getElementById(id).style.display = "none";
     }
   </script>
 </body>
