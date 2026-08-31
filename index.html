@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOZ1VENDAS - O Seu Marketplace Multivendor em Moçambique</title>
-  <!-- Tailwind CSS CDN -->
+  <title>MOZ1VENDAS - Marketplace Multivendor em Moçambique</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
     tailwind.config = {
@@ -29,9 +27,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen font-sans">
 
-  <!-- ==========================================
-       HEADER & NAVEGAÇÃO COM ÁREA DO VENDEDOR
-  ========================================== -->
+  <!-- HEADER -->
   <header class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       
@@ -42,23 +38,19 @@
         <span class="text-xl font-bold text-gray-900 tracking-tight">VENDAS</span>
       </div>
 
-      <!-- Barra de Pesquisa (Visível na Vitrine Principal) -->
       <div id="wrapperPesquisa" class="hidden md:flex flex-1 max-w-md mx-8">
         <div class="relative w-full">
-          <input type="text" id="searchInput" onkeyup="filtrarProdutos()" placeholder="Pesquisar produtos ou lojas..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+          <input type="text" id="searchInput" onkeyup="filtrarProdutos()" placeholder="Pesquisar produtos ou lojas..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-brand-500">
           <i data-lucide="search" class="absolute left-3 top-2.5 h-4 w-4 text-gray-400"></i>
         </div>
       </div>
 
-      <!-- Ações do Utilizador & Área do Vendedor -->
       <div class="flex items-center space-x-3">
-        <!-- Carrinho -->
         <button onclick="toggleModal('modalCheckout')" class="relative p-2 text-gray-600 hover:text-brand-600">
           <i data-lucide="shopping-bag" class="h-6 w-6"></i>
           <span id="cartCount" class="absolute top-0 right-0 bg-brand-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
         </button>
 
-        <!-- Botão Entrar / Área do Vendedor -->
         <div id="areaAuthVendedor">
           <button onclick="abrirModalAuth()" class="flex items-center space-x-1 px-4 py-2 border border-brand-600 text-brand-600 font-bold rounded-lg text-xs hover:bg-brand-50 transition">
             <i data-lucide="store" class="h-4 w-4"></i>
@@ -69,17 +61,15 @@
     </div>
   </header>
 
-  <!-- ==========================================
-       CONTEÚDO PRINCIPAL / VITRINE E PAINEL
-  ========================================== -->
+  <!-- PRINCIPAL -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
-    <!-- SEÇÃO: DASHBOARD DO VENDEDOR (Exibido após Login) -->
+    <!-- DASHBOARD DO VENDEDOR -->
     <section id="painelVendedorContainer" class="hidden space-y-8 mb-12">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
         <div>
           <h2 class="text-2xl font-bold text-gray-900" id="dashNomeLoja">Painel do Vendedor</h2>
-          <p class="text-xs text-gray-500">Acompanhe suas vendas e gira os seus produtos publicados no MOZ1VENDAS.</p>
+          <p class="text-xs text-gray-500">Gira seus artigos e monitore suas vendas.</p>
         </div>
         <div class="mt-4 sm:mt-0 flex space-x-3">
           <button onclick="toggleModal('modalNovoProduto')" class="px-4 py-2 bg-brand-600 text-white text-xs font-bold rounded-lg hover:bg-brand-700 flex items-center">
@@ -91,7 +81,6 @@
         </div>
       </div>
 
-      <!-- Indicadores de Vendas (Métricas) -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center space-x-4">
           <div class="p-3 bg-brand-100 text-brand-600 rounded-xl">
@@ -119,39 +108,36 @@
           </div>
           <div>
             <div class="text-2xl font-black text-gray-900" id="statTotalFaturado">0 MZN</div>
-            <div class="text-xs text-gray-500">Receita Total Acumulada</div>
+            <div class="text-xs text-gray-500">Receita Total</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SEÇÃO: VITRINE PRINCIPAL -->
+    <!-- VITRINE -->
     <div id="vitrineContainer">
-      <!-- Banner de Boas-Vindas -->
       <div class="bg-gradient-to-r from-brand-900 to-brand-700 rounded-2xl p-6 sm:p-10 text-white mb-10 shadow-lg relative overflow-hidden">
         <div class="relative z-10 max-w-2xl">
           <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">Compre e Venda com Segurança em Moçambique</h1>
-          <p class="text-brand-100 text-sm sm:text-base mb-6">Pagamentos rápidos via M-Pesa/e-Mola com NetShop. Registe a sua loja e comece a vender hoje mesmo.</p>
+          <p class="text-brand-100 text-sm sm:text-base mb-6">Pagamentos via M-Pesa/e-Mola. Registe a sua loja e venda hoje mesmo.</p>
           <div class="flex flex-wrap gap-3">
-            <a href="#lojas" class="inline-flex items-center px-5 py-2.5 bg-white text-brand-900 rounded-lg font-bold text-sm hover:bg-brand-50 transition">Ver Produtos Disponíveis</a>
+            <a href="#lojas" class="inline-flex items-center px-5 py-2.5 bg-white text-brand-900 rounded-lg font-bold text-sm hover:bg-brand-50 transition">Ver Produtos</a>
             <button onclick="abrirModalAuth('registo')" class="inline-flex items-center px-5 py-2.5 bg-brand-500 text-white rounded-lg font-bold text-sm hover:bg-brand-600 transition">Cadastrar Minha Loja</button>
           </div>
         </div>
       </div>
 
-      <!-- Filtros de Categorias -->
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-bold text-gray-900" id="lojas">Vitrine de Lojas e Produtos</h2>
-        <select id="categoriaFilter" onchange="carregarProdutos()" class="border border-gray-300 rounded-lg text-sm p-2 bg-white focus:ring-brand-500">
+        <h2 class="text-xl font-bold text-gray-900" id="lojas">Lojas & Produtos</h2>
+        <select id="categoriaFilter" onchange="carregarProdutos()" class="border border-gray-300 rounded-lg text-sm p-2 bg-white">
           <option value="">Todas as Categorias</option>
           <option value="GERAL">Geral</option>
           <option value="ELETRONICOS">Eletrónicos</option>
           <option value="MODA">Moda & Calçado</option>
-          <option value="DIGITAL">Produtos Digitais (PDF/Ebook)</option>
+          <option value="DIGITAL">Produtos Digitais</option>
         </select>
       </div>
 
-      <!-- Grelha de Lojas e Produtos -->
       <div id="lojasContainer" class="space-y-12">
         <div class="animate-pulse flex space-x-4 p-6 bg-white rounded-xl border border-gray-200">
           <div class="rounded-full bg-gray-200 h-12 w-12"></div>
@@ -165,9 +151,7 @@
 
   </main>
 
-  <!-- ==========================================
-       MODAL: ADICIONAR NOVO PRODUTO (VENDEDOR)
-  ========================================== -->
+  <!-- MODAL: CADASTRAR PRODUTO -->
   <div id="modalNovoProduto" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="toggleModal('modalNovoProduto')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
@@ -175,41 +159,41 @@
       </button>
 
       <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-        <i data-lucide="plus-circle" class="mr-2 h-5 w-5 text-brand-600"></i> Cadastrar Novo Produto
+        <i data-lucide="plus-circle" class="mr-2 h-5 w-5 text-brand-600"></i> Publicar Novo Produto
       </h3>
 
       <form id="formNovoProduto" onsubmit="processarNovoProduto(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">Nome do Produto</label>
-          <input type="text" id="prodNome" placeholder="Ex: Sapatilhas Nike Air" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <input type="text" id="prodNome" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">Preço (MZN)</label>
-          <input type="number" id="prodPreco" placeholder="1500" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <input type="number" id="prodPreco" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">Tipo de Produto</label>
-          <select id="prodTipo" onchange="alternarCampoPrazo()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <select id="prodTipo" onchange="alternarCampoPrazo()" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
             <option value="FISICO">Físico</option>
-            <option value="DIGITAL">Digital (PDF / Download)</option>
+            <option value="DIGITAL">Digital (Download)</option>
           </select>
         </div>
 
         <div id="containerPrazoEntrega">
           <label class="block text-xs font-semibold text-gray-700 mb-1">Prazo de Entrega Estimado</label>
-          <input type="text" id="prodPrazo" placeholder="Ex: 24h em Maputo / 48h Províncias" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <input type="text" id="prodPrazo" placeholder="Ex: 24h em Maputo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">URL da Imagem do Produto</label>
-          <input type="url" id="prodImagem" placeholder="https://..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">URL da Imagem</label>
+          <input type="url" id="prodImagem" placeholder="https://..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">Descrição</label>
-          <textarea id="prodDescricao" rows="3" placeholder="Detalhes do artigo..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500"></textarea>
+          <textarea id="prodDescricao" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></textarea>
         </div>
 
         <button type="submit" id="btnSalvarProduto" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
@@ -219,9 +203,7 @@
     </div>
   </div>
 
-  <!-- ==========================================
-       MODAL DE AUTENTICAÇÃO DO VENDEDOR
-  ========================================== -->
+  <!-- MODAL: LOGIN / REGISTO -->
   <div id="modalAuthVendedor" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="toggleModal('modalAuthVendedor')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
@@ -239,45 +221,43 @@
 
       <form id="formLoginVendedor" onsubmit="processarLoginVendedor(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Telefone da Loja (WhatsApp / M-Pesa)</label>
-          <input type="tel" id="loginTelefone" placeholder="+258 84/85/86/87..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Telefone da Loja</label>
+          <input type="tel" id="loginTelefone" placeholder="+258..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">Palavra-passe</label>
-          <input type="password" id="loginSenha" placeholder="******" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <input type="password" id="loginSenha" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
         <button type="submit" id="btnSubmitLogin" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
-          Aceder à Minha Loja
+          Entrar
         </button>
       </form>
 
       <form id="formRegistoVendedor" onsubmit="processarRegistoVendedor(event)" class="space-y-4 hidden">
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Nome da Marca / Loja</label>
-          <input type="text" id="registoNomeLoja" placeholder="Ex: MozTech Digital" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Nome da Loja</label>
+          <input type="text" id="registoNomeLoja" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Nome Completo do Proprietário</label>
-          <input type="text" id="registoNomeProprietario" placeholder="Ex: Elidio Nelson" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Nome do Proprietário</label>
+          <input type="text" id="registoNomeProprietario" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Telefone Principal (WhatsApp & NetShop)</label>
-          <input type="tel" id="registoTelefone" placeholder="+258 84/85/86/87..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Telefone Principal</label>
+          <input type="tel" id="registoTelefone" placeholder="+258..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Criar Palavra-passe</label>
-          <input type="password" id="registoSenha" placeholder="Atribua uma palavra-passe segura" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Palavra-passe</label>
+          <input type="password" id="registoSenha" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
         <button type="submit" id="btnSubmitRegisto" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
-          Criar Loja no MOZ1VENDAS
+          Criar Loja
         </button>
       </form>
     </div>
   </div>
 
-  <!-- ==========================================
-       MODAL DE CHECKOUT / PAGAMENTO NETSHOP
-  ========================================== -->
+  <!-- MODAL CHECKOUT -->
   <div id="modalCheckout" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="toggleModal('modalCheckout')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
@@ -292,93 +272,36 @@
 
       <form id="formCheckout" onsubmit="processarPagamento(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1">Seu Número de Telefone (M-Pesa / e-Mola)</label>
-          <input type="tel" id="checkoutTelefone" placeholder="+258 84/85/86/87..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">Número de Telefone (M-Pesa / e-Mola)</label>
+          <input type="tel" id="checkoutTelefone" placeholder="+258..." required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">Método de Pagamento</label>
-          <select id="checkoutMetodo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-brand-500">
+          <select id="checkoutMetodo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
             <option value="mpesa">M-Pesa (NetShop)</option>
             <option value="emola">e-Mola (NetShop)</option>
           </select>
         </div>
 
-        <button type="submit" id="btnPagar" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition flex items-center justify-center">
-          <span>Pagar via NetShop</span>
+        <button type="submit" id="btnPagar" class="w-full py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 transition">
+          Pagar via NetShop
         </button>
       </form>
     </div>
   </div>
 
-  <!-- ==========================================
-       RODAPÉ: TUTORIAL, TERMOS & LEGISLAÇÃO
-  ========================================== -->
+  <!-- RODAPÉ -->
   <footer class="bg-gray-900 text-gray-300 border-t border-gray-800">
-    <section id="como-funciona" class="border-b border-gray-800 py-12">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h3 class="text-xl font-bold text-white mb-8 text-center">Como Funciona a Plataforma</h3>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-          <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50">
-            <div class="w-12 h-12 bg-brand-600/20 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">1</div>
-            <h4 class="font-bold text-white mb-2">Escolha o Produto</h4>
-            <p class="text-xs text-gray-400">Navegue pelas lojas oficiais dos vendedores moçambicanos e selecione o artigo desejado.</p>
-          </div>
-
-          <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50">
-            <div class="w-12 h-12 bg-brand-600/20 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">2</div>
-            <h4 class="font-bold text-white mb-2">Pagamento Seguro</h4>
-            <p class="text-xs text-gray-400">Efetue o pagamento através do gateway integrado NetShop utilizando M-Pesa ou e-Mola.</p>
-          </div>
-
-          <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50">
-            <div class="w-12 h-12 bg-brand-600/20 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">3</div>
-            <h4 class="font-bold text-white mb-2">Prazo de Entrega</h4>
-            <p class="text-xs text-gray-400">Consulte o prazo estimado definido pelo vendedor no momento da compra (produtos físicos).</p>
-          </div>
-
-          <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50">
-            <div class="w-12 h-12 bg-brand-600/20 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">4</div>
-            <h4 class="font-bold text-white mb-2">Contacto & Suporte</h4>
-            <p class="text-xs text-gray-400">Acompanhe a sua encomenda ou tire dúvidas diretamente no WhatsApp do Vendedor.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div id="termos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 text-xs leading-relaxed text-gray-400">
-      <div>
-        <h4 class="text-sm font-bold text-white mb-3 flex items-center">
-          <i data-lucide="shield-check" class="mr-2 h-4 w-4 text-brand-500"></i> Termos & Condições de Uso
-        </h4>
-        <p class="mb-2">A plataforma MOZ1VENDAS atua como intermediária de serviços de marketplace no território moçambicano, facilitando a ligação entre compradores e vendedores registados.</p>
-        <p>Todos os pagamentos são processados em Meticais (MZN) através de parceiros financeiros autorizados. O tempo de entrega e a qualidade do produto físico são da inteira responsabilidade do vendedor anunciante.</p>
-      </div>
-
-      <div>
-        <h4 class="text-sm font-bold text-white mb-3 flex items-center">
-          <i data-lucide="alert-triangle" class="mr-2 h-4 w-4 text-amber-500"></i> Artigos Proibidos (Legislação Moçambicana)
-        </h4>
-        <p class="mb-2">Em conformidade com a legislação comercial e penal da República de Moçambique, é estritamente proibido anunciar ou transacionar:</p>
-        <ul class="list-disc pl-4 space-y-1">
-          <li>Armas de fogo, munições ou material explosivo.</li>
-          <li>Substâncias estupefacientes, narcóticos ou medicamentos não autorizados pela MISAU.</li>
-          <li>Artigos contrafeitos, pirateados ou que violem Direitos de Autor e Propriedade Intelectual.</li>
-          <li>Documentos oficiais de identificação, moedas ou títulos financeiros.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="border-t border-gray-800 py-6 text-center text-xs text-gray-500">
-      &copy; 2026 MOZ1VENDAS. Todos os direitos reservados. Licenciado para operar em Moçambique.
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-xs text-gray-500">
+      &copy; 2026 MOZ1VENDAS. Todos os direitos reservados.
     </div>
   </footer>
 
-  <!-- ==========================================
-       LÓGICA JAVASCRIPT / INTEGRAÇÃO GAS 4.0
-  ========================================== -->
+  <!-- SCRIPT -->
   <script>
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzKOTM8SQin4DgH_O_mFbeiUlMPWVQ3iu7WnhYR4ujvaMkJmW3SLSqGcLeknq9fKK9PIw/exec";
+    // URL DO SEU SCRIPT GAS
+    const GAS_API_URL = "https://script.google.com/macros/s/SUO_MEU_SCRIPT_ID/exec";
 
     let estadoGeral = {
       blocos: [],
@@ -399,8 +322,7 @@
 
     function alternarCampoPrazo() {
       const tipo = document.getElementById('prodTipo').value;
-      const container = document.getElementById('containerPrazoEntrega');
-      container.classList.toggle('hidden', tipo === 'DIGITAL');
+      document.getElementById('containerPrazoEntrega').classList.toggle('hidden', tipo === 'DIGITAL');
     }
 
     function abrirDashboardVendedor() {
@@ -413,32 +335,89 @@
       document.getElementById('painelVendedorContainer').classList.add('hidden');
     }
 
-    // Carregar Métricas do Vendedor a partir do GAS
-    async function carregarEstatisticasVendedor() {
-      if (!estadoGeral.vendedorLogado) return;
+    // REGISTRO DO VENDEDOR
+    async function processarRegistoVendedor(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitRegisto');
+      btn.disabled = true;
+      btn.innerText = "A registar...";
 
-      document.getElementById('dashNomeLoja').innerText = `Painel: ${estadoGeral.vendedorLogado.nomeLoja}`;
+      const payload = {
+        action: 'REGISTRAR_VENDEDOR',
+        nomeLoja: document.getElementById('registoNomeLoja').value,
+        nomeProprietario: document.getElementById('registoNomeProprietario').value,
+        telefone: document.getElementById('registoTelefone').value,
+        senha: document.getElementById('registoSenha').value
+      };
 
       try {
-        const response = await fetch(`${GAS_API_URL}?action=obterEstatisticasVendedor&vendedorId=${estadoGeral.vendedorLogado.vendedorId}`);
+        const response = await fetch(GAS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
         const res = await response.json();
 
-        if (res.ok && res.stats) {
-          document.getElementById('statProdutosPublicados').innerText = res.stats.produtosPublicados || 0;
-          document.getElementById('statProdutosVendidos').innerText = res.stats.produtosVendidos || 0;
-          document.getElementById('statTotalFaturado').innerText = `${Number(res.stats.totalFaturado || 0).toLocaleString('pt-MZ')} MZN`;
+        if (res.ok) {
+          alert('Loja registada com sucesso! Faça login para aceder.');
+          alternarAbaAuth('login');
+        } else {
+          alert(`Erro no registo: ${res.message}`);
         }
       } catch (err) {
-        console.error("Erro ao carregar estatísticas do vendedor:", err);
+        console.error(err);
+        alert('Falha na ligação com o servidor GAS.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Criar Loja";
       }
     }
 
-    // Processar Novo Produto no GAS
+    // LOGIN DO VENDEDOR
+    async function processarLoginVendedor(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitLogin');
+      btn.disabled = true;
+      btn.innerText = "A autenticar...";
+
+      const payload = {
+        action: 'LOGIN_VENDEDOR',
+        telefone: document.getElementById('loginTelefone').value,
+        senha: document.getElementById('loginSenha').value
+      };
+
+      try {
+        const response = await fetch(GAS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const res = await response.json();
+
+        if (res.ok && res.vendedor) {
+          estadoGeral.vendedorLogado = res.vendedor;
+          localStorage.setItem('moz1_vendedor', JSON.stringify(res.vendedor));
+          atualizarInterfaceSessao();
+          toggleModal('modalAuthVendedor');
+          abrirDashboardVendedor();
+        } else {
+          alert(`Erro: ${res.message || 'Dados de login incorretos'}`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao ligar ao servidor.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Entrar";
+      }
+    }
+
+    // NOVO PRODUTO
     async function processarNovoProduto(e) {
       e.preventDefault();
       const btn = document.getElementById('btnSalvarProduto');
       btn.disabled = true;
-      btn.innerText = "A guardar produto...";
+      btn.innerText = "A publicar...";
 
       const payload = {
         action: 'CADASTRAR_PRODUTO',
@@ -454,13 +433,13 @@
       try {
         const response = await fetch(GAS_API_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload)
         });
         const res = await response.json();
 
         if (res.ok) {
-          alert('Produto publicado com sucesso!');
+          alert('Produto publicado!');
           toggleModal('modalNovoProduto');
           document.getElementById('formNovoProduto').reset();
           carregarEstatisticasVendedor();
@@ -470,14 +449,193 @@
         }
       } catch (err) {
         console.error(err);
-        alert('Falha ao registar produto.');
+        alert('Erro ao registar produto.');
       } finally {
         btn.disabled = false;
         btn.innerText = "Publicar Produto";
       }
     }
 
-    // Modal de Autenticação
+    // CARREGAR ESTATÍSTICAS
+    async function carregarEstatisticasVendedor() {
+      if (!estadoGeral.vendedorLogado) return;
+      document.getElementById('dashNomeLoja').innerText = `Painel: ${estadoGeral.vendedorLogado.nomeLoja}`;
+
+      try {
+        const response = await fetch(`${GAS_API_URL}?action=obterEstatisticasVendedor&vendedorId=${estadoGeral.vendedorLogado.vendedorId}`);
+        const res = await response.json();
+
+        if (res.ok && res.stats) {
+          document.getElementById('statProdutosPublicados').innerText = res.stats.produtosPublicados || 0;
+          document.getElementById('statProdutosVendidos').innerText = res.stats.produtosVendidos || 0;
+          document.getElementById('statTotalFaturado').innerText = `${Number(res.stats.totalFaturado || 0).toLocaleString('pt-MZ')} MZN`;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // CARREGAR VITRINE E TRATAR RECOMENDAÇÕES
+    async function carregarProdutos() {
+      const container = document.getElementById('lojasContainer');
+      const cat = document.getElementById('categoriaFilter').value;
+
+      try {
+        let url = `${GAS_API_URL}?action=homeBlocos`;
+        if (cat) url = `${GAS_API_URL}?action=produtosPorCategoria&categoria=${encodeURIComponent(cat)}`;
+
+        const response = await fetch(url);
+        const res = await response.json();
+
+        if (res.ok) {
+          estadoGeral.blocos = res.data.blocos || [];
+          renderizarLojas(estadoGeral.blocos);
+        } else {
+          container.innerHTML = `<p class="text-center text-red-500 py-8">Erro: ${res.message}</p>`;
+        }
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<p class="text-center text-gray-500 py-8">Não foi possível carregar as lojas.</p>`;
+      }
+    }
+
+    function renderizarLojas(blocos) {
+      const container = document.getElementById('lojasContainer');
+      container.innerHTML = '';
+
+      if (!blocos || blocos.length === 0) {
+        container.innerHTML = `<div class="text-center py-12 text-gray-500">Nenhum produto cadastrado.</div>`;
+        return;
+      }
+
+      blocos.forEach(bloco => {
+        const lojaEl = document.createElement('div');
+        lojaEl.className = 'bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden p-6';
+
+        // TRATAMENTO DA TAXA DE RECOMENDAÇÕES
+        let taxaRecomendacao = 100;
+        if (bloco.reputacao && bloco.reputacao.recomendacao !== undefined) {
+          taxaRecomendacao = bloco.reputacao.recomendacao;
+        } else if (bloco.recomendacao !== undefined) {
+          taxaRecomendacao = bloco.recomendacao;
+        }
+
+        const logoUrl = bloco.logo || 'https://via.placeholder.com/60?text=LOJA';
+
+        let produtosHTML = '';
+        (bloco.produtos || []).forEach(prod => {
+          const isFisico = String(prod.tipo).toUpperCase() === 'FISICO';
+          const prazoEntrega = isFisico ? (prod.prazoEntrega || '24h - 48h') : 'Download Imediato';
+
+          produtosHTML += `
+            <div class="border border-gray-100 rounded-xl p-4 flex flex-col justify-between bg-gray-50/50">
+              <div>
+                <img src="${prod.imagemUrl || 'https://via.placeholder.com/300'}" alt="${prod.nome}" class="w-full h-40 object-cover rounded-lg mb-3">
+                <span class="inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-gray-200 text-gray-700 mb-2">${prod.tipo}</span>
+                <h4 class="font-bold text-gray-900 text-sm mb-1">${prod.nome}</h4>
+                <p class="text-xs text-gray-500 mb-2 line-clamp-2">${prod.descricao || ''}</p>
+                <div class="text-xs text-gray-600 mb-3 flex items-center">
+                  <i data-lucide="clock" class="h-3 w-3 mr-1 text-gray-400"></i>
+                  <span>Entrega: <strong>${prazoEntrega}</strong></span>
+                </div>
+              </div>
+              
+              <div>
+                <div class="text-base font-extrabold text-brand-700 mb-3">${Number(prod.preco).toLocaleString('pt-MZ')} MZN</div>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="abrirCheckout('${prod.produtoId}')" class="w-full py-2 bg-brand-600 text-white rounded-lg text-xs font-bold hover:bg-brand-700 transition">Comprar</button>
+                  <a href="https://wa.me/${limparTelefone(prod.whatsapp || bloco.telefone || bloco.empresa)}?text=Olá,%20tenho%20interesse%20no%20produto:%20${encodeURIComponent(prod.nome)}" target="_blank" class="w-full py-2 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-200 transition flex items-center justify-center">
+                    <i data-lucide="message-circle" class="h-3 w-3 mr-1"></i> WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        lojaEl.innerHTML = `
+          <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
+            <div class="flex items-center space-x-3">
+              <img src="${logoUrl}" alt="${bloco.empresa || bloco.nomeLoja}" class="w-12 h-12 rounded-full object-cover border border-gray-200">
+              <div>
+                <h3 class="font-bold text-gray-900 text-base">${bloco.empresa || bloco.nomeLoja || bloco.nomeVendedor}</h3>
+                <div class="flex items-center text-xs text-gray-500 space-x-2">
+                  <!-- EXIBIÇÃO DA TAXA DE RECOMENDAÇÃO -->
+                  <span class="flex items-center text-amber-500 font-semibold">
+                    <i data-lucide="thumbs-up" class="h-3.5 w-3.5 mr-1"></i> ${taxaRecomendacao}% Recomendações
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            ${produtosHTML}
+          </div>
+        `;
+
+        container.appendChild(lojaEl);
+      });
+
+      lucide.createIcons();
+    }
+
+    // CHECKOUT E SESSÃO
+    function abrirCheckout(produtoId) {
+      let prodAchado = null;
+      for (const bloco of estadoGeral.blocos) {
+        const f = (bloco.produtos || []).find(p => String(p.produtoId) === String(produtoId));
+        if (f) { prodAchado = f; break; }
+      }
+      if (!prodAchado) return alert('Produto não encontrado.');
+
+      estadoGeral.produtoSelecionado = prodAchado;
+      document.getElementById('detalhesProdutoCheckout').innerHTML = `
+        <div class="flex justify-between font-bold text-gray-900 mb-1">
+          <span>${prodAchado.nome}</span>
+          <span>${Number(prodAchado.preco).toLocaleString('pt-MZ')} MZN</span>
+        </div>
+        <div class="text-xs text-gray-500">Prazo: ${prodAchado.prazoEntrega || 'A combinar'}</div>
+      `;
+      toggleModal('modalCheckout');
+    }
+
+    async function processarPagamento(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnPagar');
+      btn.disabled = true;
+      btn.innerText = "A processar...";
+
+      try {
+        const payload = {
+          action: 'COMPRAR_PRODUTO',
+          produtoId: estadoGeral.produtoSelecionado.produtoId,
+          preco: estadoGeral.produtoSelecionado.preco,
+          telefone: document.getElementById('checkoutTelefone').value,
+          metodo: document.getElementById('checkoutMetodo').value
+        };
+
+        const response = await fetch(GAS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const res = await response.json();
+
+        if (res.ok) {
+          alert(`Solicitação enviada! Confirme a transação de ${estadoGeral.produtoSelecionado.preco} MZN no seu celular.`);
+          toggleModal('modalCheckout');
+        } else {
+          alert(`Erro: ${res.message}`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao conectar ao NetShop.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Pagar via NetShop";
+      }
+    }
+
     function abrirModalAuth(aba = 'login') {
       alternarAbaAuth(aba);
       toggleModal('modalAuthVendedor');
@@ -499,81 +657,6 @@
         formLogin.classList.add('hidden');
         tabRegistoBtn.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-brand-600 text-brand-600";
         tabLoginBtn.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-500 hover:text-gray-700";
-      }
-    }
-
-    async function processarRegistoVendedor(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmitRegisto');
-      btn.disabled = true;
-      btn.innerText = "A registar...";
-
-      const payload = {
-        action: 'REGISTRAR_VENDEDOR',
-        nomeLoja: document.getElementById('registoNomeLoja').value,
-        nomeProprietario: document.getElementById('registoNomeProprietario').value,
-        telefone: document.getElementById('registoTelefone').value,
-        senha: document.getElementById('registoSenha').value
-      };
-
-      try {
-        const response = await fetch(GAS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const res = await response.json();
-
-        if (res.ok) {
-          alert('Loja criada! Faça login para aceder ao seu painel.');
-          alternarAbaAuth('login');
-        } else {
-          alert(`Erro: ${res.message}`);
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Erro de comunicação.');
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "Criar Loja no MOZ1VENDAS";
-      }
-    }
-
-    async function processarLoginVendedor(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmitLogin');
-      btn.disabled = true;
-      btn.innerText = "A autenticar...";
-
-      const payload = {
-        action: 'LOGIN_VENDEDOR',
-        telefone: document.getElementById('loginTelefone').value,
-        senha: document.getElementById('loginSenha').value
-      };
-
-      try {
-        const response = await fetch(GAS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const res = await response.json();
-
-        if (res.ok && res.vendedor) {
-          estadoGeral.vendedorLogado = res.vendedor;
-          localStorage.setItem('moz1_vendedor', JSON.stringify(res.vendedor));
-          atualizarInterfaceSessao();
-          toggleModal('modalAuthVendedor');
-          abrirDashboardVendedor();
-        } else {
-          alert(`Erro no login: ${res.message || 'Dados inválidos'}`);
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Erro ao realizar login.');
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "Aceder à Minha Loja";
       }
     }
 
@@ -617,166 +700,12 @@
       lucide.createIcons();
     }
 
-    // Carregar Lojas e Produtos via doGet
-    async function carregarProdutos() {
-      const container = document.getElementById('lojasContainer');
-      const cat = document.getElementById('categoriaFilter').value;
-
-      try {
-        let url = `${GAS_API_URL}?action=homeBlocos`;
-        if (cat) url = `${GAS_API_URL}?action=produtosPorCategoria&categoria=${encodeURIComponent(cat)}`;
-
-        const response = await fetch(url);
-        const res = await response.json();
-
-        if (res.ok) {
-          estadoGeral.blocos = res.data.blocos || [];
-          renderizarLojas(estadoGeral.blocos);
-        } else {
-          container.innerHTML = `<p class="text-center text-red-500 py-8">Erro ao carregar produtos: ${res.message}</p>`;
-        }
-      } catch (err) {
-        console.error(err);
-        container.innerHTML = `<p class="text-center text-gray-500 py-8">Não foi possível carregar a vitrine.</p>`;
-      }
-    }
-
-    function renderizarLojas(blocos) {
-      const container = document.getElementById('lojasContainer');
-      container.innerHTML = '';
-
-      if (!blocos || blocos.length === 0) {
-        container.innerHTML = `<div class="text-center py-12 text-gray-500">Nenhum produto ou loja encontrada.</div>`;
-        return;
-      }
-
-      blocos.forEach(bloco => {
-        const lojaEl = document.createElement('div');
-        lojaEl.className = 'bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden p-6';
-
-        const reputacao = bloco.reputacao || { recomendacao: 100 };
-        const logoUrl = bloco.logo || 'https://via.placeholder.com/60?text=LOJA';
-
-        let produtosHTML = '';
-        bloco.produtos.forEach(prod => {
-          const isFisico = String(prod.tipo).toUpperCase() === 'FISICO';
-          const prazoEntrega = isFisico ? (prod.prazoEntrega || '24h - 48h (a combinar)') : 'Download Imediato';
-
-          produtosHTML += `
-            <div class="border border-gray-100 rounded-xl p-4 flex flex-col justify-between hover:shadow-md transition bg-gray-50/50">
-              <div>
-                <img src="${prod.imagemUrl || 'https://via.placeholder.com/300'}" alt="${prod.nome}" class="w-full h-40 object-cover rounded-lg mb-3">
-                <span class="inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-gray-200 text-gray-700 mb-2">${prod.tipo}</span>
-                <h4 class="font-bold text-gray-900 text-sm mb-1">${prod.nome}</h4>
-                <p class="text-xs text-gray-500 mb-2 line-clamp-2">${prod.descricao || ''}</p>
-                <div class="text-xs text-gray-600 mb-3 flex items-center">
-                  <i data-lucide="clock" class="h-3 w-3 mr-1 text-gray-400"></i>
-                  <span>Entrega: <strong>${prazoEntrega}</strong></span>
-                </div>
-              </div>
-              
-              <div>
-                <div class="text-base font-extrabold text-brand-700 mb-3">${Number(prod.preco).toLocaleString('pt-MZ')} MZN</div>
-                <div class="grid grid-cols-2 gap-2">
-                  <button onclick="abrirCheckout('${prod.produtoId}', '${bloco.vendedorId}')" class="w-full py-2 bg-brand-600 text-white rounded-lg text-xs font-bold hover:bg-brand-700 transition">Comprar</button>
-                  <a href="https://wa.me/${limparTelefone(prod.whatsapp || bloco.empresa)}?text=Olá,%20tenho%20interesse%20no%20produto:%20${encodeURIComponent(prod.nome)}" target="_blank" class="w-full py-2 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-200 transition flex items-center justify-center">
-                    <i data-lucide="message-circle" class="h-3 w-3 mr-1"></i> WhatsApp
-                  </a>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-
-        lojaEl.innerHTML = `
-          <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
-            <div class="flex items-center space-x-3">
-              <img src="${logoUrl}" alt="${bloco.empresa}" class="w-12 h-12 rounded-full object-cover border border-gray-200">
-              <div>
-                <h3 class="font-bold text-gray-900 text-base">${bloco.empresa || bloco.nomeVendedor}</h3>
-                <div class="flex items-center text-xs text-gray-500 space-x-2">
-                  <span class="flex items-center text-amber-500 font-semibold"><i data-lucide="thumbs-up" class="h-3 w-3 mr-1"></i> ${reputacao.recomendacao}% Recomendações</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            ${produtosHTML}
-          </div>
-        `;
-
-        container.appendChild(lojaEl);
-      });
-
-      lucide.createIcons();
-    }
-
-    function abrirCheckout(produtoId, vendedorId) {
-      let prodAchado = null;
-      for (const bloco of estadoGeral.blocos) {
-        const f = bloco.produtos.find(p => String(p.produtoId) === String(produtoId));
-        if (f) { prodAchado = f; break; }
-      }
-      if (!prodAchado) return alert('Produto não encontrado.');
-
-      estadoGeral.produtoSelecionado = prodAchado;
-      document.getElementById('detalhesProdutoCheckout').innerHTML = `
-        <div class="flex justify-between font-bold text-gray-900 mb-1">
-          <span>${prodAchado.nome}</span>
-          <span>${Number(prodAchado.preco).toLocaleString('pt-MZ')} MZN</span>
-        </div>
-        <div class="text-xs text-gray-500">
-          Tipo: ${prodAchado.tipo} | Prazo de Entrega: ${prodAchado.prazoEntrega || 'A combinar'}
-        </div>
-      `;
-      toggleModal('modalCheckout');
-    }
-
-    async function processarPagamento(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnPagar');
-      const telefone = document.getElementById('checkoutTelefone').value;
-      const metodo = document.getElementById('checkoutMetodo').value;
-
-      btn.disabled = true;
-      btn.innerHTML = `<span>Processando...</span>`;
-
-      try {
-        const payload = {
-          action: 'COMPRAR_PRODUTO',
-          produtoId: estadoGeral.produtoSelecionado.produtoId,
-          telefone: telefone,
-          metodo: metodo
-        };
-
-        const response = await fetch(GAS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const res = await response.json();
-
-        if (res.ok) {
-          alert(`Solicitação enviada! Confirme a transação de ${res.data.valor} MZN no seu telemóvel.`);
-          toggleModal('modalCheckout');
-        } else {
-          alert(`Erro: ${res.message}`);
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Erro ao conectar com NetShop.');
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<span>Pagar via NetShop</span>`;
-      }
-    }
-
     function limparTelefone(tel) { return String(tel || '').replace(/[^\d]/g, ''); }
 
     function filtrarProdutos() {
       const q = document.getElementById('searchInput').value.toLowerCase();
       const filtrados = estadoGeral.blocos.map(b => {
-        const prods = b.produtos.filter(p => p.nome.toLowerCase().includes(q) || b.empresa.toLowerCase().includes(q));
+        const prods = (b.produtos || []).filter(p => p.nome.toLowerCase().includes(q) || (b.empresa || '').toLowerCase().includes(q));
         return { ...b, produtos: prods };
       }).filter(b => b.produtos.length > 0);
       renderizarLojas(filtrados);
