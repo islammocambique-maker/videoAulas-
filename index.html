@@ -8,32 +8,46 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
     body { background-color: #f4f4f9; padding: 15px; }
 
+    /* Layout do Cabeçalho e Botões */
+    header { display: flex; justify-content: space-between; align-items: center; max-width: 800px; margin: 0 auto 20px auto; padding: 10px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .logo-app { font-weight: bold; font-size: 18px; color: #046A38; }
+
     /* Modais */
     .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
     .modal-content { background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; position: relative; }
     .close-btn { position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 20px; }
     
-    /* Grade de Lojas/Marcas */
-    .lojas-container { display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; }
+    /* Grade de Lojas */
+    .lojas-container { display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; min-height: 200px; }
     .card-loja { background: #fff; border-radius: 10px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     .header-loja { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
     .info-loja { display: flex; align-items: center; gap: 10px; }
     .logo-loja { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
     
-    /* Slideshow Container */
+    /* Slideshow */
     .slideshow-container { position: relative; width: 100%; height: 250px; overflow: hidden; border-radius: 8px; background: #eaedf1; }
     .slide-item { display: none; width: 100%; height: 100%; text-align: center; }
     .slide-item.active { display: block; }
     .slide-item img { width: 100%; height: 180px; object-fit: cover; }
     .slide-details { padding: 5px; background: #fff; }
     
-    /* Botões */
+    /* Estado Vazio ou Mensagens */
+    .mensagem-alerta { text-align: center; padding: 40px 20px; background: #fff; border-radius: 8px; color: #555; }
+
+    /* Botões e Formulários */
     .btn { background: #046A38; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
+    .btn-header { background: #046A38; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
     .btn-rec { background: #f0a500; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
     input { width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
   </style>
 </head>
 <body>
+
+  <!-- Topo da Aplicação -->
+  <header>
+    <div class="logo-app">Moz1Vendas</div>
+    <button class="btn-header" onclick="abrirModal('modalRegistro')">+ Criar Loja</button>
+  </header>
 
   <!-- Modal de Registro de Loja -->
   <div id="modalRegistro" class="modal">
@@ -50,7 +64,7 @@
     </div>
   </div>
 
-  <!-- Modal de Recomendação da Marca (Acesso Público) -->
+  <!-- Modal de Recomendação da Marca -->
   <div id="modalRecomendacao" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="fecharModal('modalRecomendacao')">&times;</span>
@@ -62,14 +76,14 @@
     </div>
   </div>
 
-  <!-- Exibição por Blocos de Marca -->
+  <!-- Container Principal das Lojas -->
   <main class="lojas-container" id="containerLojas">
-    <p>Carregando lojas e produtos...</p>
+    <div class="mensagem-alerta">Carregando lojas e produtos...</div>
   </main>
 
   <script>
-    // URL do Web App executado no Google Apps Script
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzwVVMw_niZXRHl8PEHxRxQcBrkIksFZYaxpUE-1WIr_vomeZyRZqFeoaBiaVjQ22hGpA/exec";
+    // IMPORTANTE: Insira a URL do seu Web App implantado no Google Apps Script aqui
+    const GAS_URL = "https://script.google.com/macros/s/SEU_SCRIPT_ID/exec";
 
     document.addEventListener("DOMContentLoaded", () => {
       carregarBlocosHome();
@@ -77,7 +91,6 @@
       document.getElementById("formRegistro").addEventListener("submit", async (e) => {
         e.preventDefault();
         
-        // Mapeamento correto conforme o GAS espera na ação CRIAR_LOJA
         const payload = {
           action: "CRIAR_LOJA",
           nome: document.getElementById("regNome").value,
@@ -94,35 +107,46 @@
           const data = await res.json();
           
           if (data.ok) {
-            alert(data.message);
+            alert(data.message || "Loja cadastrada com sucesso!");
             fecharModal("modalRegistro");
             carregarBlocosHome();
           } else {
-            alert("Erro no registo: " + data.message);
+            alert("Erro no registo: " + (data.message || "Ação não processada."));
           }
         } catch (err) {
-          alert("Erro na ligação ao servidor.");
+          alert("Erro ao conectar com o servidor.");
         }
       });
     });
 
-    // 1. Carrega lojas com seus produtos organizados por marcas
     async function carregarBlocosHome() {
+      const container = document.getElementById("containerLojas");
+      
+      if (!GAS_URL || GAS_URL.includes("SEU_SCRIPT_ID")) {
+        container.innerHTML = `<div class="mensagem-alerta"><strong>Atenção:</strong> Insira a URL válida do seu Web App no código JavaScript.</div>`;
+        return;
+      }
+
       try {
         const res = await fetch(`${GAS_URL}?action=homeBlocos`);
         const result = await res.json();
 
-        if (result.ok && result.data && result.data.blocos) {
+        if (result.ok && result.data && result.data.blocos && result.data.blocos.length > 0) {
           renderizarBlocos(result.data.blocos);
         } else {
-          document.getElementById("containerLojas").innerHTML = "<p>Nenhuma loja encontrada.</p>";
+          container.innerHTML = `
+            <div class="mensagem-alerta">
+              <h3>Nenhuma loja encontrada</h3>
+              <p style="margin-top: 8px;">Ainda não existem lojas cadastradas na plataforma.</p>
+              <button class="btn-header" style="margin-top: 15px;" onclick="abrirModal('modalRegistro')">Cadastrar Primeira Loja</button>
+            </div>`;
         }
       } catch (err) {
-        console.error(err);
+        console.error("Erro na busca dos dados:", err);
+        container.innerHTML = `<div class="mensagem-alerta">Erro ao carregar lojas. Verifique a conexão ou a URL do Apps Script.</div>`;
       }
     }
 
-    // 2. Renderiza os blocos da marca com Slideshow de 6 segundos
     function renderizarBlocos(blocos) {
       const container = document.getElementById("containerLojas");
       container.innerHTML = "";
@@ -132,28 +156,34 @@
         card.className = "card-loja";
 
         let slidesHTML = "";
-        bloco.produtos.forEach((prod, pIndex) => {
-          slidesHTML += `
-            <div class="slide-item slide-block-${bIndex} ${pIndex === 0 ? 'active' : ''}">
-              <img src="${prod.imagemUrl || 'https://via.placeholder.com/300'}" alt="${prod.nome}">
-              <div class="slide-details">
-                <strong>${prod.nome}</strong>
-                <p>${prod.preco} MZN</p>
+        const produtos = bloco.produtos || [];
+
+        if (produtos.length > 0) {
+          produtos.forEach((prod, pIndex) => {
+            slidesHTML += `
+              <div class="slide-item slide-block-${bIndex} ${pIndex === 0 ? 'active' : ''}">
+                <img src="${prod.imagemUrl || 'https://via.placeholder.com/300?text=Sem+Imagem'}" alt="${prod.nome}">
+                <div class="slide-details">
+                  <strong>${prod.nome}</strong>
+                  <p>${prod.preco} MZN</p>
+                </div>
               </div>
-            </div>
-          `;
-        });
+            `;
+          });
+        } else {
+          slidesHTML = `<div class="slide-item active"><div class="slide-details" style="padding: 50px 0;">Esta loja ainda não possui produtos.</div></div>`;
+        }
 
         card.innerHTML = `
           <div class="header-loja">
             <div class="info-loja">
-              <img class="logo-loja" src="${bloco.logo || 'https://via.placeholder.com/50'}" alt="Logo">
+              <img class="logo-loja" src="${bloco.logo || 'https://via.placeholder.com/50?text=Loja'}" alt="Logo">
               <div>
-                <h4>${bloco.empresa || bloco.nomeVendedor}</h4>
-                <small>👍 ${bloco.reputacao.recomendacao || 0}% de recomendações</small>
+                <h4>${bloco.empresa || bloco.nomeVendedor || 'Loja Sem Nome'}</h4>
+                <small>👍 ${(bloco.reputacao && bloco.reputacao.recomendacao) ? bloco.reputacao.recomendacao : 0}% de recomendações</small>
               </div>
             </div>
-            <button class="btn-rec" onclick="abrirModalRecomendacao('${bloco.vendedorld}')">⭐ Recomendar</button>
+            <button class="btn-rec" onclick="abrirModalRecomendacao('${bloco.vendedorId || ''}')">⭐ Recomendar</button>
           </div>
           <div class="slideshow-container">
             ${slidesHTML}
@@ -161,34 +191,42 @@
         `;
 
         container.appendChild(card);
-        iniciarSlideshow(bIndex, bloco.produtos.length);
+        if (produtos.length > 1) {
+          iniciarSlideshow(bIndex, produtos.length);
+        }
       });
     }
 
-    // 3. Temporizador do Slideshow (Troca a cada 6 segundos)
     function iniciarSlideshow(blocoIndex, totalSlides) {
-      if (totalSlides <= 1) return;
       let currentIndex = 0;
-
       setInterval(() => {
         const slides = document.querySelectorAll(`.slide-block-${blocoIndex}`);
-        slides[currentIndex].classList.remove("active");
-        currentIndex = (currentIndex + 1) % totalSlides;
-        slides[currentIndex].classList.add("active");
-      }, 6000); // 6000ms = 6 segundos
+        if (slides.length > 0) {
+          slides[currentIndex].classList.remove("active");
+          currentIndex = (currentIndex + 1) % totalSlides;
+          slides[currentIndex].classList.add("active");
+        }
+      }, 6000);
     }
 
-    // 4. Sistema de Recomendação Pública por Marca
+    function abrirModal(id) {
+      document.getElementById(id).style.display = "flex";
+    }
+
+    function fecharModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
     function abrirModalRecomendacao(vendedorId) {
       document.getElementById("recVendedorId").value = vendedorId;
-      document.getElementById("modalRecomendacao").style.display = "flex";
+      abrirModal("modalRecomendacao");
     }
 
     async function enviarRecomendacao(tipo) {
       const vendedorId = document.getElementById("recVendedorId").value;
       const payload = {
         action: "AVALIAR_EMPRESA",
-        vendedorld: vendedorId,
+        vendedorId: vendedorId,
         tipo: tipo
       };
 
@@ -204,15 +242,11 @@
           fecharModal("modalRecomendacao");
           carregarBlocosHome();
         } else {
-          alert(data.message);
+          alert(data.message || "Erro ao registrar recomendação.");
         }
       } catch (err) {
-        alert("Erro ao enviar recomendação.");
+        alert("Erro na comunicação com o servidor.");
       }
-    }
-
-    function fecharModal(id) {
-      document.getElementById(id).style.display = "none";
     }
   </script>
 </body>
