@@ -3,368 +3,309 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moz1Vendas - Checkout & Loja</title>
+  <title>MOZ1VENDAS | Marketplace Moçambique</title>
   <style>
     :root {
-      --primary: #00875a;
-      --primary-hover: #006644;
-      --bg: #f4f5f7;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f8fafc;
       --card-bg: #ffffff;
-      --text: #172b4d;
-      --border: #dfe1e6;
-      --error: #de350b;
-      --success: #00875a;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --warning: #d97706;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 60px; }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 16px;
-    }
+    header { background: #0f172a; color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 20px; color: #38bdf8; letter-spacing: 0.5px; }
+    header nav button { background: transparent; border: 1px solid #38bdf8; color: #38bdf8; padding: 6px 14px; border-radius: 6px; cursor: pointer; margin-left: 8px; }
 
-    .container {
-      width: 100%;
-      max-width: 450px;
-      background: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 24px;
-    }
+    .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
 
-    .header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
+    .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 12px; }
+    .card h3 { font-size: 16px; margin-bottom: 8px; }
+    .card .price { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 12px; }
 
-    .header h2 {
-      color: var(--primary);
-      font-size: 24px;
-      margin-bottom: 6px;
-    }
+    button.btn-primary { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; }
+    button.btn-primary:disabled { background: var(--text-muted); }
 
-    .header p {
-      font-size: 14px;
-      color: #6b778c;
-    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
 
-    .form-group {
-      margin-bottom: 16px;
-    }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; }
+    .modal-content { background: white; width: 100%; max-width: 440px; padding: 24px; border-radius: 12px; }
 
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
+    .financial-summary { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 13px; }
+    .financial-summary div { display: flex; justify-content: space-between; margin-bottom: 4px; }
 
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 15px;
-      outline: none;
-      transition: border 0.2s;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--primary);
-    }
-
-    .btn {
-      width: 100%;
-      padding: 14px;
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .btn:hover {
-      background-color: var(--primary-hover);
-    }
-
-    .btn:disabled {
-      background-color: #a5adba;
-      cursor: not-allowed;
-    }
-
-    .message {
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      margin-top: 16px;
-      display: none;
-      text-align: center;
-    }
-
-    .message.error {
-      background-color: #ffebe6;
-      color: var(--error);
-      display: block;
-    }
-
-    .message.success {
-      background-color: #e3fcef;
-      color: var(--success);
-      display: block;
-    }
-
-    .status-box {
-      text-align: center;
-      padding: 20px 0;
-    }
-
-    .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid var(--primary);
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 16px auto;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .download-link {
-      display: inline-block;
-      margin-top: 16px;
-      padding: 12px 20px;
-      background-color: var(--primary);
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-    }
-
-    .receipt-link {
-      display: block;
-      margin-top: 10px;
-      color: #0052cc;
-      font-size: 13px;
-      text-decoration: underline;
-    }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
+  <header>
+    <h1>MOZ1VENDAS</h1>
+    <nav>
+      <button onclick="showView('marketplace')">Loja</button>
+      <button id="nav-seller" onclick="showView('seller-dashboard')">Painel do Vendedor</button>
+      <button id="nav-login" onclick="openModal('login-modal')">Entrar</button>
+    </nav>
+  </header>
+
   <div class="container">
-    <div class="header">
-      <h2>Moz1Vendas</h2>
-      <p id="sub-title">Pagamento Seguro via M-Pesa & eMola</p>
-    </div>
+    
+    <!-- VIEW MARKETPLACE -->
+    <section id="view-marketplace">
+      <h2 style="margin-bottom: 16px;">Produtos Digitais em Destaque</h2>
+      <div id="product-grid" class="grid">
+        <p>A carregar produtos...</p>
+      </div>
+    </section>
 
-    <!-- TELA 1: FORMULÁRIO DE PAGAMENTO -->
-    <div id="checkout-view">
-      <form id="payment-form">
-        <div class="form-group">
-          <label for="clienteNome">Seu Nome</label>
-          <input type="text" id="clienteNome" placeholder="Ex: João Tembe" required>
+    <!-- VIEW DASHBOARD VENDEDOR -->
+    <section id="view-seller-dashboard" class="hidden">
+      <h2 style="margin-bottom: 16px;">Painel da Loja</h2>
+      
+      <div class="grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 24px;">
+        <div class="card">
+          <h3>Saldo Disponível</h3>
+          <div class="price" id="wallet-available">0 MZN</div>
+          <button class="btn-primary" onclick="openModal('payout-modal')">Solicitar Payout</button>
         </div>
-
-        <div class="form-group">
-          <label for="clienteTelefone">Número de Telemóvel (M-Pesa / eMola)</label>
-          <input type="tel" id="clienteTelefone" placeholder="841234567 ou 861234567" maxlength="9" required>
-        </div>
-
-        <div class="form-group">
-          <label for="metodo">Método de Pagamento</label>
-          <select id="metodo">
-            <option value="AUTO">Detectar Automático (Prefixos 84/85 ou 86/87)</option>
-            <option value="MPESA">M-Pesa (Vodacom)</option>
-            <option value="EMOLA">eMola (Movitel)</option>
-          </select>
-        </div>
-
-        <button type="submit" id="btn-pay" class="btn">Pagar Agora</button>
-      </form>
-    </div>
-
-    <!-- TELA 2: AGUARDANDO CONFIRMAÇÃO DO PAGAMENTO -->
-    <div id="status-view" style="display: none;">
-      <div class="status-box">
-        <div class="spinner" id="status-spinner"></div>
-        <h3 id="status-title">Confirmando Pagamento...</h3>
-        <p id="status-desc" style="margin-top: 8px; font-size: 14px; color: #5e6c84;">
-          Por favor, verifique o seu telemóvel e digite o seu PIN para autorizar a transação.
-        </p>
-        <div id="success-actions" style="display: none; margin-top: 16px;">
-          <a id="download-btn" href="#" target="_blank" class="download-link">Baixar Produto</a>
-          <a id="receipt-btn" href="#" target="_blank" class="receipt-link">Ver Recibo de Pagamento</a>
+        <div class="card">
+          <h3>Saldo Em Processamento</h3>
+          <div class="price" style="color: var(--warning);" id="wallet-reserved">0 MZN</div>
         </div>
       </div>
-    </div>
 
-    <div id="msg-box" class="message"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3>Meus Produtos</h3>
+        <button class="btn-primary" style="width: auto;" onclick="openModal('new-product-modal')">+ Novo Produto</button>
+      </div>
+      <div id="seller-products" class="grid"></div>
+    </section>
+
+  </div>
+
+  <!-- MODAL DE CHECKOUT (COMPRA C2B) -->
+  <div id="checkout-modal" class="modal">
+    <div class="modal-content">
+      <h3 id="checkout-title">Finalizar Compra</h3>
+      <p id="checkout-price" style="margin-bottom: 12px; color: var(--text-muted);"></p>
+
+      <div class="form-group">
+        <label>Método de Pagamento</label>
+        <select id="checkout-method">
+          <option value="MPESA">M-Pesa</option>
+          <option value="EMOLA">eMola</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Número de Telemóvel (84/85/86/87)</label>
+        <input type="text" id="checkout-phone" placeholder="841234567">
+      </div>
+
+      <button id="btn-pay" class="btn-primary" onclick="executeC2BPayment()">Comprar Agora</button>
+      <button style="margin-top: 8px; background: transparent; border: none; cursor: pointer; width: 100%; color: var(--text-muted);" onclick="closeModal('checkout-modal')">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- MODAL DE PAYOUT (RETIRADA COM CÁLCULO TRANSPARENTE) -->
+  <div id="payout-modal" class="modal">
+    <div class="modal-content">
+      <h3>Solicitar Payout</h3>
+      
+      <div class="form-group" style="margin-top: 12px;">
+        <label>Valor Bruto Desejado (MZN)</label>
+        <input type="number" id="payout-amount" placeholder="1000" oninput="updatePayoutSummary()">
+      </div>
+
+      <div class="form-group">
+        <label>Método de Recebimento</label>
+        <select id="payout-method">
+          <option value="MPESA">M-Pesa</option>
+          <option value="EMOLA">eMola</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Telemóvel da Conta</label>
+        <input type="text" id="payout-phone" placeholder="841234567">
+      </div>
+
+      <div class="financial-summary">
+        <div><span>Valor Solicitado:</span> <strong id="sum-gross">0 MZN</strong></div>
+        <div><span>Taxa Provedor (8%):</span> <span id="sum-provider" style="color: red;">-0 MZN</span></div>
+        <div><span>Taxa MOZ1VENDAS (2%):</span> <span id="sum-marketplace" style="color: red;">-0 MZN</span></div>
+        <hr style="margin: 6px 0; border: none; border-top: 1px dashed #cbd5e1;">
+        <div><span>Valor Líquido a Receber:</span> <strong id="sum-net" style="color: var(--success);">0 MZN</strong></div>
+      </div>
+
+      <button id="btn-payout" class="btn-primary" style="margin-top: 14px;" onclick="executePayoutRequest()">Confirmar e Solicitar</button>
+      <button style="margin-top: 8px; background: transparent; border: none; cursor: pointer; width: 100%; color: var(--text-muted);" onclick="closeModal('payout-modal')">Fechar</button>
+    </div>
+  </div>
+
+  <!-- MODAL LOGIN -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <h3>Entrar na Sua Loja</h3>
+      <div class="form-group" style="margin-top: 12px;">
+        <label>Email</label>
+        <input type="email" id="login-email">
+      </div>
+      <div class="form-group">
+        <label>Palavra-passe</label>
+        <input type="password" id="login-password">
+      </div>
+      <button class="btn-primary" onclick="executeLogin()">Entrar</button>
+      <button style="margin-top: 8px; background: transparent; border: none; cursor: pointer; width: 100%; color: var(--text-muted);" onclick="closeModal('login-modal')">Cancelar</button>
+    </div>
   </div>
 
   <script>
-    // ==========================================
-    // CONFIGURAÇÕES E ESTADO GLOBAL
-    // ==========================================
-    
-    // ATENÇÃO: Substitua pela URL da sua implantação (Web App) do Google Apps Script
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbySIMd97GG0aPl-CEEVJ1apNibJ7ZUJna3unQ93KxXuJcdNQY3fSIpZ-whdUf_gFApP/exec";
-    
-    // Obter parâmetro idProduto da URL (Ex: ?idProduto=PRD-XXXXXX)
-    const urlParams = new URLSearchParams(window.location.search);
-    const idProduto = urlParams.get('idProduto') || "PRD-DEFAULT";
+    let currentSelectedProductId = null;
+    let authToken = localStorage.getItem("moz1_token") || null;
 
-    let pollingInterval = null;
-
-    // ==========================================
-    // EVENTOS E INTERAÇÃO COM O USUÁRIO
-    // ==========================================
-
-    document.getElementById('payment-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const nome = document.getElementById('clienteNome').value.trim();
-      const telefone = document.getElementById('clienteTelefone').value.trim();
-      let metodo = document.getElementById('metodo').value;
-
-      if (!telefone || telefone.length < 9) {
-        exibirMensagem("Insira um número de telefone válido com 9 dígitos.", "error");
-        return;
+    window.onload = function() {
+      loadPublicProducts();
+      if(authToken) {
+        document.getElementById("nav-login").innerText = "Sair";
+        document.getElementById("nav-login").onclick = logout;
       }
+    };
 
-      limparMensagem();
-      toggleBotao(true, "Iniciando Transação...");
+    function showView(viewId) {
+      document.getElementById("view-marketplace").classList.add("hidden");
+      document.getElementById("view-seller-dashboard").classList.add("hidden");
 
-      try {
-        const payload = {
-          action: "CRIAR_VENDA",
-          idProduto: idProduto,
-          clienteNome: nome,
-          clienteTelefone: telefone,
-          metodo: metodo === "AUTO" ? "" : metodo
-        };
+      if(viewId === 'seller-dashboard') {
+        if(!authToken) {
+          openModal('login-modal');
+          return;
+        }
+        loadSellerDashboard();
+      }
+      document.getElementById("view-" + viewId).classList.remove("hidden");
+    }
 
-        const response = await fetch(GAS_WEB_APP_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" }, // Evita bloqueio de CORS no GAS
-          body: JSON.stringify(payload)
-        });
+    function openModal(id) { document.getElementById(id).style.display = "flex"; }
+    function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
-        const res = await response.json();
+    function loadPublicProducts() {
+      google.script.run.withSuccessHandler(res => {
+        if(res.success) {
+          let html = "";
+          res.products.forEach(p => {
+            html += `
+              <div class="card">
+                <div>
+                  <img src="${p.imageUrl || 'https://via.placeholder.com/300'}" alt="${p.title}">
+                  <h3>${p.title}</h3>
+                  <div class="price">${p.priceMzn} MZN</div>
+                </div>
+                <button class="btn-primary" onclick="openCheckout('${p.id}', '${p.title}', ${p.priceMzn})">Comprar Agora</button>
+              </div>
+            `;
+          });
+          document.getElementById("product-grid").innerHTML = html || "<p>Nenhum produto cadastrado.</p>";
+        }
+      }).routeAction("listPublicProducts", {}, null);
+    }
 
-        if (res.success) {
-          mostrarAguardandoStatus(res.idVenda);
+    function openCheckout(id, title, price) {
+      currentSelectedProductId = id;
+      document.getElementById("checkout-title").innerText = title;
+      document.getElementById("checkout-price").innerText = "Preço: " + price + " MZN";
+      openModal("checkout-modal");
+    }
+
+    function executeC2BPayment() {
+      const btn = document.getElementById("btn-pay");
+      btn.disabled = true;
+      btn.innerText = "A Processar...";
+
+      const payload = {
+        productId: currentSelectedProductId,
+        method: document.getElementById("checkout-method").value,
+        phone: document.getElementById("checkout-phone").value
+      };
+
+      google.script.run.withSuccessHandler(res => {
+        btn.disabled = false;
+        btn.innerText = "Comprar Agora";
+        alert(res.message);
+        if(res.success) closeModal("checkout-modal");
+      }).routeAction("initiateC2BPayment", payload, null);
+    }
+
+    function updatePayoutSummary() {
+      const gross = parseInt(document.getElementById("payout-amount").value, 10) || 0;
+      const providerFee = Math.round(gross * 0.08);
+      const marketplaceFee = Math.round(gross * 0.02);
+      const net = gross - providerFee - marketplaceFee;
+
+      document.getElementById("sum-gross").innerText = gross + " MZN";
+      document.getElementById("sum-provider").innerText = "-" + providerFee + " MZN";
+      document.getElementById("sum-marketplace").innerText = "-" + marketplaceFee + " MZN";
+      document.getElementById("sum-net").innerText = (net > 0 ? net : 0) + " MZN";
+    }
+
+    function executePayoutRequest() {
+      const payload = {
+        amountMzn: document.getElementById("payout-amount").value,
+        method: document.getElementById("payout-method").value,
+        phone: document.getElementById("payout-phone").value
+      };
+
+      google.script.run.withSuccessHandler(res => {
+        alert(res.message);
+        if(res.success) {
+          closeModal("payout-modal");
+          loadSellerDashboard();
+        }
+      }).routeAction("requestPayout", payload, authToken);
+    }
+
+    function executeLogin() {
+      const payload = {
+        email: document.getElementById("login-email").value,
+        password: document.getElementById("login-password").value
+      };
+
+      google.script.run.withSuccessHandler(res => {
+        if(res.success) {
+          authToken = res.token;
+          localStorage.setItem("moz1_token", res.token);
+          closeModal("login-modal");
+          document.getElementById("nav-login").innerText = "Sair";
+          showView("seller-dashboard");
         } else {
-          exibirMensagem(res.error || "Erro ao iniciar pagamento.", "error");
-          toggleBotao(false, "Pagar Agora");
+          alert(res.message);
         }
-      } catch (err) {
-        exibirMensagem("Erro de conexão ao servidor: " + err.message, "error");
-        toggleBotao(false, "Pagar Agora");
-      }
-    });
-
-    // ==========================================
-    // POLLING: VERIFICAÇÃO AUTOMÁTICA DE STATUS
-    // ==========================================
-
-    function mostrarAguardandoStatus(idVenda) {
-      document.getElementById('checkout-view').style.display = 'none';
-      document.getElementById('status-view').style.display = 'block';
-
-      // Consulta periódica a cada 4 segundos para verificar autorização no telemóvel
-      pollingInterval = setInterval(() => {
-        verificarStatusVenda(idVenda);
-      }, 4000);
+      }).routeAction("loginStore", payload, null);
     }
 
-    async function verificarStatusVenda(idVenda) {
-      try {
-        const url = `${GAS_WEB_APP_URL}?action=consultarVenda&idVenda=${encodeURIComponent(idVenda)}`;
-        const response = await fetch(url);
-        const data = await response.json();
+    function logout() {
+      localStorage.removeItem("moz1_token");
+      location.reload();
+    }
 
-        if (data.success) {
-          if (data.status === 'PAID') {
-            clearInterval(pollingInterval);
-            finalizarPagamentoSucesso(data);
-          } else if (data.status === 'FAILED' || data.status === 'CANCELLED') {
-            clearInterval(pollingInterval);
-            finalizarPagamentoErro("O pagamento foi cancelado ou falhou no telemóvel.");
-          }
+    function loadSellerDashboard() {
+      google.script.run.withSuccessHandler(res => {
+        if(res.available !== undefined) {
+          document.getElementById("wallet-available").innerText = res.available + " MZN";
+          document.getElementById("wallet-reserved").innerText = res.reserved + " MZN";
         }
-      } catch (err) {
-        console.warn("Erro temporário na consulta do status:", err);
-      }
-    }
-
-    function finalizarPagamentoSucesso(data) {
-      document.getElementById('status-spinner').style.display = 'none';
-      document.getElementById('status-title').innerText = "Pagamento Confirmado!";
-      document.getElementById('status-title').style.color = "var(--primary)";
-      document.getElementById('status-desc').innerText = "Obrigado! A sua transação foi processada com sucesso.";
-
-      const actionsDiv = document.getElementById('success-actions');
-      actionsDiv.style.display = 'block';
-
-      if (data.downloadUrl) {
-        const dlBtn = document.getElementById('download-btn');
-        dlBtn.href = data.downloadUrl;
-      } else {
-        document.getElementById('download-btn').style.display = 'none';
-      }
-
-      if (data.receiptUrl) {
-        const rcBtn = document.getElementById('receipt-btn');
-        rcBtn.href = data.receiptUrl;
-      } else {
-        document.getElementById('receipt-btn').style.display = 'none';
-      }
-    }
-
-    function finalizarPagamentoErro(msg) {
-      document.getElementById('status-spinner').style.display = 'none';
-      document.getElementById('status-title').innerText = "Falha no Pagamento";
-      document.getElementById('status-title').style.color = "var(--error)";
-      document.getElementById('status-desc').innerText = msg;
-    }
-
-    // ==========================================
-    // FUNÇÕES AUXILIARES DE UI
-    // ==========================================
-
-    function toggleBotao(desabilitar, texto) {
-      const btn = document.getElementById('btn-pay');
-      btn.disabled = desabilitar;
-      btn.innerText = texto;
-    }
-
-    function exibirMensagem(texto, tipo) {
-      const box = document.getElementById('msg-box');
-      box.className = `message ${tipo}`;
-      box.innerText = texto;
-    }
-
-    function limparMensagem() {
-      const box = document.getElementById('msg-box');
-      box.className = 'message';
-      box.innerText = '';
+      }).routeAction("getStoreWallet", {}, authToken);
     }
   </script>
 </body>
