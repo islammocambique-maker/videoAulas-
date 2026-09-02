@@ -3,563 +3,368 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOZ1VENDAS - O Seu Marketplace em Moçambique</title>
-  <!-- Tailwind CSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Ícones Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Moz1Vendas - Checkout & Loja</title>
+  <style>
+    :root {
+      --primary: #00875a;
+      --primary-hover: #006644;
+      --bg: #f4f5f7;
+      --card-bg: #ffffff;
+      --text: #172b4d;
+      --border: #dfe1e6;
+      --error: #de350b;
+      --success: #00875a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 450px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h2 {
+      color: var(--primary);
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: #6b778c;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn:disabled {
+      background-color: #a5adba;
+      cursor: not-allowed;
+    }
+
+    .message {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-top: 16px;
+      display: none;
+      text-align: center;
+    }
+
+    .message.error {
+      background-color: #ffebe6;
+      color: var(--error);
+      display: block;
+    }
+
+    .message.success {
+      background-color: #e3fcef;
+      color: var(--success);
+      display: block;
+    }
+
+    .status-box {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .download-link {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 12px 20px;
+      background-color: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .receipt-link {
+      display: block;
+      margin-top: 10px;
+      color: #0052cc;
+      font-size: 13px;
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col justify-between">
+<body>
 
-  <!-- NAVEGAÇÃO / CABEÇALHO -->
-  <header class="bg-emerald-700 text-white shadow-lg sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center space-x-2 cursor-pointer" onclick="navegarPara('produtos')">
-        <i class="fa-solid fa-bag-shopping text-2xl text-yellow-400"></i>
-        <span class="text-xl font-bold tracking-wide">MOZ1<span class="text-yellow-400">VENDAS</span></span>
-      </div>
-      <nav class="flex items-center space-x-4">
-        <button onclick="navegarPara('produtos')" class="hover:text-yellow-300 font-medium transition">
-          <i class="fa-solid fa-store mr-1"></i> Loja
-        </button>
-        <button onclick="navegarPara('marcas')" class="hover:text-yellow-300 font-medium transition">
-          <i class="fa-solid fa-building text-sm mr-1"></i> Marcas
-        </button>
-        <button id="btnAreaVendedor" onclick="abrirAreaVendedor()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-3 py-1.5 rounded-lg font-semibold text-sm transition shadow">
-          <i class="fa-solid fa-user-tie mr-1"></i> Área do Vendedor
-        </button>
-      </nav>
+  <div class="container">
+    <div class="header">
+      <h2>Moz1Vendas</h2>
+      <p id="sub-title">Pagamento Seguro via M-Pesa & eMola</p>
     </div>
-  </header>
 
-  <!-- NOTIFICAÇÕES / TOAST -->
-  <div id="toast" class="hidden fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-2xl text-white font-medium max-w-sm transition-all duration-300"></div>
-
-  <!-- CONTAINER PRINCIPAL DE CONTEÚDO -->
-  <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
-
-    <!-- SECÇÃO 1: CATÁLOGO DE PRODUTOS DA LOJA -->
-    <section id="secProdutos" class="space-y-6">
-      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-        <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <i class="fa-solid fa-fire text-red-500"></i> Produtos em Destaque
-        </h1>
-        <div class="w-full md:w-auto flex gap-2">
-          <input type="text" id="inputPesquisa" onkeyup="filtrarProdutos()" placeholder="Pesquisar produto..." class="w-full md:w-64 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm text-sm">
-        </div>
-      </div>
-      <!-- Grid de Produtos -->
-      <div id="gridProdutos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <!-- Renderizado Dinamicamente -->
-      </div>
-    </section>
-
-    <!-- SECÇÃO 2: MARCAS / VENDEDORES PARCEIROS -->
-    <section id="secMarcas" class="space-y-6 hidden">
-      <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-        <i class="fa-solid fa-certificate text-emerald-600"></i> Marcas Registadas
-      </h1>
-      <div id="gridMarcas" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        <!-- Renderizado Dinamicamente -->
-      </div>
-    </section>
-
-    <!-- SECÇÃO 3: PORTAL DO VENDEDOR (LOGIN / REGISTO / DASHBOARD) -->
-    <section id="secVendedor" class="max-w-4xl mx-auto space-y-6 hidden">
-      <!-- OPÇÕES DE AUTENTICAÇÃO (Se não estiver logado) -->
-      <div id="painelAutenticacao" class="bg-white p-6 md:p-8 rounded-2xl shadow-md border">
-        <div class="flex justify-center border-b mb-6">
-          <button id="tabLogin" onclick="mudarAbaAuth('login')" class="pb-3 px-6 font-bold text-emerald-700 border-b-2 border-emerald-700">Entrar</button>
-          <button id="tabRegisto" onclick="mudarAbaAuth('registo')" class="pb-3 px-6 font-medium text-gray-500">Registar Empresa</button>
+    <!-- TELA 1: FORMULÁRIO DE PAGAMENTO -->
+    <div id="checkout-view">
+      <form id="payment-form">
+        <div class="form-group">
+          <label for="clienteNome">Seu Nome</label>
+          <input type="text" id="clienteNome" placeholder="Ex: João Tembe" required>
         </div>
 
-        <!-- FORMULÁRIO DE LOGIN -->
-        <form id="formLogin" onsubmit="efetuarLogin(event)" class="space-y-4 max-w-md mx-auto">
-          <div>
-            <label class="block text-sm font-semibold mb-1">ID do Vendedor (ex: VND_ABC123)</label>
-            <input type="text" id="loginVendedorld" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-semibold mb-1">PIN de Acesso (6 Dígitos)</label>
-            <input type="password" maxlength="6" id="loginPin" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
-          </div>
-          <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl transition shadow">
-            Entrar no Painel
-          </button>
-        </form>
-
-        <!-- FORMULÁRIO DE REGISTO DE VENDEDOR -->
-        <form id="formRegisto" onsubmit="efetuarRegistoVendedor(event)" class="space-y-4 max-w-md mx-auto hidden">
-          <div>
-            <label class="block text-sm font-semibold mb-1">Nome Completo do Responsável</label>
-            <input type="text" id="regNome" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-semibold mb-1">Nome da Marca / Empresa</label>
-            <input type="text" id="regMarca" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-semibold mb-1">E-mail de Contacto</label>
-            <input type="email" id="regEmail" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-semibold mb-1">PIN de Segurança (6 dígitos)</label>
-            <input type="password" maxlength="6" id="regPin" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-semibold mb-1">URL do Logótipo (Opcional)</label>
-            <input type="url" id="regLogo" placeholder="https://..." class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
-          </div>
-          <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl transition shadow">
-            Criar Conta de Vendedor
-          </button>
-        </form>
-      </div>
-
-      <!-- DASHBOARD DO VENDEDOR (Exibido após Login) -->
-      <div id="painelDashboard" class="space-y-6 hidden">
-        <div class="bg-white p-6 rounded-2xl shadow-md border flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div>
-            <h2 class="text-2xl font-bold text-gray-800" id="dashNomeEmpresa">---</h2>
-            <p class="text-sm text-gray-500">ID Vendedor: <span id="dashVendedorld" class="font-mono text-emerald-700 font-bold">---</span></p>
-          </div>
-          <div class="flex gap-2">
-            <button onclick="abrirModalPublicarProduto()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow transition">
-              <i class="fa-solid fa-plus mr-1"></i> Publicar Produto
-            </button>
-            <button onclick="terminarSessaoVendedor()" class="bg-red-100 text-red-600 hover:bg-red-200 px-3 py-2 rounded-xl text-sm font-semibold transition">
-              <i class="fa-solid fa-right-from-bracket"></i>
-            </button>
-          </div>
+        <div class="form-group">
+          <label for="clienteTelefone">Número de Telemóvel (M-Pesa / eMola)</label>
+          <input type="tel" id="clienteTelefone" placeholder="841234567 ou 861234567" maxlength="9" required>
         </div>
 
-        <!-- MÉTRICAS E GANHOS (REGRA 85/15) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl">
-            <p class="text-xs uppercase font-bold text-emerald-800 tracking-wider">Total de Vendas</p>
-            <p id="dashTotalVendas" class="text-3xl font-extrabold text-emerald-900 mt-2">0</p>
-          </div>
-          <div class="bg-yellow-50 border border-yellow-200 p-5 rounded-2xl">
-            <p class="text-xs uppercase font-bold text-yellow-800 tracking-wider">Ganhos Acumulados (85%)</p>
-            <p id="dashGanhosMzn" class="text-3xl font-extrabold text-yellow-900 mt-2">0,00 MT</p>
-          </div>
-        </div>
-
-        <!-- TABELA DE PRODUTOS DO VENDEDOR -->
-        <div class="bg-white p-6 rounded-2xl shadow-md border overflow-x-auto">
-          <h3 class="text-lg font-bold mb-4">Meus Produtos Cadastrados</h3>
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b text-sm text-gray-500">
-                <th class="pb-3">ID</th>
-                <th class="pb-3">Produto</th>
-                <th class="pb-3">Preço</th>
-                <th class="pb-3">Estado</th>
-                <th class="pb-3 text-right">Ação</th>
-              </tr>
-            </thead>
-            <tbody id="tabelaMeusProdutos" class="divide-y text-sm">
-              <!-- Renderizado via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- MODAIS (COMPRA / AVALIAÇÃO / NOVO PRODUTO) -->
-
-  <!-- MODAL DE COMPRA / PAGAMENTO NETSHOP -->
-  <div id="modalCompra" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
-      <button onclick="fecharModal('modalCompra')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
-      <h3 class="text-xl font-bold text-gray-800 mb-1" id="modalProdNome">---</h3>
-      <p class="text-2xl font-black text-emerald-700 mb-4" id="modalProdPreco">0,00 MT</p>
-      <form onsubmit="processarCompra(event)" class="space-y-4">
-        <input type="hidden" id="compraProdutold">
-        <div>
-          <label class="block text-sm font-semibold mb-1">Método de Pagamento (NetShop)</label>
-          <select id="compraMetodo" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
-            <option value="mpesa">M-Pesa (Mínimo: 10 MT)</option>
-            <option value="emola">e-Mola (Mínimo: 50 MT)</option>
-            <option value="card">Cartão Visa / Mastercard (Mínimo: 50 MT)</option>
+        <div class="form-group">
+          <label for="metodo">Método de Pagamento</label>
+          <select id="metodo">
+            <option value="AUTO">Detectar Automático (Prefixos 84/85 ou 86/87)</option>
+            <option value="MPESA">M-Pesa (Vodacom)</option>
+            <option value="EMOLA">eMola (Movitel)</option>
           </select>
         </div>
-        <div>
-          <label class="block text-sm font-semibold mb-1">Contacto Telemóvel</label>
-          <input type="tel" id="compraContacto" placeholder="841234567 ou +258..." required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
-          <span class="text-xs text-gray-400">O indicativo +258 será adicionado automaticamente.</span>
-        </div>
-        <button type="submit" id="btnConfirmarPagamento" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow transition">
-          Pagar Agora com NetShop
-        </button>
+
+        <button type="submit" id="btn-pay" class="btn">Pagar Agora</button>
       </form>
     </div>
+
+    <!-- TELA 2: AGUARDANDO CONFIRMAÇÃO DO PAGAMENTO -->
+    <div id="status-view" style="display: none;">
+      <div class="status-box">
+        <div class="spinner" id="status-spinner"></div>
+        <h3 id="status-title">Confirmando Pagamento...</h3>
+        <p id="status-desc" style="margin-top: 8px; font-size: 14px; color: #5e6c84;">
+          Por favor, verifique o seu telemóvel e digite o seu PIN para autorizar a transação.
+        </p>
+        <div id="success-actions" style="display: none; margin-top: 16px;">
+          <a id="download-btn" href="#" target="_blank" class="download-link">Baixar Produto</a>
+          <a id="receipt-btn" href="#" target="_blank" class="receipt-link">Ver Recibo de Pagamento</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="msg-box" class="message"></div>
   </div>
 
-  <!-- MODAL PARA ADICIONAR PRODUTO -->
-  <div id="modalNovoProduto" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-      <button onclick="fecharModal('modalNovoProduto')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
-      <h3 class="text-xl font-bold text-gray-800 mb-4">Publicar Novo Produto</h3>
-      <form onsubmit="processarNovoProduto(event)" class="space-y-3 text-sm">
-        <div>
-          <label class="block font-semibold mb-1">Nome do Produto</label>
-          <input type="text" id="pNome" required class="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold mb-1">Preço (MT)</label>
-            <input type="number" step="0.01" id="pPreco" required class="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-          <div>
-            <label class="block font-semibold mb-1">Categoria</label>
-            <input type="text" id="pCategoria" required placeholder="Digital, Moda, etc." class="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">URL da Imagem</label>
-          <input type="url" id="pImagem" required placeholder="https://..." class="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Contacto WhatsApp</label>
-          <input type="text" id="pWhatsapp" required placeholder="84..." class="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Link de Download/Entrega (Se aplicável)</label>
-          <input type="url" id="pLinkDownload" placeholder="https://..." class="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Descrição do Produto</label>
-          <textarea id="pDescricao" rows="3" required class="w-full px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
-        </div>
-        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl shadow transition">
-          Publicar Produto
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- RODAPÉ -->
-  <footer class="bg-gray-900 text-gray-400 text-sm py-6 border-t mt-12">
-    <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
-      <p>&copy; 2026 MOZ1VENDAS. Todos os direitos reservados.</p>
-      <p class="text-xs text-gray-500">Pagamentos processados com segurança via <span class="text-emerald-400 font-bold">NetShop Moçambique</span>.</p>
-    </div>
-  </footer>
-
-  <!-- LÓGICA JAVASCRIPT VANILLA DE INTEGRAÇÃO COM GOOGLE APPS SCRIPT -->
   <script>
-    // CONFIGURAÇÃO DA API (Apps Script Web App Exec URL)
-    const API_URL = "https://script.google.com/macros/s/AKfycbyEBKqXGhyxJMZDkF47uzzIfan5-Uz0D7OOdOEMruOg7gwvCLOldeyBBr-Bo9_Kx_-F/exec";
+    // ==========================================
+    // CONFIGURAÇÕES E ESTADO GLOBAL
+    // ==========================================
+    
+    // ATENÇÃO: Substitua pela URL da sua implantação (Web App) do Google Apps Script
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/SUA_URL_AQUI/exec";
+    
+    // Obter parâmetro idProduto da URL (Ex: ?idProduto=PRD-XXXXXX)
+    const urlParams = new URLSearchParams(window.location.search);
+    const idProduto = urlParams.get('idProduto') || "PRD-DEFAULT";
 
-    // Estado local da aplicação
-    let listaProdutosGlobal = [];
-    let sessaoVendedor = JSON.parse(localStorage.getItem('moz1_vendedor')) || null;
+    let pollingInterval = null;
 
-    // Inicialização da Aplicação
-    document.addEventListener("DOMContentLoaded", () => {
-      carregarProdutos();
-      carregarMarcas();
-      verificarSessaoVendedor();
-    });
+    // ==========================================
+    // EVENTOS E INTERAÇÃO COM O USUÁRIO
+    // ==========================================
 
-    // ROTEAMENTO E NAVEGAÇÃO DE PÁGINAS (SPA)
-    function navegarPara(seccao) {
-      document.getElementById("secProdutos").classList.add("hidden");
-      document.getElementById("secMarcas").classList.add("hidden");
-      document.getElementById("secVendedor").classList.add("hidden");
+    document.getElementById('payment-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
       
-      if (seccao === 'produtos') document.getElementById("secProdutos").classList.remove("hidden");
-      if (seccao === 'marcas') document.getElementById("secMarcas").classList.remove("hidden");
-      if (seccao === 'vendedor') document.getElementById("secVendedor").classList.remove("hidden");
-    }
+      const nome = document.getElementById('clienteNome').value.trim();
+      const telefone = document.getElementById('clienteTelefone').value.trim();
+      let metodo = document.getElementById('metodo').value;
 
-    function abrirAreaVendedor() {
-      navegarPara('vendedor');
-    }
-
-    // REQUISIÇÕES HTTP (GET / POST)
-    async function apiGet(acao, parametros = {}) {
-      try {
-        const query = new URLSearchParams({ action: acao, ...parametros }).toString();
-        const resposta = await fetch(`${API_URL}?${query}`);
-        return await resposta.json();
-      } catch (erro) {
-        exibirToast("Erro ao conectar ao servidor.", "erro");
-        console.error(erro);
-      }
-    }
-
-    async function apiPost(dados) {
-      try {
-        const resposta = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-          body: JSON.stringify(dados)
-        });
-        return await resposta.json();
-      } catch (erro) {
-        exibirToast("Erro na transação com o servidor.", "erro");
-        console.error(erro);
-      }
-    }
-
-    // PRODUTOS
-    async function carregarProdutos() {
-      const res = await apiGet("obterProdutos");
-      if (res && res.sucesso) {
-        listaProdutosGlobal = res.produtos;
-        renderizarProdutos(listaProdutosGlobal);
-      }
-    }
-
-    function renderizarProdutos(produtos) {
-      const container = document.getElementById("gridProdutos");
-      if (!produtos || produtos.length === 0) {
-        container.innerHTML = '<p class="col-span-full text-center text-gray-500 py-8">Nenhum produto encontrado.</p>';
+      if (!telefone || telefone.length < 9) {
+        exibirMensagem("Insira um número de telefone válido com 9 dígitos.", "error");
         return;
       }
-      container.innerHTML = produtos.map(p => `
-        <div class="bg-white rounded-2xl shadow-sm border hover:shadow-md transition overflow-hidden flex flex-col justify-between">
-          <div>
-            <img src="${p.imagemProduto || 'https://via.placeholder.com/300'}" alt="${p.nomeProduto}" class="w-full h-48 object-cover">
-            <div class="p-4 space-y-2">
-              <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">${p.categoria || 'Geral'}</span>
-              <h3 class="font-bold text-gray-800 text-base line-clamp-1">${p.nomeProduto}</h3>
-              <p class="text-xs text-gray-500">${p.marcaVendedor}</p>
-              <p class="text-sm text-gray-600 line-clamp-2">${p.descricao}</p>
-            </div>
-          </div>
-          <div class="p-4 border-t bg-gray-50 flex items-center justify-between">
-            <span class="text-lg font-extrabold text-emerald-700">${parseFloat(p.preco).toFixed(2)} MT</span>
-            <button onclick="abrirModalCompra('${p.produtold}', '${p.nomeProduto}', ${p.preco})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-3 py-2 rounded-xl transition shadow">
-              <i class="fa-solid fa-cart-shopping mr-1"></i> Comprar
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
 
-    function filtrarProdutos() {
-      const termo = document.getElementById("inputPesquisa").value.toLowerCase();
-      const filtrados = listaProdutosGlobal.filter(p =>
-        p.nomeProduto.toLowerCase().includes(termo) ||
-        p.marcaVendedor.toLowerCase().includes(termo)
-      );
-      renderizarProdutos(filtrados);
-    }
+      limparMensagem();
+      toggleBotao(true, "Iniciando Transação...");
 
-    // MARCAS
-    async function carregarMarcas() {
-      const res = await apiGet("obterMarcas");
-      if (res && res.sucesso) {
-        const container = document.getElementById("gridMarcas");
-        container.innerHTML = res.marcas.map(m => `
-          <div class="bg-white p-4 rounded-2xl border shadow-sm text-center space-y-2 flex flex-col items-center justify-center">
-            <img src="${m.linkLogo || 'https://via.placeholder.com/80'}" class="w-16 h-16 rounded-full object-cover border">
-            <h4 class="font-bold text-sm text-gray-800">${m.marcaEmpresa}</h4>
-          </div>
-        `).join('');
-      }
-    }
+      try {
+        const payload = {
+          action: "CRIAR_VENDA",
+          idProduto: idProduto,
+          clienteNome: nome,
+          clienteTelefone: telefone,
+          metodo: metodo === "AUTO" ? "" : metodo
+        };
 
-    // COMPRAS E PAGAMENTO VIA NETSHOP
-    function abrirModalCompra(id, nome, preco) {
-      document.getElementById("compraProdutold").value = id;
-      document.getElementById("modalProdNome").innerText = nome;
-      document.getElementById("modalProdPreco").innerText = `${parseFloat(preco).toFixed(2)} MT`;
-      document.getElementById("modalCompra").classList.remove("hidden");
-    }
+        const response = await fetch(GAS_WEB_APP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" }, // Evita bloqueio de CORS no GAS
+          body: JSON.stringify(payload)
+        });
 
-    async function processarCompra(e) {
-      e.preventDefault();
-      const btn = document.getElementById("btnConfirmarPagamento");
-      btn.disabled = true;
-      btn.innerText = "A processar pagamento...";
+        const res = await response.json();
 
-      const produtold = document.getElementById("compraProdutold").value;
-      const metodo = document.getElementById("compraMetodo").value;
-      const contacto = document.getElementById("compraContacto").value;
-
-      const res = await apiPost({
-        action: "comprar",
-        produtold: produtold,
-        metodo: metodo,
-        contacto: contacto
-      });
-
-      btn.disabled = false;
-      btn.innerText = "Pagar Agora com NetShop";
-
-      if (res && res.sucesso) {
-        fecharModal('modalCompra');
-        exibirToast(res.dados.instrucoes || "Pedido gerado com sucesso!", "sucesso");
-        if (res.dados.checkoutUrl) {
-          window.location.href = res.dados.checkoutUrl;
+        if (res.success) {
+          mostrarAguardandoStatus(res.idVenda);
+        } else {
+          exibirMensagem(res.error || "Erro ao iniciar pagamento.", "error");
+          toggleBotao(false, "Pagar Agora");
         }
+      } catch (err) {
+        exibirMensagem("Erro de conexão ao servidor: " + err.message, "error");
+        toggleBotao(false, "Pagar Agora");
+      }
+    });
+
+    // ==========================================
+    // POLLING: VERIFICAÇÃO AUTOMÁTICA DE STATUS
+    // ==========================================
+
+    function mostrarAguardandoStatus(idVenda) {
+      document.getElementById('checkout-view').style.display = 'none';
+      document.getElementById('status-view').style.display = 'block';
+
+      // Consulta periódica a cada 4 segundos para verificar autorização no telemóvel
+      pollingInterval = setInterval(() => {
+        verificarStatusVenda(idVenda);
+      }, 4000);
+    }
+
+    async function verificarStatusVenda(idVenda) {
+      try {
+        const url = `${GAS_WEB_APP_URL}?action=consultarVenda&idVenda=${encodeURIComponent(idVenda)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.success) {
+          if (data.status === 'PAID') {
+            clearInterval(pollingInterval);
+            finalizarPagamentoSucesso(data);
+          } else if (data.status === 'FAILED' || data.status === 'CANCELLED') {
+            clearInterval(pollingInterval);
+            finalizarPagamentoErro("O pagamento foi cancelado ou falhou no telemóvel.");
+          }
+        }
+      } catch (err) {
+        console.warn("Erro temporário na consulta do status:", err);
+      }
+    }
+
+    function finalizarPagamentoSucesso(data) {
+      document.getElementById('status-spinner').style.display = 'none';
+      document.getElementById('status-title').innerText = "Pagamento Confirmado!";
+      document.getElementById('status-title').style.color = "var(--primary)";
+      document.getElementById('status-desc').innerText = "Obrigado! A sua transação foi processada com sucesso.";
+
+      const actionsDiv = document.getElementById('success-actions');
+      actionsDiv.style.display = 'block';
+
+      if (data.downloadUrl) {
+        const dlBtn = document.getElementById('download-btn');
+        dlBtn.href = data.downloadUrl;
       } else {
-        exibirToast(res.erro || "Falha ao processar pagamento.", "erro");
+        document.getElementById('download-btn').style.display = 'none';
       }
-    }
 
-    // AUTENTICAÇÃO E DASHBOARD DO VENDEDOR
-    function mudarAbaAuth(aba) {
-      if (aba === 'login') {
-        document.getElementById("formLogin").classList.remove("hidden");
-        document.getElementById("formRegisto").classList.add("hidden");
-        document.getElementById("tabLogin").className = "pb-3 px-6 font-bold text-emerald-700 border-b-2 border-emerald-700";
-        document.getElementById("tabRegisto").className = "pb-3 px-6 font-medium text-gray-500";
+      if (data.receiptUrl) {
+        const rcBtn = document.getElementById('receipt-btn');
+        rcBtn.href = data.receiptUrl;
       } else {
-        document.getElementById("formLogin").classList.add("hidden");
-        document.getElementById("formRegisto").classList.remove("hidden");
-        document.getElementById("tabRegisto").className = "pb-3 px-6 font-bold text-emerald-700 border-b-2 border-emerald-700";
-        document.getElementById("tabLogin").className = "pb-3 px-6 font-medium text-gray-500";
+        document.getElementById('receipt-btn').style.display = 'none';
       }
     }
 
-    async function efetuarLogin(e) {
-      e.preventDefault();
-      const id = document.getElementById("loginVendedorld").value;
-      const pin = document.getElementById("loginPin").value;
-
-      const res = await apiPost({ action: "loginVendedor", vendedorld: id, pin: pin });
-      if (res && res.sucesso) {
-        sessaoVendedor = { ...res.dados, vendedorld: id, pin: pin };
-        localStorage.setItem('moz1_vendedor', JSON.stringify(sessaoVendedor));
-        verificarSessaoVendedor();
-        exibirToast("Sessão iniciada com sucesso!", "sucesso");
-      } else {
-        exibirToast(res.erro || "Dados de acesso inválidos.", "erro");
-      }
+    function finalizarPagamentoErro(msg) {
+      document.getElementById('status-spinner').style.display = 'none';
+      document.getElementById('status-title').innerText = "Falha no Pagamento";
+      document.getElementById('status-title').style.color = "var(--error)";
+      document.getElementById('status-desc').innerText = msg;
     }
 
-    async function efetuarRegistoVendedor(e) {
-      e.preventDefault();
-      const res = await apiPost({
-        action: "registrarVendedor",
-        nome: document.getElementById("regNome").value,
-        marcaEmpresa: document.getElementById("regMarca").value,
-        email: document.getElementById("regEmail").value,
-        pin: document.getElementById("regPin").value,
-        linkLogo: document.getElementById("regLogo").value
-      });
+    // ==========================================
+    // FUNÇÕES AUXILIARES DE UI
+    // ==========================================
 
-      if (res && res.sucesso) {
-        exibirToast(`Registo concluído! Guarde o seu ID: ${res.dados.vendedorld}`, "sucesso");
-        mudarAbaAuth('login');
-        document.getElementById("loginVendedorld").value = res.dados.vendedorld;
-      } else {
-        exibirToast(res.erro || "Erro ao registar.", "erro");
-      }
+    function toggleBotao(desabilitar, texto) {
+      const btn = document.getElementById('btn-pay');
+      btn.disabled = desabilitar;
+      btn.innerText = texto;
     }
 
-    function verificarSessaoVendedor() {
-      if (sessaoVendedor) {
-        document.getElementById("painelAutenticacao").classList.add("hidden");
-        document.getElementById("painelDashboard").classList.remove("hidden");
-        carregarDashboard();
-      } else {
-        document.getElementById("painelAutenticacao").classList.remove("hidden");
-        document.getElementById("painelDashboard").classList.add("hidden");
-      }
+    function exibirMensagem(texto, tipo) {
+      const box = document.getElementById('msg-box');
+      box.className = `message ${tipo}`;
+      box.innerText = texto;
     }
 
-    async function carregarDashboard() {
-      if (!sessaoVendedor) return;
-      const res = await apiGet("obterDashboardVendedor", {
-        vendedorld: sessaoVendedor.vendedorld,
-        pin: sessaoVendedor.pin
-      });
-
-      if (res && res.sucesso) {
-        const d = res.dashboard;
-        document.getElementById("dashNomeEmpresa").innerText = sessaoVendedor.marca || sessaoVendedor.marcaEmpresa || "Vendedor";
-        document.getElementById("dashVendedorld").innerText = d.vendedorld;
-        document.getElementById("dashTotalVendas").innerText = d.totalVendas;
-        document.getElementById("dashGanhosMzn").innerText = `${parseFloat(d.totalGanhosMZN).toFixed(2)} MT`;
-
-        const tabela = document.getElementById("tabelaMeusProdutos");
-        tabela.innerHTML = d.produtos.map(p => `
-          <tr>
-            <td class="py-3 font-mono font-bold">${p.produtold}</td>
-            <td class="py-3">${p.nome}</td>
-            <td class="py-3 font-bold">${parseFloat(p.preco).toFixed(2)} MT</td>
-            <td class="py-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${p.status === 'ATIVO' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${p.status}</span></td>
-            <td class="py-3 text-right">
-              ${p.status === 'ATIVO' ? `<button onclick="removerProduto('${p.produtold}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>` : '-'}
-            </td>
-          </tr>
-        `).join('');
-      }
-    }
-
-    function terminarSessaoVendedor() {
-      localStorage.removeItem('moz1_vendedor');
-      sessaoVendedor = null;
-      verificarSessaoVendedor();
-      exibirToast("Sessão terminada.", "sucesso");
-    }
-
-    // GESTÃO DE PRODUTOS PELO VENDEDOR
-    function abrirModalPublicarProduto() {
-      document.getElementById("modalNovoProduto").classList.remove("hidden");
-    }
-
-    async function processarNovoProduto(e) {
-      e.preventDefault();
-      const res = await apiPost({
-        action: "adicionarProduto",
-        vendedorld: sessaoVendedor.vendedorld,
-        pin: sessaoVendedor.pin,
-        marcaVendedor: sessaoVendedor.marca || sessaoVendedor.marcaEmpresa,
-        nomeProduto: document.getElementById("pNome").value,
-        preco: document.getElementById("pPreco").value,
-        categoria: document.getElementById("pCategoria").value,
-        imagemProduto: document.getElementById("pImagem").value,
-        contactoWhatsapp: document.getElementById("pWhatsapp").value,
-        linkDownload: document.getElementById("pLinkDownload").value,
-        descricao: document.getElementById("pDescricao").value
-      });
-
-      if (res && res.sucesso) {
-        fecharModal('modalNovoProduto');
-        exibirToast("Produto publicado com sucesso!", "sucesso");
-        carregarDashboard();
-        carregarProdutos();
-      } else {
-        exibirToast(res.erro || "Erro ao publicar produto.", "erro");
-      }
-    }
-
-    async function removerProduto(produtold) {
-      if (!confirm("Tem certeza que deseja remover este produto?")) return;
-      const res = await apiPost({
-        action: "removerProduto",
-        produtold: produtold,
-        vendedorld: sessaoVendedor.vendedorld
-      });
-
-      if (res && res.sucesso) {
-        exibirToast("Produto removido.", "sucesso");
-        carregarDashboard();
-        carregarProdutos();
-      } else {
-        exibirToast(res.erro || "Não foi possível remover o produto.", "erro");
-      }
-    }
-
-    // UTILITÁRIOS (MODAIS E TOASTS)
-    function fecharModal(idModal) {
-      document.getElementById(idModal).classList.add("hidden");
-    }
-
-    function exibirToast(mensagem, tipo = 'sucesso') {
-      const toast = document.getElementById("toast");
-      toast.innerText = mensagem;
-      toast.className = `fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl shadow-2xl text-white font-medium max-w-sm transition-all duration-300 ${tipo === 'sucesso' ? 'bg-emerald-800' : 'bg-red-600'}`;
-      toast.classList.remove("hidden");
-      setTimeout(() => toast.classList.add("hidden"), 4000);
+    function limparMensagem() {
+      const box = document.getElementById('msg-box');
+      box.className = 'message';
+      box.innerText = '';
     }
   </script>
 </body>
