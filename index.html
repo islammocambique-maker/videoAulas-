@@ -3,309 +3,363 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOZ1VENDAS | Marketplace Moçambique</title>
+  <title>Moz1vendas - Marketplace & Vitrine Digital</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --success: #16a34a;
-      --warning: #d97706;
+      --primary-color: #0d6efd;
+      --bg-light: #f8f9fa;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 60px; }
-
-    header { background: #0f172a; color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
-    header h1 { font-size: 20px; color: #38bdf8; letter-spacing: 0.5px; }
-    header nav button { background: transparent; border: 1px solid #38bdf8; color: #38bdf8; padding: 6px 14px; border-radius: 6px; cursor: pointer; margin-left: 8px; }
-
-    .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-
-    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
-    .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 12px; }
-    .card h3 { font-size: 16px; margin-bottom: 8px; }
-    .card .price { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 12px; }
-
-    button.btn-primary { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; }
-    button.btn-primary:disabled { background: var(--text-muted); }
-
-    .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
-
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; }
-    .modal-content { background: white; width: 100%; max-width: 440px; padding: 24px; border-radius: 12px; }
-
-    .financial-summary { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 13px; }
-    .financial-summary div { display: flex; justify-content: space-between; margin-bottom: 4px; }
-
-    .hidden { display: none !important; }
+    body {
+      background-color: var(--bg-light);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+      color: white;
+      padding: 2.5rem 1rem;
+      border-radius: 0 0 20px 20px;
+    }
+    .product-card {
+      border: none;
+      border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .product-img {
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px 12px 0 0;
+    }
+    .store-logo {
+      width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+    .badge-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #198754;
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>MOZ1VENDAS</h1>
-    <nav>
-      <button onclick="showView('marketplace')">Loja</button>
-      <button id="nav-seller" onclick="showView('seller-dashboard')">Painel do Vendedor</button>
-      <button id="nav-login" onclick="openModal('login-modal')">Entrar</button>
-    </nav>
-  </header>
+  <!-- Navegação Principal -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#"><i class="bi bi-shop me-2"></i>Moz1vendas</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" onclick="carregarVitrineHome()"><i class="bi bi-house me-1"></i> Início</a>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-outline-light ms-lg-2 my-2 my-lg-0" data-bs-toggle="modal" data-bs-target="#modalAuth">
+              <i class="bi bi-person-circle me-1"></i> Minha Conta
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-  <div class="container">
+  <!-- Cabeçalho Hero -->
+  <div class="hero-banner text-center mb-4">
+    <div class="container">
+      <h1 class="fw-bold">Compre e Venda com Segurança</h1>
+      <p class="lead mb-0">Produtos digitais e físicos dos melhores vendedores de Moçambique</p>
+    </div>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <main class="container mb-5">
     
-    <!-- VIEW MARKETPLACE -->
-    <section id="view-marketplace">
-      <h2 style="margin-bottom: 16px;">Produtos Digitais em Destaque</h2>
-      <div id="product-grid" class="grid">
-        <p>A carregar produtos...</p>
-      </div>
-    </section>
+    <!-- Filtro de Categorias -->
+    <div class="d-flex overflow-auto pb-3 mb-4 gap-2" id="categoriasContainer">
+      <button class="btn btn-primary rounded-pill px-3 active" onclick="filtrarCategoria('')">Todas</button>
+      <button class="btn btn-outline-primary rounded-pill px-3" onclick="filtrarCategoria('DIGITAL')">Digitais</button>
+      <button class="btn btn-outline-primary rounded-pill px-3" onclick="filtrarCategoria('FISICO')">Físicos</button>
+      <button class="btn btn-outline-primary rounded-pill px-3" onclick="filtrarCategoria('GERAL')">Geral</button>
+    </div>
 
-    <!-- VIEW DASHBOARD VENDEDOR -->
-    <section id="view-seller-dashboard" class="hidden">
-      <h2 style="margin-bottom: 16px;">Painel da Loja</h2>
-      
-      <div class="grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 24px;">
-        <div class="card">
-          <h3>Saldo Disponível</h3>
-          <div class="price" id="wallet-available">0 MZN</div>
-          <button class="btn-primary" onclick="openModal('payout-modal')">Solicitar Payout</button>
+    <!-- Indicador de Carregamento -->
+    <div id="loading" class="text-center my-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2 text-muted">A carregar produtos...</p>
+    </div>
+
+    <!-- Container das Lojas e Produtos -->
+    <div id="vitrineContainer" class="row g-4"></div>
+  </main>
+
+  <!-- Modal de Compra / Pagamento -->
+  <div class="modal fade" id="modalCheckout" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Finalizar Compra</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
-        <div class="card">
-          <h3>Saldo Em Processamento</h3>
-          <div class="price" style="color: var(--warning);" id="wallet-reserved">0 MZN</div>
-        </div>
-      </div>
-
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h3>Meus Produtos</h3>
-        <button class="btn-primary" style="width: auto;" onclick="openModal('new-product-modal')">+ Novo Produto</button>
-      </div>
-      <div id="seller-products" class="grid"></div>
-    </section>
-
-  </div>
-
-  <!-- MODAL DE CHECKOUT (COMPRA C2B) -->
-  <div id="checkout-modal" class="modal">
-    <div class="modal-content">
-      <h3 id="checkout-title">Finalizar Compra</h3>
-      <p id="checkout-price" style="margin-bottom: 12px; color: var(--text-muted);"></p>
-
-      <div class="form-group">
-        <label>Método de Pagamento</label>
-        <select id="checkout-method">
-          <option value="MPESA">M-Pesa</option>
-          <option value="EMOLA">eMola</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Número de Telemóvel (84/85/86/87)</label>
-        <input type="text" id="checkout-phone" placeholder="841234567">
-      </div>
-
-      <button id="btn-pay" class="btn-primary" onclick="executeC2BPayment()">Comprar Agora</button>
-      <button style="margin-top: 8px; background: transparent; border: none; cursor: pointer; width: 100%; color: var(--text-muted);" onclick="closeModal('checkout-modal')">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- MODAL DE PAYOUT (RETIRADA COM CÁLCULO TRANSPARENTE) -->
-  <div id="payout-modal" class="modal">
-    <div class="modal-content">
-      <h3>Solicitar Payout</h3>
-      
-      <div class="form-group" style="margin-top: 12px;">
-        <label>Valor Bruto Desejado (MZN)</label>
-        <input type="number" id="payout-amount" placeholder="1000" oninput="updatePayoutSummary()">
-      </div>
-
-      <div class="form-group">
-        <label>Método de Recebimento</label>
-        <select id="payout-method">
-          <option value="MPESA">M-Pesa</option>
-          <option value="EMOLA">eMola</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Telemóvel da Conta</label>
-        <input type="text" id="payout-phone" placeholder="841234567">
-      </div>
-
-      <div class="financial-summary">
-        <div><span>Valor Solicitado:</span> <strong id="sum-gross">0 MZN</strong></div>
-        <div><span>Taxa Provedor (8%):</span> <span id="sum-provider" style="color: red;">-0 MZN</span></div>
-        <div><span>Taxa MOZ1VENDAS (2%):</span> <span id="sum-marketplace" style="color: red;">-0 MZN</span></div>
-        <hr style="margin: 6px 0; border: none; border-top: 1px dashed #cbd5e1;">
-        <div><span>Valor Líquido a Receber:</span> <strong id="sum-net" style="color: var(--success);">0 MZN</strong></div>
-      </div>
-
-      <button id="btn-payout" class="btn-primary" style="margin-top: 14px;" onclick="executePayoutRequest()">Confirmar e Solicitar</button>
-      <button style="margin-top: 8px; background: transparent; border: none; cursor: pointer; width: 100%; color: var(--text-muted);" onclick="closeModal('payout-modal')">Fechar</button>
-    </div>
-  </div>
-
-  <!-- MODAL LOGIN -->
-  <div id="login-modal" class="modal">
-    <div class="modal-content">
-      <h3>Entrar na Sua Loja</h3>
-      <div class="form-group" style="margin-top: 12px;">
-        <label>Email</label>
-        <input type="email" id="login-email">
-      </div>
-      <div class="form-group">
-        <label>Palavra-passe</label>
-        <input type="password" id="login-password">
-      </div>
-      <button class="btn-primary" onclick="executeLogin()">Entrar</button>
-      <button style="margin-top: 8px; background: transparent; border: none; cursor: pointer; width: 100%; color: var(--text-muted);" onclick="closeModal('login-modal')">Cancelar</button>
-    </div>
-  </div>
-
-  <script>
-    let currentSelectedProductId = null;
-    let authToken = localStorage.getItem("moz1_token") || null;
-
-    window.onload = function() {
-      loadPublicProducts();
-      if(authToken) {
-        document.getElementById("nav-login").innerText = "Sair";
-        document.getElementById("nav-login").onclick = logout;
-      }
-    };
-
-    function showView(viewId) {
-      document.getElementById("view-marketplace").classList.add("hidden");
-      document.getElementById("view-seller-dashboard").classList.add("hidden");
-
-      if(viewId === 'seller-dashboard') {
-        if(!authToken) {
-          openModal('login-modal');
-          return;
-        }
-        loadSellerDashboard();
-      }
-      document.getElementById("view-" + viewId).classList.remove("hidden");
-    }
-
-    function openModal(id) { document.getElementById(id).style.display = "flex"; }
-    function closeModal(id) { document.getElementById(id).style.display = "none"; }
-
-    function loadPublicProducts() {
-      google.script.run.withSuccessHandler(res => {
-        if(res.success) {
-          let html = "";
-          res.products.forEach(p => {
-            html += `
-              <div class="card">
-                <div>
-                  <img src="${p.imageUrl || 'https://via.placeholder.com/300'}" alt="${p.title}">
-                  <h3>${p.title}</h3>
-                  <div class="price">${p.priceMzn} MZN</div>
-                </div>
-                <button class="btn-primary" onclick="openCheckout('${p.id}', '${p.title}', ${p.priceMzn})">Comprar Agora</button>
+        <div class="modal-body">
+          <div id="checkoutInfo" class="mb-3 p-3 bg-light rounded"></div>
+          <form id="formCheckout" onsubmit="processarCompra(event)">
+            <input type="hidden" id="checkoutProdutoId">
+            <div class="mb-3">
+              <label class="form-label">Seu Número M-Pesa / Carteira Mobile</label>
+              <div class="input-group">
+                <span class="input-group-text">+258</span>
+                <input type="tel" class="form-control" id="checkoutTelefone" placeholder="841234567" requiredPattern="8[2-7]\d{7}">
               </div>
-            `;
-          });
-          document.getElementById("product-grid").innerHTML = html || "<p>Nenhum produto cadastrado.</p>";
-        }
-      }).routeAction("listPublicProducts", {}, null);
-    }
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Método de Pagamento</label>
+              <select class="form-select" id="checkoutMetodo">
+                <option value="mpesa">M-Pesa</option>
+                <option value="emola">e-Mola</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success w-100 py-2 fw-bold" id="btnPagar">
+              Confirmar e Pagar
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    function openCheckout(id, title, price) {
-      currentSelectedProductId = id;
-      document.getElementById("checkout-title").innerText = title;
-      document.getElementById("checkout-price").innerText = "Preço: " + price + " MZN";
-      openModal("checkout-modal");
-    }
+  <!-- Modal Autenticação (Login / Registo) -->
+  <div class="modal fade" id="modalAuth" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Área do Vendedor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-pills nav-justified mb-3" id="authTab" role="tablist">
+            <li class="nav-item">
+              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabLogin">Entrar</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabRegisto">Criar Loja</button>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <!-- Formulário Login -->
+            <div class="tab-pane fade show active" id="tabLogin">
+              <form onsubmit="executarLogin(event)">
+                <div class="mb-3">
+                  <label class="form-label">Telefone</label>
+                  <input type="tel" class="form-control" id="loginTelefone" placeholder="841234567" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">PIN / Senha</label>
+                  <input type="password" class="form-control" id="loginPin" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Entrar na Loja</button>
+              </form>
+            </div>
+            <!-- Formulário Registo -->
+            <div class="tab-pane fade" id="tabRegisto">
+              <form onsubmit="executarRegisto(event)">
+                <div class="mb-3">
+                  <label class="form-label">Nome do Proprietário</label>
+                  <input type="text" class="form-control" id="regNome" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Nome da Loja / Empresa</label>
+                  <input type="text" class="form-control" id="regEmpresa" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Telefone</label>
+                  <input type="tel" class="form-control" id="regTelefone" placeholder="841234567" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">PIN de Segurança (4-6 dígitos)</label>
+                  <input type="password" class="form-control" id="regPin" maxlength="6" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Criar Minha Loja</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    function executeC2BPayment() {
-      const btn = document.getElementById("btn-pay");
-      btn.disabled = true;
-      btn.innerText = "A Processar...";
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // URL da sua implantação (Web App Executável do Apps Script)
+    const API_URL = 'https://script.google.com/macros/s/AKfycbylXMOOSJo3iFnuY5vqMl2XfvDwfUErBIYv9VeKltAUNlzA6YAASVX5WE9wFqyOPkzrDg/exec';
 
-      const payload = {
-        productId: currentSelectedProductId,
-        method: document.getElementById("checkout-method").value,
-        phone: document.getElementById("checkout-phone").value
-      };
+    document.addEventListener("DOMContentLoaded", () => {
+      carregarVitrineHome();
+    });
 
-      google.script.run.withSuccessHandler(res => {
-        btn.disabled = false;
-        btn.innerText = "Comprar Agora";
-        alert(res.message);
-        if(res.success) closeModal("checkout-modal");
-      }).routeAction("initiateC2BPayment", payload, null);
-    }
-
-    function updatePayoutSummary() {
-      const gross = parseInt(document.getElementById("payout-amount").value, 10) || 0;
-      const providerFee = Math.round(gross * 0.08);
-      const marketplaceFee = Math.round(gross * 0.02);
-      const net = gross - providerFee - marketplaceFee;
-
-      document.getElementById("sum-gross").innerText = gross + " MZN";
-      document.getElementById("sum-provider").innerText = "-" + providerFee + " MZN";
-      document.getElementById("sum-marketplace").innerText = "-" + marketplaceFee + " MZN";
-      document.getElementById("sum-net").innerText = (net > 0 ? net : 0) + " MZN";
-    }
-
-    function executePayoutRequest() {
-      const payload = {
-        amountMzn: document.getElementById("payout-amount").value,
-        method: document.getElementById("payout-method").value,
-        phone: document.getElementById("payout-phone").value
-      };
-
-      google.script.run.withSuccessHandler(res => {
-        alert(res.message);
-        if(res.success) {
-          closeModal("payout-modal");
-          loadSellerDashboard();
-        }
-      }).routeAction("requestPayout", payload, authToken);
-    }
-
-    function executeLogin() {
-      const payload = {
-        email: document.getElementById("login-email").value,
-        password: document.getElementById("login-password").value
-      };
-
-      google.script.run.withSuccessHandler(res => {
-        if(res.success) {
-          authToken = res.token;
-          localStorage.setItem("moz1_token", res.token);
-          closeModal("login-modal");
-          document.getElementById("nav-login").innerText = "Sair";
-          showView("seller-dashboard");
+    async function carregarVitrineHome() {
+      exibirLoading(true);
+      try {
+        const res = await fetch(`${API_URL}?action=homeBlocos`);
+        const json = await res.json();
+        
+        if (json.ok && json.data && json.data.blocos) {
+          renderizarBlocos(json.data.blocos);
         } else {
-          alert(res.message);
+          exibirErro('Não foi possível carregar os produtos.');
         }
-      }).routeAction("loginStore", payload, null);
+      } catch (err) {
+        exibirErro('Erro de conexão ao carregar a vitrine.');
+      } finally {
+        exibirLoading(false);
+      }
     }
 
-    function logout() {
-      localStorage.removeItem("moz1_token");
-      location.reload();
+    function renderizarBlocos(blocos) {
+      const container = document.getElementById('vitrineContainer');
+      container.innerHTML = '';
+
+      if (blocos.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted my-5">Nenhum produto disponível no momento.</div>';
+        return;
+      }
+
+      blocos.forEach(bloco => {
+        bloco.produtos.forEach(p => {
+          const col = document.createElement('div');
+          col.className = 'col-6 col-md-4 col-lg-3';
+          col.innerHTML = `
+            <div class="card product-card h-100 shadow-sm">
+              <img src="${p.imagemUrl || 'https://via.placeholder.com/300'}" class="card-img-top product-img" alt="${p.nome}">
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex align-items-center mb-2">
+                  <span class="badge bg-secondary me-auto">${p.tipo}</span>
+                  <small class="text-muted"><i class="bi bi-hand-thumbs-up"></i> ${p.gosta}</small>
+                </div>
+                <h6 class="card-title fw-bold text-truncate">${p.nome}</h6>
+                <p class="badge-price mb-2">${p.preco} MZN</p>
+                <button class="btn btn-primary btn-sm mt-auto w-100" onclick="abrirCheckout('${p.produtoId}', '${p.nome}', ${p.preco})">
+                  Comprar
+                </button>
+              </div>
+            </div>
+          `;
+          container.appendChild(col);
+        });
+      });
     }
 
-    function loadSellerDashboard() {
-      google.script.run.withSuccessHandler(res => {
-        if(res.available !== undefined) {
-          document.getElementById("wallet-available").innerText = res.available + " MZN";
-          document.getElementById("wallet-reserved").innerText = res.reserved + " MZN";
+    function abrirCheckout(id, nome, preco) {
+      document.getElementById('checkoutProdutoId').value = id;
+      document.getElementById('checkoutInfo').innerHTML = `
+        <div class="fw-bold">${nome}</div>
+        <div class="text-success fs-5 fw-bold">${preco} MZN</div>
+      `;
+      const modal = new bootstrap.Modal(document.getElementById('modalCheckout'));
+      modal.show();
+    }
+
+    async function processarCompra(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnPagar');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>A Processar...';
+
+      const payload = {
+        action: 'COMPRAR_PRODUTO',
+        produtoId: document.getElementById('checkoutProdutoId').value,
+        telefone: document.getElementById('checkoutTelefone').value,
+        metodo: document.getElementById('checkoutMetodo').value
+      };
+
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (json.ok) {
+          alert('Pagamento iniciado! Verifique a mensagem do M-Pesa no seu telemóvel para confirmar o PIN.');
+          bootstrap.Modal.getInstance(document.getElementById('modalCheckout')).hide();
+        } else {
+          alert('Erro ao processar: ' + json.message);
         }
-      }).routeAction("getStoreWallet", {}, authToken);
+      } catch (err) {
+        alert('Falha ao comunicar com o servidor.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Confirmar e Pagar';
+      }
+    }
+
+    async function filtrarCategoria(categoria) {
+      exibirLoading(true);
+      try {
+        const url = categoria 
+          ? `${API_URL}?action=produtosPorCategoria&categoria=${encodeURIComponent(categoria)}`
+          : `${API_URL}?action=homeBlocos`;
+          
+        const res = await fetch(url);
+        const json = await res.json();
+
+        if (categoria) {
+          renderizarListaProdutos(json.data ? json.data.produtos : []);
+        } else {
+          renderizarBlocos(json.data ? json.data.blocos : []);
+        }
+      } catch (err) {
+        exibirErro('Erro ao filtrar produtos.');
+      } finally {
+        exibirLoading(false);
+      }
+    }
+
+    function renderizarListaProdutos(produtos) {
+      const container = document.getElementById('vitrineContainer');
+      container.innerHTML = '';
+      
+      if (!produtos || produtos.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted my-5">Nenhum produto encontrado nesta categoria.</div>';
+        return;
+      }
+
+      produtos.forEach(p => {
+        const col = document.createElement('div');
+        col.className = 'col-6 col-md-4 col-lg-3';
+        col.innerHTML = `
+          <div class="card product-card h-100 shadow-sm">
+            <img src="${p.imagemUrl || 'https://via.placeholder.com/300'}" class="card-img-top product-img" alt="${p.nome}">
+            <div class="card-body d-flex flex-column">
+              <h6 class="card-title fw-bold text-truncate">${p.nome}</h6>
+              <p class="badge-price mb-2">${p.preco} MZN</p>
+              <button class="btn btn-primary btn-sm mt-auto w-100" onclick="abrirCheckout('${p.produtoId}', '${p.nome}', ${p.preco})">
+                Comprar
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(col);
+      });
+    }
+
+    function exibirLoading(exibir) {
+      document.getElementById('loading').style.display = exibir ? 'block' : 'none';
+      if (exibir) document.getElementById('vitrineContainer').innerHTML = '';
+    }
+
+    function exibirErro(msg) {
+      document.getElementById('vitrineContainer').innerHTML = `<div class="alert alert-danger text-center w-100">${msg}</div>`;
     }
   </script>
 </body>
