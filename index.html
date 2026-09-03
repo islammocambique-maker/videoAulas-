@@ -165,7 +165,12 @@
     <div class="p-6 border-b flex justify-between"><div><h2 class="text-2xl font-black">Cash out</h2><p class="text-slate-500 text-sm">Solicite o levantamento do saldo disponível.</p></div><button onclick="fechar('payoutModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100"><i class="fa-solid fa-xmark"></i></button></div>
     <form onsubmit="executarPayout(event)" class="p-6 space-y-4">
       <div class="rounded-2xl bg-slate-900 text-white p-5"><div class="text-slate-300 text-sm">Saldo disponível</div><div id="payoutBalance" class="text-3xl font-black mt-1">0 MT</div></div>
-      <div><label class="label">Valor bruto do payout (MT)</label><input id="payoutAmount" oninput="calcularPayout()" type="number" min="0" step="0.01" required class="input"></div>
+      <div><label class="label">Valor bruto do payout (MT)</label><div class="mb-4">
+          <label class="block text-sm font-bold mb-1">Telefone para receber</label>
+          <input id="payoutPhone" type="tel" placeholder="84/85/86/87xxxxxxx" class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-orange-200">
+          <p class="text-xs text-slate-500 mt-1">Use o número M-Pesa/e-Mola que receberá o saque.</p>
+        </div>
+        <input id="payoutAmount" oninput="calcularPayout()" type="number" min="0" step="0.01" required class="input"></div>
       <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-2 text-sm"><div class="flex justify-between"><span>NetShop — 2%</span><b id="feeNet">0 MT</b></div><div class="flex justify-between"><span>Moz1Vendas — 1%</span><b id="feeMoz">0 MT</b></div><div class="flex justify-between border-t pt-2"><span class="font-bold">Total taxas — 3%</span><b id="feeTotal">0 MT</b></div><div class="flex justify-between text-base border-t pt-2"><span class="font-black">Receberá</span><b id="payoutNet" class="text-orange-600">0 MT</b></div></div>
       <div><label class="label">Método</label><select id="payoutMethod" class="input"><option value="MPESA">M-Pesa</option><option value="EMOLA">e-Mola</option></select></div>
       <button class="w-full py-3 rounded-xl bg-orange-500 text-white font-black">Solicitar payout</button>
@@ -278,9 +283,24 @@ async function apiGet(action, params = {}) {
   }
 }
 async function apiPost(payload) {
-  const r = await fetch(GAS_API_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload), cache:"no-store"});
+  // text/plain keeps the request "simple" and avoids an OPTIONS preflight
+  // that Google Apps Script web apps do not handle reliably.
+  const r = await fetch(GAS_API_URL, {
+    method:"POST",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(payload),
+    redirect:"follow",
+    cache:"no-store"
+  });
   if (!r.ok) throw new Error("Erro HTTP " + r.status);
-  return await r.json();
+  const text = await r.text();
+  try { return JSON.parse(text); }
+  catch (_) {
+    const start = text.indexOf("{");
+    const end = text.lastIndexOf("}");
+    if (start >= 0 && end > start) return JSON.parse(text.slice(start, end + 1));
+    throw new Error("Resposta inválida do GAS.");
+  }
 }
 function toast(msg, type="info") {
   const root = document.getElementById("toastRoot");
@@ -319,8 +339,12 @@ async function executarLogin(e) {
   e.preventDefault();
   try {
     const res = await apiPost({action:"LOGIN", telefone:document.getElementById("loginPhone").value.trim(), pin:document.getElementById("loginPin").value});
-    if (res.status !== "SUCCESS") throw new Error(res.mensagem || "Telefone ou PIN inválido.");
-    vendedorAtivo = res.vendedor;
+    if (res.status !== "SUCCESS") throw new Error(res.mensagem || res.message || res.erro || "Telefone ou PIN inválido.");
+    if (!res.vendedor) throw new Error("O GAS não devolveu os dados do vendedor.");
+    vendedorAtivo = {
+      ...res.vendedor,
+      id: res.vendedor.id || res.vendedor.vendedorId
+    };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(vendedorAtivo));
     atualizarAuthUI(); fechar("authModal"); toast("Login efetuado com sucesso.", "success"); mostrarDashboard();
   } catch(err){ toast(err.message || "Não foi possível entrar.", "error"); }
@@ -338,10 +362,19 @@ async function executarRegisto(e) {
       empresa:document.getElementById("regCompany").value.trim(),
       pin,
       email:document.getElementById("regEmail").value.trim(),
-      logo:document.getElementById("regLogo").value.trim()
+      logo:document.getElementById("regLogo").value.trim(),
+      dataNasc: document.getElementById("regBirth")?.value || ""
     });
-    if (res.status !== "SUCCESS") throw new Error(res.mensagem || "Falha ao criar loja.");
-    vendedorAtivo = {id:res.vendedorId, nome:document.getElementById("regName").value.trim(), empresa:res.empresa, logo:res.logo || ""};
+    if (res.status !== "SUCCESS") throw new Error(res.mensagem || res.message || res.erro || "Falha ao criar loja.");
+    if (!res.vendedorId) throw new Error("A loja foi criada, mas o GAS não devolveu o ID do vendedor.");
+    vendedorAtivo = {
+      id:res.vendedorId,
+      vendedorId:res.vendedorId,
+      nome:document.getElementById("regName").value.trim(),
+      empresa:res.empresa || document.getElementById("regCompany").value.trim(),
+      logo:res.logo || "",
+      telefone:document.getElementById("regPhone").value.trim()
+    };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(vendedorAtivo));
     atualizarAuthUI(); fechar("authModal"); toast("Loja criada. Agora publique o primeiro produto.", "success"); mostrarDashboard();
   } catch(err){ toast(err.message || "Não foi possível criar a loja.", "error"); }
@@ -371,7 +404,7 @@ async function executarCadastroProduto(e) {
       linkDigital:document.getElementById("prodDownload").value.trim(),
       categoria:document.getElementById("prodCategory").value
     });
-    if (res.status !== "SUCCESS") throw new Error(res.mensagem || "Falha ao criar produto.");
+    if (res.status !== "SUCCESS") throw new Error(res.mensagem || res.message || res.erro || "Falha ao criar produto.");
     fechar("productModal"); toast("Produto publicado com sucesso.", "success");
     await carregarDadosPublicos();
     if (!document.getElementById("dashboard").classList.contains("hidden")) await carregarDashboard();
@@ -520,21 +553,31 @@ async function comprarProduto(p) {
   const telefone = prompt("Digite o seu telefone para iniciar a compra:");
   if (!telefone) return;
   try {
-    const res = await apiPost({action:"COMPRAR_PRODUTO", produtoId:p.productId, telefone:telefone.trim()});
-    if (res.status !== "SUCCESS") throw new Error(res.mensagem || "Não foi possível iniciar a compra.");
-    const ref = res.vendaId || res.transacaoId || res.transactionId || "";
-    let msg = "Compra iniciada.";
+    const res = await apiPost({
+      action:"COMPRAR_PRODUTO",
+      produtoId:p.productId,
+      telefone:telefone.trim(),
+      metodo:"mpesa"
+    });
+    if (!res || res.ok !== true) throw new Error(res.mensagem || res.message || res.erro || "Não foi possível iniciar a compra.");
+    const ref = res.referencia || res.vendaId || res.transactionId || "";
+    let msg = res.mensagem || "Pagamento iniciado.";
     if (ref) msg += " Referência: " + ref + ".";
     toast(msg, "success");
     if (res.checkoutUrl) {
-      const ok = confirm("O pagamento foi preparado. Abrir a página de pagamento agora?");
-      if (ok) window.open(res.checkoutUrl, "_blank", "noopener,noreferrer");
+      window.open(res.checkoutUrl, "_blank", "noopener,noreferrer");
+    } else {
+      // The backend can create a pending charge without a checkout URL.
+      // Tell the buyer exactly what to use when contacting support/payment flow.
+      alert("Pagamento iniciado.\n\nReferência: " + (res.referencia || "—") +
+            "\nEstado: " + (res.status || "PENDENTE") +
+            "\n\nO pagamento será confirmado pelo NetShop.");
     }
   } catch(err){ toast(err.message || "Erro ao iniciar compra.", "error"); }
 }
 async function avaliarProduto(produtoId, avaliacao) {
   try {
-    const res = await apiPost({action:"AVALIAR_PRODUTO", produtoId, avaliacao});
+    const res = await apiPost({action:"AVALIAR_PRODUTO", produtoId, tipo:avaliacao});
     if (res.status && res.status !== "SUCCESS") throw new Error(res.mensagem || "Não foi possível avaliar.");
     toast("Avaliação registada.", "success");
   } catch(err){ toast(err.message || "Não foi possível avaliar.", "error"); }
@@ -553,8 +596,8 @@ async function carregarDashboard() {
     ultimoResumo = r;
     const f = r.financeiro || {};
     document.getElementById("kpiSaldo").textContent = dinheiro(f.saldoDisponivel);
-    document.getElementById("kpiVendas").textContent = r.vendasPagas ?? 0;
-    document.getElementById("kpiBrutas").textContent = dinheiro(r.vendasBrutas);
+    document.getElementById("kpiVendas").textContent = f.vendasPagas ?? 0;
+    document.getElementById("kpiBrutas").textContent = dinheiro(f.vendasBrutas);
     document.getElementById("kpiPendentes").textContent = dinheiro(f.payoutsPendentes);
     renderTabela("salesTable", r.vendas || [], ["vendaId","valorLiquido","status","metodo"]);
     renderTabela("payoutTable", r.payouts || [], ["payoutId","valorLiquido","status","metodo"]);
@@ -573,6 +616,8 @@ function abrirPayout() {
   const saldo = Number(ultimoResumo.financeiro?.saldoDisponivel || 0);
   document.getElementById("payoutBalance").textContent = dinheiro(saldo);
   document.getElementById("payoutAmount").value = "";
+  const payoutPhone = document.getElementById("payoutPhone");
+  if (payoutPhone) payoutPhone.value = vendedorAtivo.telefone || "";
   calcularPayout(); abrir("payoutModal");
 }
 function calcularPayout() {
@@ -590,9 +635,21 @@ async function executarPayout(e) {
   if (!valor || valor <= 0) { toast("Informe um valor válido.", "error"); return; }
   if (valor > saldo) { toast("O valor solicitado excede o saldo disponível.", "error"); return; }
   try {
-    const res = await apiPost({action:"SOLICITAR_PAYOUT", vendedorId:vendedorAtivo.id, valor, metodo:document.getElementById("payoutMethod").value});
-    if (res.status !== "SUCCESS") throw new Error(res.mensagem || "Payout não autorizado.");
-    fechar("payoutModal"); toast("Payout solicitado. Líquido estimado: " + dinheiro(res.valorLiquidoContabilizado || valor*0.97), "success"); await carregarDashboard();
+    const telefone = document.getElementById("payoutPhone")?.value?.trim() || "";
+    if (!telefone) { toast("Informe o telefone M-Pesa/e-Mola para receber o payout.", "error"); return; }
+
+    const res = await apiPost({
+      action:"SOLICITAR_PAYOUT",
+      vendedorId:vendedorAtivo.id,
+      valor,
+      telefone,
+      msisdn:telefone,
+      metodo:document.getElementById("payoutMethod").value
+    });
+    if (!res || res.ok !== true) throw new Error(res.mensagem || res.message || res.erro || "Payout não autorizado.");
+    fechar("payoutModal");
+    toast("Payout solicitado. Líquido: " + dinheiro(res.valorLiquidoContabilizado || valor*0.97), "success");
+    await carregarDashboard();
   } catch(err){ toast(err.message || "Não foi possível solicitar o payout.", "error"); }
 }
 function abrirTermos(){ abrir("termsModal"); }
