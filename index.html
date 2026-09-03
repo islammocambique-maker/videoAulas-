@@ -64,14 +64,6 @@
         </div>
       </div>
 
-      <!-- Anúncios em Destaque -->
-      <div>
-        <h2 class="text-xl font-bold mb-4 flex items-center"><i class="fa-solid fa-bullhorn text-blue-600 mr-2"></i>Anúncios em Destaque</h2>
-        <div id="containerAnuncios" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="col-span-3 text-center py-6 text-gray-400">A carregar anúncios...</div>
-        </div>
-      </div>
-
       <!-- Vitrine de Lojas e Produtos -->
       <div>
         <h2 class="text-xl font-bold mb-6">Explorar Vitrines</h2>
@@ -81,7 +73,7 @@
       </div>
     </section>
 
-    <!-- ECRÃ 2: PAINEL DO VENDEDOR (DASHBOARD & PAYOUT) -->
+    <!-- ECRÃ 2: PAINEL DO VENDEDOR -->
     <section id="secDashboard" class="hidden space-y-8">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-6">
         <div>
@@ -119,9 +111,8 @@
         </div>
       </div>
 
-      <!-- Tabelas de Histórico -->
+      <!-- Tabelas -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Vendas -->
         <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <h3 class="font-bold text-gray-900 mb-4">Últimas Vendas</h3>
           <div class="overflow-x-auto">
@@ -134,7 +125,6 @@
           </div>
         </div>
 
-        <!-- Saques -->
         <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <h3 class="font-bold text-gray-900 mb-4">Histórico de Saques</h3>
           <div class="overflow-x-auto">
@@ -150,7 +140,7 @@
     </section>
   </main>
 
-  <!-- MODAL AUTH (LOGIN / REGISTO) -->
+  <!-- MODAL AUTH -->
   <div id="modalAuth" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6">
       <div class="flex border-b">
@@ -158,7 +148,6 @@
         <button id="tabRegisto" onclick="mudarTabAuth('registo')" class="w-1/2 py-3 text-center font-semibold text-gray-400">Criar Loja</button>
       </div>
 
-      <!-- Form Login -->
       <form id="formLogin" onsubmit="executarLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Telefone</label>
@@ -171,7 +160,6 @@
         <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition">Entrar no Painel</button>
       </form>
 
-      <!-- Form Registo -->
       <form id="formRegisto" onsubmit="executarRegisto(event)" class="hidden space-y-4">
         <div>
           <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Nome Completo</label>
@@ -198,7 +186,7 @@
     </div>
   </div>
 
-  <!-- MODAL PAYOUT (SOLICITAR SAQUE) -->
+  <!-- MODAL PAYOUT -->
   <div id="modalPayout" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6">
       <h3 class="text-xl font-bold">Solicitar Saque</h3>
@@ -210,10 +198,6 @@
         <div>
           <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Número M-Pesa / e-Mola</label>
           <input type="text" id="payoutTelefone" placeholder="841234567" required class="w-full border rounded-xl p-3 text-sm outline-none">
-        </div>
-        <div class="bg-gray-50 p-4 rounded-xl text-xs space-y-1 text-gray-500">
-          <div class="flex justify-between"><span>Taxa NetShop (2%):</span><span id="taxaNetshopDesc">0.00 MT</span></div>
-          <div class="flex justify-between"><span>Taxa Moz1Vendas (1%):</span><span id="taxaMoz1Desc">0.00 MT</span></div>
         </div>
         <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition">Confirmar Saque</button>
       </form>
@@ -357,7 +341,7 @@
       }
     }
 
-    /* HOME & VITRINE */
+    /* HOME & VITRINE COM SUPORTE A IMAGENS */
     async function carregarHome() {
       const res = await apiGet('homeBlocos');
       const container = document.getElementById('containerHomeBlocos');
@@ -366,18 +350,29 @@
         container.innerHTML = res.blocos.map(b => `
           <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">${b.empresa[0]}</div>
+              <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">${b.empresa ? b.empresa[0] : 'L'}</div>
               <h3 class="font-bold text-lg">${b.empresa}</h3>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              ${b.slideshowProdutos.map(p => `
-                <div class="border rounded-xl p-3 space-y-2">
-                  <div class="h-28 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400"><i class="fa-solid fa-box text-2xl"></i></div>
-                  <h4 class="font-bold text-sm truncate">${p.nome}</h4>
-                  <p class="text-blue-600 font-extrabold text-sm">${p.preco} MT</p>
-                  <button onclick="comprarProduto('${p.produtoId}')" class="w-full bg-blue-600 text-white text-xs py-2 rounded-lg font-bold">Comprar</button>
-                </div>
-              `).join('')}
+              ${b.slideshowProdutos.map(p => {
+                // Tratamento da imagem
+                const imgTag = p.imagem && p.imagem.trim() !== '' 
+                  ? `<img src="${p.imagem}" alt="${p.nome}" class="w-full h-full object-cover rounded-lg" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-gray-400\\'><i class=\\'fa-solid fa-box text-2xl\\'></i></div>';">`
+                  : `<div class="flex items-center justify-center h-full text-gray-400"><i class="fa-solid fa-box text-2xl"></i></div>`;
+
+                return `
+                  <div class="border rounded-xl p-3 space-y-2 flex flex-col justify-between">
+                    <div class="h-32 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+                      ${imgTag}
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-sm truncate mt-1" title="${p.nome}">${p.nome}</h4>
+                      <p class="text-blue-600 font-extrabold text-sm">${p.preco} MT</p>
+                    </div>
+                    <button onclick="comprarProduto('${p.produtoId}')" class="w-full bg-blue-600 text-white text-xs py-2 rounded-lg font-bold hover:bg-blue-700 transition">Comprar</button>
+                  </div>
+                `;
+              }).join('')}
             </div>
           </div>
         `).join('');
@@ -399,13 +394,11 @@
         document.getElementById('dashVendasQtd').innerText = res.financeiro.vendasPagas;
         document.getElementById('dashPayoutsPendentes').innerText = res.financeiro.payoutsPendentes.toFixed(2);
 
-        // Render Vendas
         const tbV = document.getElementById('tbVendas');
         tbV.innerHTML = res.vendas.length ? res.vendas.map(v => `
           <tr class="border-b"><td class="py-2">${v.vendaId}</td><td>${v.valorLiquido.toFixed(2)} MT</td><td><span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs">${v.status}</span></td></tr>
         `).join('') : '<tr><td colspan="3" class="text-center py-4">Sem vendas.</td></tr>';
 
-        // Render Payouts
         const tbP = document.getElementById('tbPayouts');
         tbP.innerHTML = res.payouts.length ? res.payouts.map(p => `
           <tr class="border-b"><td class="py-2">${p.payoutId}</td><td>${p.valorLiquido.toFixed(2)} MT</td><td><span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-xs">${p.status}</span></td></tr>
