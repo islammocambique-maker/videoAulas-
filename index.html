@@ -230,7 +230,7 @@ const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyzTcRZo8vJO50vQcMu
 </div>
 <div>
 <label class="block text-xs font-bold uppercase text-gray-500 mb-1">WhatsApp para Contacto</label>
-<input type="text" id="prodWhatsapp" placeholder="258841234567" required class="w-full border rounded-xl p-3 text-sm outline-none">
+<input type="text" id="prodWhatsapp" placeholder="258841234567" class="w-full border rounded-xl p-3 text-sm outline-none">
 </div>
 <div>
 <label class="block text-xs font-bold uppercase text-gray-500 mb-1">URL Direto da Imagem</label>
@@ -377,7 +377,7 @@ async function executarRegisto(e) {
   });
 
   if (res.status === 'SUCCESS') {
-    vendedorAtivo = { id: res.vendedorId, empresa: res.empresa };
+    vendedorAtivo = { id: res.vendedorId || res.vendedorld, empresa: res.empresa };
     localStorage.setItem('vendedor_moz1', JSON.stringify(vendedorAtivo));
     renderizarAreaAuth();
     fecharModalAuth();
@@ -411,7 +411,7 @@ function renderizarAreaAuth() {
   }
 }
 
-/* CARREGAR HOME E BLOCOS DE VENDEDORES */
+/* CARREGAR HOME E BLOCOS DE VENDEDORES (Restaurada compatibilidade estrita) */
 async function carregarHome() {
   const container = document.getElementById('containerHomeBlocos');
   const res = await apiGet('homeBlocos');
@@ -424,7 +424,7 @@ async function carregarHome() {
         ? `<img src="${logoDirect}" alt="${b.empresa}" referrerpolicy="no-referrer" class="w-10 h-10 rounded-full object-cover border" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold\\'>${b.empresa ? b.empresa[0] : 'L'}</div>';">`
         : `<div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">${b.empresa ? b.empresa[0] : 'L'}</div>`;
 
-      const produtos = b.slideshowProdutos || [];
+      const produtos = b.slideshowProdutos || b.produtos || [];
 
       return `
         <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
@@ -437,13 +437,16 @@ async function carregarHome() {
           </div>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             ${produtos.map(p => {
-              const imgDirect = formatarUrlImagem(p.imagemUrl);
+              // Suporta todas as variações de propriedades enviadas do GAS
+              const pId = p.produtoId || p.produtold || p.id || '';
+              const urlImg = p.imagemUrl || p.imagem || '';
+              const imgDirect = formatarUrlImagem(urlImg);
               const imgTag = imgDirect !== ''
                 ? `<img src="${imgDirect}" alt="${p.nome}" referrerpolicy="no-referrer" class="w-full h-full object-cover rounded-lg" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-gray-400\\'><i class=\\'fa-solid fa-box text-2xl\\'></i></div>';">`
                 : `<div class="flex items-center justify-center h-full text-gray-400"><i class="fa-solid fa-box text-2xl"></i></div>`;
 
-              // Trata o número do WhatsApp recebido do GAS
-              let numWa = String(p.whatsapp || '258840000000').replace(/\D/g, '');
+              // WhatsApp fallback para o número do produto ou geral
+              let numWa = String(p.whatsapp || p.telefone || '258840000000').replace(/\D/g, '');
               if (!numWa.startsWith('258') && numWa.length === 9) numWa = '258' + numWa;
               const linkWa = `https://wa.me/${numWa}?text=${encodeURIComponent('Olá! Gostaria de mais informações sobre o produto: ' + p.nome)}`;
 
@@ -457,7 +460,7 @@ async function carregarHome() {
                     <p class="text-blue-600 font-extrabold text-sm">${p.preco} MT</p>
                   </div>
                   <div class="grid grid-cols-2 gap-2 pt-1">
-                    <button onclick="comprarProduto('${p.produtoId}')" class="bg-blue-600 text-white text-xs py-2 rounded-lg font-bold hover:bg-blue-700 transition flex items-center justify-center">
+                    <button onclick="comprarProduto('${pId}')" class="bg-blue-600 text-white text-xs py-2 rounded-lg font-bold hover:bg-blue-700 transition flex items-center justify-center">
                       Comprar
                     </button>
                     <a href="${linkWa}" target="_blank" class="bg-emerald-500 text-white text-xs py-2 rounded-lg font-bold hover:bg-emerald-600 transition flex items-center justify-center space-x-1">
@@ -498,6 +501,7 @@ async function executarCadastroProduto(e) {
   const res = await apiPost({
     action: 'CRIAR_PRODUTO',
     vendedorId: vId,
+    vendedorld: vId,
     nome: nome,
     preco: preco,
     whatsapp: whatsapp,
@@ -530,7 +534,7 @@ async function carregarDashboard() {
   document.getElementById('dashNomeEmpresa').innerText = vendedorAtivo.empresa || 'Minha Loja';
   document.getElementById('dashVendedorId').innerText = `ID: ${vId}`;
 
-  const res = await apiGet('resumoVendedor', `&vendedorId=${vId}`);
+  const res = await apiGet('resumoVendedor', `&vendedorId=${vId}&vendedorld=${vId}`);
   if (res.ok && res.financeiro) {
     document.getElementById('dashSaldo').innerText = res.financeiro.saldoDisponivel.toFixed(2);
     document.getElementById('dashVendasBrutas').innerText = res.financeiro.vendasBrutas.toFixed(2);
@@ -540,7 +544,7 @@ async function carregarDashboard() {
     const tbV = document.getElementById('tbVendas');
     tbV.innerHTML = res.vendas && res.vendas.length ? res.vendas.map(v => `
       <tr class="border-b">
-        <td class="py-2">${v.vendaId}</td>
+        <td class="py-2">${v.vendaId || v.vendald}</td>
         <td>${v.valorLiquido.toFixed(2)} MT</td>
         <td><span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs">${v.status}</span></td>
       </tr>
@@ -569,6 +573,7 @@ async function executarPayout(e) {
   const res = await apiPost({
     action: 'SOLICITAR_PAYOUT',
     vendedorId: vId,
+    vendedorld: vId,
     valor: valor,
     telefone: telefone
   });
@@ -589,6 +594,7 @@ async function comprarProduto(produtoId) {
   const res = await apiPost({
     action: 'COMPRAR_PRODUTO',
     produtoId: produtoId,
+    produtold: produtoId,
     telefone: tel
   });
 
