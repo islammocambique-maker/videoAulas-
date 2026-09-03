@@ -254,8 +254,10 @@ function normalizarProdutos(lista) {
   return lista.map(p => ({
     ...p,
     productId: p.productId || p.produtoId || p.produtold || p.produtoID,
-    vendedorId: p.vendedorId || p.vendedorld || p.vendedorID,
-    imagemUrl: p.imagemUrl || p.imagem || p.imageUrl || "",
+    vendedorId: p.vendedorId || p.vendedorld || p.vendedorID || p.sellerId || p.vendedor?.id,
+    empresa: p.empresa || p.empresaMarca || p.loja || p.sellerName || p.vendedor?.empresa || "",
+    logo: p.logo || p.logoUrl || p.vendedor?.logo || "",
+    imagemUrl: p.imagemUrl || p.imagem || p.imageUrl || p.foto || "",
     preco: Number(p.preco || 0)
   })).filter(p => p.productId && p.nome);
 }
@@ -263,7 +265,17 @@ async function apiGet(action, params = {}) {
   const q = new URLSearchParams({action, _ts: String(Date.now()), ...params});
   const r = await fetch(GAS_API_URL + "?" + q.toString(), {cache:"no-store"});
   if (!r.ok) throw new Error("Erro HTTP " + r.status);
-  return await r.json();
+  const text = await r.text();
+  try { return JSON.parse(text); }
+  catch (_) {
+    const start = text.indexOf("{");
+    const end = text.lastIndexOf("}");
+    if (start >= 0 && end > start) return JSON.parse(text.slice(start, end + 1));
+    const a = text.indexOf("[");
+    const z = text.lastIndexOf("]");
+    if (a >= 0 && z > a) return JSON.parse(text.slice(a, z + 1));
+    throw new Error("Resposta inválida do GAS.");
+  }
 }
 async function apiPost(payload) {
   const r = await fetch(GAS_API_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload), cache:"no-store"});
@@ -365,19 +377,69 @@ async function executarCadastroProduto(e) {
     if (!document.getElementById("dashboard").classList.contains("hidden")) await carregarDashboard();
   } catch(err){ toast(err.message || "Não foi possível publicar o produto.", "error"); }
 }
+function extrairArrayGAS(value, keys = []) {
+  if (Array.isArray(value)) return value;
+  if (!value || typeof value !== "object") return [];
+  for (const key of keys) {
+    if (Array.isArray(value[key])) return value[key];
+  }
+  for (const key of ["data","resultado","result","produtos","blocos","items","rows"]) {
+    if (Array.isArray(value[key])) return value[key];
+  }
+  return [];
+}
+function produtosDosBlocos(lista) {
+  const out = [];
+  (Array.isArray(lista) ? lista : []).forEach(b => {
+    if (b && b.produtoDestaque) out.push(b.produtoDestaque);
+    if (b && Array.isArray(b.slideshowProdutos)) out.push(...b.slideshowProdutos);
+    if (b && Array.isArray(b.produtos)) out.push(...b.produtos);
+  });
+  return out;
+}
 async function carregarDadosPublicos() {
   try {
-    const [b, d] = await Promise.allSettled([apiGet("homeBlocos"), apiGet("produtosDestaque")]);
-    blocos = b.status === "fulfilled" && Array.isArray(b.value) ? b.value : [];
-    produtos = d.status === "fulfilled" ? normalizarProdutos(d.value) : [];
-    if (!produtos.length) {
-      const fallback = blocos.flatMap(x => Array.isArray(x.slideshowProdutos) ? x.slideshowProdutos : (x.produtoDestaque ? [x.produtoDestaque] : []));
-      produtos = normalizarProdutos(fallback);
-    }
-    renderProdutos(); renderLojas(); renderHero(); preencherCategorias();
+    const [b, d] = await Promise.allSettled([
+      apiGet("homeBlocos"),
+      apiGet("produtosDestaque")
+    ]);
+
+    const bRaw = b.status === "fulfilled" ? b.value : null;
+    const dRaw = d.status === "fulfilled" ? d.value : null;
+
+    blocos = extrairArrayGAS(bRaw, ["blocos","homeBlocos"]);
+    const direct = extrairArrayGAS(dRaw, ["produtos","produtosDestaque","destaques"]);
+    const fromBlocks = produtosDosBlocos(blocos);
+
+    // Merge both endpoints. This also makes the frontend resilient when
+    // Apps Script returns an object envelope instead of a bare array.
+    produtos = normalizarProdutos([...direct, ...fromBlocks]);
+
+    const seen = new Set();
+    produtos = produtos.filter(p => {
+      const id = String(p.productId);
+      if (seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
+
+    renderProdutos();
+    renderLojas();
+    renderHero();
+    preencherCategorias();
+
     document.getElementById("statProducts").textContent = produtos.length;
-    document.getElementById("statStores").textContent = new Set(produtos.map(p => p.vendedorId).filter(Boolean)).size;
-  } catch(err) { toast("Não foi possível carregar a vitrine.", "error"); }
+    document.getElementById("statStores").textContent =
+      new Set(produtos.map(p => p.vendedorId).filter(Boolean)).size;
+
+    if (!produtos.length) {
+      console.warn("Moz1Vendas: endpoints públicos não devolveram produtos.", {homeBlocos:bRaw, produtosDestaque:dRaw});
+      toast("A vitrine carregou, mas o GAS não devolveu produtos ativos.", "error");
+    }
+  } catch(err) {
+    console.error(err);
+    toast("Não foi possível carregar a vitrine.", "error");
+  }
 }
 function preencherCategorias() {
   const sel = document.getElementById("categoryFilter"), current = sel.value;
