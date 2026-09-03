@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -70,7 +71,7 @@ const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyzTcRZo8vJO50vQcMu
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-6">
 <div>
 <h1 class="text-2xl font-bold" id="dashNomeEmpresa">Minha Loja</h1>
-<p class="text-gray-500 text-sm" id="dashVendedorId">ID: VND-000000</p>
+<p class="text-gray-500 text-sm" id="dashVendedorld">ID: VND-000000</p>
 </div>
 <div class="flex space-x-3">
 <button onclick="abrirModalProduto()" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition">
@@ -130,44 +131,39 @@ const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyzTcRZo8vJO50vQcMu
   <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
     <div>
       <p class="font-bold text-gray-700">Moz1Vendas Marketplace &copy; 2026</p>
-      <p>Plataforma em conformidade com as diretrizes de Comércio Eletrónico em Moçambique.</p>
+      <p>Em conformidade com a legislação de Comércio Eletrónico de Moçambique.</p>
     </div>
     <div class="flex space-x-6">
       <button onclick="abrirModalTermos()" class="hover:underline">Termos e Condições</button>
-      <button onclick="abrirModalTermos()" class="hover:underline">Regras de Venda</button>
-      <button onclick="abrirModalTermos()" class="hover:underline">Política de Reembolso</button>
+      <button onclick="abrirModalTermos()" class="hover:underline">Regras de Uso</button>
     </div>
   </div>
 </footer>
 
-<!-- MODAL TERMOS E CONDIÇÕES -->
+<!-- MODAL TERMOS DE USO -->
 <div id="modalTermos" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
   <div class="bg-white rounded-3xl max-w-2xl w-full p-6 max-h-[85vh] flex flex-col justify-between space-y-4">
     <div class="border-b pb-3 flex justify-between items-center">
-      <h3 class="text-lg font-bold text-gray-900"><i class="fa-solid fa-scale-balanced mr-2 text-blue-600"></i>Termos, Condições e Regras da Plataforma</h3>
+      <h3 class="text-lg font-bold text-gray-900"><i class="fa-solid fa-scale-balanced mr-2 text-blue-600"></i>Termos e Regras da Plataforma</h3>
       <button onclick="fecharModalTermos()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
     </div>
 
     <div class="overflow-y-auto space-y-4 text-xs text-gray-600 pr-2 leading-relaxed">
-      <h4 class="font-bold text-gray-800 text-sm">1. Âmbito do Marketplace</h4>
-      <p>A Moz1Vendas é uma plataforma facilitadora de negócios que conecta vendedores e compradores em Moçambique, oferecendo integração para recebimentos via M-Pesa e e-Mola.</p>
+      <h4 class="font-bold text-gray-800 text-sm">1. Introdução e Base Legal</h4>
+      <p>A plataforma Moz1Vendas atua como intermediadora de comércio eletrónico em Moçambique, observando as diretrizes legais sobre transações eletrónicas e defesa dos direitos do consumidor.</p>
 
-      <h4 class="font-bold text-gray-800 text-sm">2. Conduta e Responsabilidade do Vendedor</h4>
+      <h4 class="font-bold text-gray-800 text-sm">2. Regras para Vendedores</h4>
       <ul class="list-disc pl-4 space-y-1">
-        <li>É proibida a publicação de produtos ilegais, fraudulentos ou que violem os direitos de propriedade intelectual.</li>
-        <li>O vendedor deve manter o seu número de WhatsApp atualizado para garantir o suporte direto aos compradores.</li>
-        <li>Os produtos digitais disponibilizados devem ter links de download ativos e funcionais.</li>
+        <li>É proibido comercializar produtos ilegais, não autorizados ou contra a ordem pública.</li>
+        <li>O vendedor compromete-se a fornecer informações claras e contacto ativo (WhatsApp) para suporte ao consumidor.</li>
       </ul>
 
-      <h4 class="font-bold text-gray-800 text-sm">3. Pagamentos e Saques (Payouts)</h4>
-      <p>O saldo gerado pelas vendas fica disponível para pedido de saque no painel do vendedor. Os saques são liquidados para o número M-Pesa/e-Mola registado após verificação.</p>
-
-      <h4 class="font-bold text-gray-800 text-sm">4. Cancelamentos e Reembolsos</h4>
-      <p>Reembolsos em compras digitais serão considerados apenas se for comprovada a inoperância do link de download dentro de 48h após o pagamento.</p>
+      <h4 class="font-bold text-gray-800 text-sm">3. Processamento de Pagamentos e Payouts</h4>
+      <p>Os pagamentos são processados via integração automatizada M-Pesa / e-Mola. Os saques solicitados são encaminhados para a conta móvel cadastrada.</p>
     </div>
 
     <div class="pt-3 border-t text-right">
-      <button onclick="fecharModalTermos()" class="bg-blue-600 text-white px-6 py-2 rounded-xl text-xs font-bold hover:bg-blue-700 transition">Compreendi e Aceito</button>
+      <button onclick="fecharModalTermos()" class="bg-blue-600 text-white px-6 py-2 rounded-xl text-xs font-bold hover:bg-blue-700 transition">Concordo</button>
     </div>
   </div>
 </div>
@@ -229,8 +225,8 @@ const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyzTcRZo8vJO50vQcMu
 <input type="number" id="prodPreco" step="0.01" min="1" required class="w-full border rounded-xl p-3 text-sm outline-none">
 </div>
 <div>
-<label class="block text-xs font-bold uppercase text-gray-500 mb-1">WhatsApp para Contacto</label>
-<input type="text" id="prodWhatsapp" placeholder="258841234567" class="w-full border rounded-xl p-3 text-sm outline-none">
+<label class="block text-xs font-bold uppercase text-gray-500 mb-1">WhatsApp para Suporte</label>
+<input type="text" id="prodWhatsapp" placeholder="841234567" class="w-full border rounded-xl p-3 text-sm outline-none">
 </div>
 <div>
 <label class="block text-xs font-bold uppercase text-gray-500 mb-1">URL Direto da Imagem</label>
@@ -377,7 +373,7 @@ async function executarRegisto(e) {
   });
 
   if (res.status === 'SUCCESS') {
-    vendedorAtivo = { id: res.vendedorId || res.vendedorld, empresa: res.empresa };
+    vendedorAtivo = { id: res.vendedorld, empresa: res.empresa };
     localStorage.setItem('vendedor_moz1', JSON.stringify(vendedorAtivo));
     renderizarAreaAuth();
     fecharModalAuth();
@@ -411,7 +407,7 @@ function renderizarAreaAuth() {
   }
 }
 
-/* CARREGAR HOME E BLOCOS DE VENDEDORES (Restaurada compatibilidade estrita) */
+/* CARREGAR HOME E BLOCOS DE VENDEDORES */
 async function carregarHome() {
   const container = document.getElementById('containerHomeBlocos');
   const res = await apiGet('homeBlocos');
@@ -437,15 +433,12 @@ async function carregarHome() {
           </div>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             ${produtos.map(p => {
-              // Suporta todas as variações de propriedades enviadas do GAS
-              const pId = p.produtoId || p.produtold || p.id || '';
-              const urlImg = p.imagemUrl || p.imagem || '';
-              const imgDirect = formatarUrlImagem(urlImg);
+              const pId = p.produtold || p.produtoId || p.id || '';
+              const imgDirect = formatarUrlImagem(p.imagemUrl || p.imagem);
               const imgTag = imgDirect !== ''
                 ? `<img src="${imgDirect}" alt="${p.nome}" referrerpolicy="no-referrer" class="w-full h-full object-cover rounded-lg" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-gray-400\\'><i class=\\'fa-solid fa-box text-2xl\\'></i></div>';">`
                 : `<div class="flex items-center justify-center h-full text-gray-400"><i class="fa-solid fa-box text-2xl"></i></div>`;
 
-              // WhatsApp fallback para o número do produto ou geral
               let numWa = String(p.whatsapp || p.telefone || '258840000000').replace(/\D/g, '');
               if (!numWa.startsWith('258') && numWa.length === 9) numWa = '258' + numWa;
               const linkWa = `https://wa.me/${numWa}?text=${encodeURIComponent('Olá! Gostaria de mais informações sobre o produto: ' + p.nome)}`;
@@ -492,7 +485,7 @@ async function executarCadastroProduto(e) {
     return;
   }
 
-  const vId = vendedorAtivo.vendedorId || vendedorAtivo.id || vendedorAtivo.vId;
+  const vld = vendedorAtivo.vendedorld || vendedorAtivo.id || vendedorAtivo.vld;
   const nome = document.getElementById('prodNome').value;
   const preco = document.getElementById('prodPreco').value;
   const whatsapp = document.getElementById('prodWhatsapp').value;
@@ -500,8 +493,7 @@ async function executarCadastroProduto(e) {
 
   const res = await apiPost({
     action: 'CRIAR_PRODUTO',
-    vendedorId: vId,
-    vendedorld: vId,
+    vendedorld: vld,
     nome: nome,
     preco: preco,
     whatsapp: whatsapp,
@@ -529,12 +521,12 @@ async function executarCadastroProduto(e) {
 async function carregarDashboard() {
   if (!vendedorAtivo) return;
 
-  const vId = vendedorAtivo.id || vendedorAtivo.vendedorId || vendedorAtivo.vId;
+  const vId = vendedorAtivo.vendedorld || vendedorAtivo.id;
 
   document.getElementById('dashNomeEmpresa').innerText = vendedorAtivo.empresa || 'Minha Loja';
-  document.getElementById('dashVendedorId').innerText = `ID: ${vId}`;
+  document.getElementById('dashVendedorld').innerText = `ID: ${vId}`;
 
-  const res = await apiGet('resumoVendedor', `&vendedorId=${vId}&vendedorld=${vId}`);
+  const res = await apiGet('resumoVendedor', `&vendedorld=${vId}`);
   if (res.ok && res.financeiro) {
     document.getElementById('dashSaldo').innerText = res.financeiro.saldoDisponivel.toFixed(2);
     document.getElementById('dashVendasBrutas').innerText = res.financeiro.vendasBrutas.toFixed(2);
@@ -544,7 +536,7 @@ async function carregarDashboard() {
     const tbV = document.getElementById('tbVendas');
     tbV.innerHTML = res.vendas && res.vendas.length ? res.vendas.map(v => `
       <tr class="border-b">
-        <td class="py-2">${v.vendaId || v.vendald}</td>
+        <td class="py-2">${v.vendald}</td>
         <td>${v.valorLiquido.toFixed(2)} MT</td>
         <td><span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs">${v.status}</span></td>
       </tr>
@@ -568,11 +560,10 @@ async function executarPayout(e) {
   e.preventDefault();
   const valor = document.getElementById('payoutValor').value;
   const telefone = document.getElementById('payoutTelefone').value;
-  const vId = vendedorAtivo.id || vendedorAtivo.vendedorId || vendedorAtivo.vId;
+  const vId = vendedorAtivo.vendedorld || vendedorAtivo.id;
 
   const res = await apiPost({
     action: 'SOLICITAR_PAYOUT',
-    vendedorId: vId,
     vendedorld: vId,
     valor: valor,
     telefone: telefone
@@ -587,14 +578,13 @@ async function executarPayout(e) {
   }
 }
 
-async function comprarProduto(produtoId) {
+async function comprarProduto(produtold) {
   const tel = prompt('Insira o seu número M-Pesa / e-Mola para pagamento:');
   if (!tel) return;
 
   const res = await apiPost({
     action: 'COMPRAR_PRODUTO',
-    produtoId: produtoId,
-    produtold: produtoId,
+    produtold: produtold,
     telefone: tel
   });
 
