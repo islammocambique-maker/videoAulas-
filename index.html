@@ -16,7 +16,6 @@
 
   <!-- CONFIGURAÇÃO DA API -->
   <script>
-    // Cole aqui a URL da sua Implantação do Google Apps Script
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyzTcRZo8vJO50vQcMuORzYSAW5Bq755_QpKH_rHwXYtHYGgZ5qEIYe37TOkkXGcIK1aw/exec";
   </script>
 
@@ -30,8 +29,6 @@
 
       <nav class="hidden md:flex space-x-8 text-sm font-medium">
         <button onclick="navegarPara('home')" class="hover:text-blue-600 py-5">Início</button>
-        <button onclick="navegarPara('lojas')" class="hover:text-blue-600 py-5">Lojas</button>
-        <button onclick="navegarPara('anuncios')" class="hover:text-blue-600 py-5">Anúncios</button>
       </nav>
 
       <div class="flex items-center space-x-4">
@@ -44,7 +41,7 @@
     </div>
   </header>
 
-  <!-- ALERTA GLOBAL DE ERRO / SUCESSO -->
+  <!-- TOAST -->
   <div id="toast" class="hidden fixed bottom-5 right-5 z-50 max-w-sm w-full bg-gray-900 text-white p-4 rounded-xl shadow-2xl flex items-center space-x-3">
     <i id="toastIcon" class="fa-solid fa-circle-info text-blue-400 text-xl"></i>
     <div id="toastMsg" class="text-sm"></div>
@@ -53,9 +50,8 @@
   <!-- CONTEÚDO PRINCIPAL -->
   <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <!-- ECRÃ 1: HOME -->
+    <!-- HOME -->
     <section id="secHome" class="space-y-10">
-      <!-- Banner Destaque -->
       <div class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-3xl p-8 md:p-12 text-white shadow-xl flex flex-col md:flex-row items-center justify-between">
         <div class="space-y-4 max-w-xl">
           <span class="bg-blue-500/30 text-blue-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Marketplace Moçambique</span>
@@ -64,7 +60,6 @@
         </div>
       </div>
 
-      <!-- Vitrine de Lojas e Produtos -->
       <div>
         <h2 class="text-xl font-bold mb-6">Explorar Vitrines</h2>
         <div id="containerHomeBlocos" class="space-y-8">
@@ -73,7 +68,7 @@
       </div>
     </section>
 
-    <!-- ECRÃ 2: PAINEL DO VENDEDOR -->
+    <!-- DASHBOARD -->
     <section id="secDashboard" class="hidden space-y-8">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-6">
         <div>
@@ -88,7 +83,6 @@
         </div>
       </div>
 
-      <!-- Cards Financeiros -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <p class="text-sm font-medium text-gray-500">Saldo Disponível para Saque</p>
@@ -111,7 +105,6 @@
         </div>
       </div>
 
-      <!-- Tabelas -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <h3 class="font-bold text-gray-900 mb-4">Últimas Vendas</h3>
@@ -151,11 +144,11 @@
       <form id="formLogin" onsubmit="executarLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Telefone</label>
-          <input type="text" id="loginTelefone" placeholder="841234567" required class="w-full border rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+          <input type="text" id="loginTelefone" placeholder="841234567" required class="w-full border rounded-xl p-3 text-sm outline-none">
         </div>
         <div>
           <label class="block text-xs font-bold uppercase text-gray-500 mb-1">PIN</label>
-          <input type="password" id="loginPin" placeholder="****" required class="w-full border rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+          <input type="password" id="loginPin" placeholder="****" required class="w-full border rounded-xl p-3 text-sm outline-none">
         </div>
         <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition">Entrar no Painel</button>
       </form>
@@ -186,6 +179,30 @@
     </div>
   </div>
 
+  <!-- MODAL NOVO PRODUTO -->
+  <div id="modalProduto" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6">
+      <h3 class="text-xl font-bold">Adicionar Novo Produto</h3>
+      <form onsubmit="executarCadastroProduto(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Nome do Produto</label>
+          <input type="text" id="prodNome" required class="w-full border rounded-xl p-3 text-sm outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Preço (MT)</label>
+          <input type="number" id="prodPreco" step="0.01" min="1" required class="w-full border rounded-xl p-3 text-sm outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-gray-500 mb-1">URL Direto da Imagem</label>
+          <input type="url" id="prodImagem" placeholder="https://exemplo.com/imagem.jpg" required class="w-full border rounded-xl p-3 text-sm outline-none">
+          <span class="text-[10px] text-gray-400">Cole qualquer link direto de imagem (Imgur, Cloudinary, AWS, Dropbox, Google Drive, etc.).</span>
+        </div>
+        <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition">Cadastrar Produto</button>
+      </form>
+      <button onclick="fecharModalProduto()" class="w-full text-center text-sm text-gray-400">Cancelar</button>
+    </div>
+  </div>
+
   <!-- MODAL PAYOUT -->
   <div id="modalPayout" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6">
@@ -199,7 +216,7 @@
           <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Número M-Pesa / e-Mola</label>
           <input type="text" id="payoutTelefone" placeholder="841234567" required class="w-full border rounded-xl p-3 text-sm outline-none">
         </div>
-        <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition">Confirmar Saque</button>
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition">Confirmar Saque</button>
       </form>
       <button onclick="fecharModalPayout()" class="w-full text-center text-sm text-gray-400">Cancelar</button>
     </div>
@@ -211,10 +228,30 @@
 
     window.onload = function() {
       carregarHome();
-      if (vendedorAtivo) {
-        renderizarAreaAuth();
-      }
+      if (vendedorAtivo) renderizarAreaAuth();
     };
+
+    // TRATAMENTO UNIVERSAL DE IMAGENS (Google Drive, Dropbox, Links Diretos Gerais)
+    function formatarUrlImagem(url) {
+      if (!url) return '';
+      url = url.trim();
+
+      // Conversão para Google Drive
+      if (url.includes('drive.google.com')) {
+        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+        }
+      }
+
+      // Conversão para Dropbox (força o download/view direto em vez de abrir página HTML)
+      if (url.includes('dropbox.com')) {
+        return url.replace('dl=0', 'raw=1').replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+      }
+
+      // Aceita qualquer outro URL direto HTTP/HTTPS (Imgur, Cloudinary, S3, Postimages, etc.)
+      return url;
+    }
 
     function mostrarToast(msg, tipo = 'info') {
       const toast = document.getElementById('toast');
@@ -225,10 +262,7 @@
 
     async function apiPost(payload) {
       try {
-        const res = await fetch(GAS_API_URL, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
+        const res = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(payload) });
         return await res.json();
       } catch (err) {
         mostrarToast('Erro ao ligar ao servidor.', 'erro');
@@ -341,7 +375,7 @@
       }
     }
 
-    /* HOME & VITRINE COM SUPORTE A IMAGENS */
+    /* HOME & VITRINES */
     async function carregarHome() {
       const res = await apiGet('homeBlocos');
       const container = document.getElementById('containerHomeBlocos');
@@ -355,9 +389,9 @@
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
               ${b.slideshowProdutos.map(p => {
-                // Tratamento da imagem
-                const imgTag = p.imagem && p.imagem.trim() !== '' 
-                  ? `<img src="${p.imagem}" alt="${p.nome}" class="w-full h-full object-cover rounded-lg" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-gray-400\\'><i class=\\'fa-solid fa-box text-2xl\\'></i></div>';">`
+                const imgDirect = formatarUrlImagem(p.imagem);
+                const imgTag = imgDirect !== '' 
+                  ? `<img src="${imgDirect}" alt="${p.nome}" referrerpolicy="no-referrer" class="w-full h-full object-cover rounded-lg" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-gray-400\\'><i class=\\'fa-solid fa-box text-2xl\\'></i></div>';">`
                   : `<div class="flex items-center justify-center h-full text-gray-400"><i class="fa-solid fa-box text-2xl"></i></div>`;
 
                 return `
@@ -381,6 +415,35 @@
       }
     }
 
+    /* GESTÃO DE PRODUTO */
+    function abrirModalProduto() { document.getElementById('modalProduto').classList.remove('hidden'); }
+    function fecharModalProduto() { document.getElementById('modalProduto').classList.add('hidden'); }
+
+    async function executarCadastroProduto(e) {
+      e.preventDefault();
+      if (!vendedorAtivo) return;
+
+      const nome = document.getElementById('prodNome').value;
+      const preco = document.getElementById('prodPreco').value;
+      const imagem = document.getElementById('prodImagem').value;
+
+      const res = await apiPost({
+        action: 'CADASTRAR_PRODUTO',
+        vendedorId: vendedorAtivo.id,
+        nome: nome,
+        preco: preco,
+        imagem: imagem
+      });
+
+      if (res.ok || res.status === 'SUCCESS') {
+        mostrarToast('Produto registado com sucesso!');
+        fecharModalProduto();
+        carregarDashboard();
+      } else {
+        mostrarToast(res.erro || res.message || 'Erro ao cadastrar produto.');
+      }
+    }
+
     /* DASHBOARD & PAYOUT */
     async function carregarDashboard() {
       if (!vendedorAtivo) return;
@@ -395,12 +458,12 @@
         document.getElementById('dashPayoutsPendentes').innerText = res.financeiro.payoutsPendentes.toFixed(2);
 
         const tbV = document.getElementById('tbVendas');
-        tbV.innerHTML = res.vendas.length ? res.vendas.map(v => `
+        tbV.innerHTML = res.vendas && res.vendas.length ? res.vendas.map(v => `
           <tr class="border-b"><td class="py-2">${v.vendaId}</td><td>${v.valorLiquido.toFixed(2)} MT</td><td><span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs">${v.status}</span></td></tr>
         `).join('') : '<tr><td colspan="3" class="text-center py-4">Sem vendas.</td></tr>';
 
         const tbP = document.getElementById('tbPayouts');
-        tbP.innerHTML = res.payouts.length ? res.payouts.map(p => `
+        tbP.innerHTML = res.payouts && res.payouts.length ? res.payouts.map(p => `
           <tr class="border-b"><td class="py-2">${p.payoutId}</td><td>${p.valorLiquido.toFixed(2)} MT</td><td><span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-xs">${p.status}</span></td></tr>
         `).join('') : '<tr><td colspan="3" class="text-center py-4">Sem saques.</td></tr>';
       }
