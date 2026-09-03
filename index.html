@@ -233,25 +233,30 @@
 
     // TRATAMENTO UNIVERSAL DE IMAGENS (Google Drive, Dropbox, Links Diretos Gerais)
     function formatarUrlImagem(url) {
-      if (!url) return '';
-      url = url.trim();
+  if (!url) return '';
+  url = url.trim();
 
-      // Conversão para Google Drive
-      if (url.includes('drive.google.com')) {
-        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-        if (match && match[1]) {
-          return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-        }
-      }
-
-      // Conversão para Dropbox (força o download/view direto em vez de abrir página HTML)
-      if (url.includes('dropbox.com')) {
-        return url.replace('dl=0', 'raw=1').replace('www.dropbox.com', 'dl.dropboxusercontent.com');
-      }
-
-      // Aceita qualquer outro URL direto HTTP/HTTPS (Imgur, Cloudinary, S3, Postimages, etc.)
-      return url;
+  // 1. Google Drive
+  if (url.includes('drive.google.com')) {
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      return `https://drive.google.com/uc?export=view&id=${match[1]}`;
     }
+  }
+
+  // 2. Dropbox
+  if (url.includes('dropbox.com')) {
+    return url.replace('dl=0', 'raw=1').replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+  }
+
+  // 3. ImgBB (se usares links da página ibb.co/ID em vez do link direto i.ibb.co/ID/imagem.jpg)
+  if (url.includes('ibb.co/') && !url.includes('i.ibb.co/')) {
+    // Nota: Certifica-te de colar sempre na planilha o "Link Direto" gerado pelo ImgBB
+  }
+
+  // Servimg (i31.servimg.com) já é um link direto nativo!
+  return url;
+}
 
     function mostrarToast(msg, tipo = 'info') {
       const toast = document.getElementById('toast');
