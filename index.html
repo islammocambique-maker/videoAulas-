@@ -439,30 +439,49 @@
     function fecharModalProduto() { document.getElementById('modalProduto').classList.add('hidden'); }
 
     async function executarCadastroProduto(e) {
-      e.preventDefault();
-      if (!vendedorAtivo) return;
+  e.preventDefault();
 
-      const nome = document.getElementById('prodNome').value;
-      const preco = document.getElementById('prodPreco').value;
-      const imagem = document.getElementById('prodImagem').value;
+  if (!vendedorAtivo) {
+    mostrarToast('É necessário estar sessão iniciada para adicionar produtos.');
+    return;
+  }
 
-      const res = await apiPost({
-        action: 'CADASTRAR_PRODUTO',
-        vendedorId: vendedorAtivo.id,
-        nome: nome,
-        preco: preco,
-        imagem: imagem
-      });
+  // Extrai o ID do vendedor dependendo da propriedade guardada na sessão
+  const vId = vendedorAtivo.vendedorId || vendedorAtivo.id || vendedorAtivo.vId;
 
-      if (res.ok || res.status === 'SUCCESS') {
-        mostrarToast('Produto registado com sucesso!');
-        fecharModalProduto();
-        carregarDashboard();
-      } else {
-        mostrarToast(res.erro || res.message || 'Erro ao cadastrar produto.');
-      }
-    }
+  const nome = document.getElementById('prodNome').value;
+  const preco = document.getElementById('prodPreco').value;
+  const imagem = document.getElementById('prodImagem').value;
 
+  // IMPORTANTE: A ação enviada DEVE ser 'CRIAR_PRODUTO' para coincidir com o teu GAS
+  const res = await apiPost({
+    action: 'CRIAR_PRODUTO',
+    vendedorId: vId,
+    nome: nome,
+    preco: preco,
+    imagem: imagem,
+    descricao: nome, // Opcional
+    tipo: 'FISICO',  // Opcional
+    categoria: 'GERAL' // Opcional
+  });
+
+  // Verifica se a resposta do GAS foi SUCCESS
+  if (res && res.status === 'SUCCESS') {
+    mostrarToast('Produto adicionado com sucesso!');
+    fecharModalProduto();
+
+    // Limpa o formulário
+    document.getElementById('prodNome').value = '';
+    document.getElementById('prodPreco').value = '';
+    document.getElementById('prodImagem').value = '';
+
+    // Atualiza a vista
+    carregarHome();
+    if (typeof carregarDashboard === 'function') carregarDashboard();
+  } else {
+    mostrarToast(res.erro || res.message || 'Erro ao cadastrar produto.');
+  }
+}
     /* DASHBOARD & PAYOUT */
     async function carregarDashboard() {
       if (!vendedorAtivo) return;
