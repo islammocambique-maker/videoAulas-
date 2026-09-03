@@ -195,7 +195,7 @@
         <div>
           <label class="block text-xs font-bold uppercase text-gray-500 mb-1">URL Direto da Imagem</label>
           <input type="url" id="prodImagem" placeholder="https://exemplo.com/imagem.jpg" required class="w-full border rounded-xl p-3 text-sm outline-none">
-          <span class="text-[10px] text-gray-400">Cole qualquer link direto de imagem (Imgur, Cloudinary, AWS, Dropbox, Google Drive, etc.).</span>
+          <span class="text-[10px] text-gray-400">Suporta links diretos, Servimg, ImgBB, Dropbox e Google Drive.</span>
         </div>
         <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition">Cadastrar Produto</button>
       </form>
@@ -231,34 +231,28 @@
       if (vendedorAtivo) renderizarAreaAuth();
     };
 
-    // TRATAMENTO UNIVERSAL DE IMAGENS (Google Drive, Dropbox, Links Diretos Gerais)
+    // FUNÇÃO UNIVERSAL PARA TRATAR URLS DE IMAGENS
     function formatarUrlImagem(url) {
-  if (!url) return '';
-  url = url.trim();
+      if (!url) return '';
+      url = String(url).trim();
 
-  // 1. Google Drive
-  if (url.includes('drive.google.com')) {
-    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+      // Conversão automática para Google Drive
+      if (url.includes('drive.google.com')) {
+        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+          return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+        }
+      }
+
+      // Conversão automática para Dropbox
+      if (url.includes('dropbox.com')) {
+        return url.replace('dl=0', 'raw=1').replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+      }
+
+      return url;
     }
-  }
 
-  // 2. Dropbox
-  if (url.includes('dropbox.com')) {
-    return url.replace('dl=0', 'raw=1').replace('www.dropbox.com', 'dl.dropboxusercontent.com');
-  }
-
-  // 3. ImgBB (se usares links da página ibb.co/ID em vez do link direto i.ibb.co/ID/imagem.jpg)
-  if (url.includes('ibb.co/') && !url.includes('i.ibb.co/')) {
-    // Nota: Certifica-te de colar sempre na planilha o "Link Direto" gerado pelo ImgBB
-  }
-
-  // Servimg (i31.servimg.com) já é um link direto nativo!
-  return url;
-}
-
-    function mostrarToast(msg, tipo = 'info') {
+    function mostrarToast(msg) {
       const toast = document.getElementById('toast');
       document.getElementById('toastMsg').innerText = msg;
       toast.classList.remove('hidden');
@@ -270,7 +264,7 @@
         const res = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(payload) });
         return await res.json();
       } catch (err) {
-        mostrarToast('Erro ao ligar ao servidor.', 'erro');
+        mostrarToast('Erro ao ligar ao servidor.');
         return { ok: false, erro: err.toString() };
       }
     }
@@ -380,41 +374,61 @@
       }
     }
 
-    /* HOME & VITRINES */
+    /* CARREGAR HOME E BLOCOS DE VENDEDORES */
     async function carregarHome() {
-      const res = await apiGet('homeBlocos');
       const container = document.getElementById('containerHomeBlocos');
+      const res = await apiGet('homeBlocos');
 
-      if (res.ok && res.blocos && res.blocos.length > 0) {
-        container.innerHTML = res.blocos.map(b => `
-          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">${b.empresa ? b.empresa[0] : 'L'}</div>
-              <h3 class="font-bold text-lg">${b.empresa}</h3>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              ${b.slideshowProdutos.map(p => {
-                const imgDirect = formatarUrlImagem(p.imagem);
-                const imgTag = imgDirect !== '' 
-                  ? `<img src="${imgDirect}" alt="${p.nome}" referrerpolicy="no-referrer" class="w-full h-full object-cover rounded-lg" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-gray-400\\'><i class=\\'fa-solid fa-box text-2xl\\'></i></div>';">`
-                  : `<div class="flex items-center justify-center h-full text-gray-400"><i class="fa-solid fa-box text-2xl"></i></div>`;
+      // Suporta se a resposta vier como array direto ou dentro de res.blocos
+      const blocos = Array.isArray(res) ? res : (res.blocos || []);
 
-                return `
-                  <div class="border rounded-xl p-3 space-y-2 flex flex-col justify-between">
-                    <div class="h-32 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
-                      ${imgTag}
+      if (blocos && blocos.length > 0) {
+        container.innerHTML = blocos.map(b => {
+          // Renderização do Logo da Empresa
+          const logoDirect = formatarUrlImagem(b.logo);
+          const logoHtml = logoDirect !== ''
+            ? `<img src="${logoDirect}" alt="${b.empresa}" referrerpolicy="no-referrer" class="w-10 h-10 rounded-full object-cover border" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold\\'>${b.empresa ? b.empresa[0] : 'L'}</div>';">`
+            : `<div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">${b.empresa ? b.empresa[0] : 'L'}</div>`;
+
+          const produtos = b.slideshowProdutos || [];
+
+          return `
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+              <!-- CABEÇALHO DO BLOCO (LOJA) -->
+              <div class="flex items-center space-x-3">
+                ${logoHtml}
+                <div>
+                  <h3 class="font-bold text-lg text-gray-900 leading-tight">${b.empresa || 'Loja'}</h3>
+                  <span class="text-xs text-gray-400">Vendedor Verificado</span>
+                </div>
+              </div>
+
+              <!-- LISTA DE PRODUTOS DA LOJA -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                ${produtos.map(p => {
+                  // Mapeia imagemUrl vindo do teu GAS
+                  const imgDirect = formatarUrlImagem(p.imagemUrl);
+                  const imgTag = imgDirect !== '' 
+                    ? `<img src="${imgDirect}" alt="${p.nome}" referrerpolicy="no-referrer" class="w-full h-full object-cover rounded-lg" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-gray-400\\'><i class=\\'fa-solid fa-box text-2xl\\'></i></div>';">`
+                    : `<div class="flex items-center justify-center h-full text-gray-400"><i class="fa-solid fa-box text-2xl"></i></div>`;
+
+                  return `
+                    <div class="border rounded-xl p-3 space-y-2 flex flex-col justify-between">
+                      <div class="h-32 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+                        ${imgTag}
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-sm truncate mt-1" title="${p.nome}">${p.nome}</h4>
+                        <p class="text-blue-600 font-extrabold text-sm">${p.preco} MT</p>
+                      </div>
+                      <button onclick="comprarProduto('${p.produtoId}')" class="w-full bg-blue-600 text-white text-xs py-2 rounded-lg font-bold hover:bg-blue-700 transition">Comprar</button>
                     </div>
-                    <div>
-                      <h4 class="font-bold text-sm truncate mt-1" title="${p.nome}">${p.nome}</h4>
-                      <p class="text-blue-600 font-extrabold text-sm">${p.preco} MT</p>
-                    </div>
-                    <button onclick="comprarProduto('${p.produtoId}')" class="w-full bg-blue-600 text-white text-xs py-2 rounded-lg font-bold hover:bg-blue-700 transition">Comprar</button>
-                  </div>
-                `;
-              }).join('')}
+                  `;
+                }).join('')}
+              </div>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       } else {
         container.innerHTML = `<p class="text-center text-gray-400 py-6">Nenhum produto em destaque de momento.</p>`;
       }
