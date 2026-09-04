@@ -815,25 +815,6 @@ init();
     return true;
   }
 
-  // Restaura o botão quando o pagamento falha ou o modal é fechado
-  window.desbloquearBotoes = function() {
-    document.querySelectorAll("button").forEach(btn => {
-      busyButtons.delete(btn);
-      delete btn.dataset.m1Busy;
-      btn.disabled = false;
-      btn.classList.remove("opacity-60", "cursor-not-allowed");
-      if (btn.dataset.m1OldHtml) {
-        btn.innerHTML = btn.dataset.m1OldHtml;
-        delete btn.dataset.m1OldHtml;
-      }
-    });
-    try {
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith(STORAGE_PREFIX)) localStorage.removeItem(key);
-      });
-    } catch (_) {}
-  };
-
   function rememberOperation(name, signature) {
     if (!name) return false;
     const key = STORAGE_PREFIX + name + "_" + fingerprint(signature);
