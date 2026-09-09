@@ -15,11 +15,11 @@ body{font-family:Inter,ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFo
 .shadow-soft{box-shadow:0 18px 50px rgba(15,23,42,.10)}
 .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical; overflow:hidden}
 .toast{animation:toastin .22s ease-out}
-@keyframes toastin{from{transform:translateY(12px); opacity:0}to{transform:translateY(0); opacity:1}}
+@keyframes toastin{from{transform:translateY(12px); opacity:0}to{transform: translateY(0); opacity:1}}
 .modal{animation:modalin .18s ease-out}
 @keyframes modalin{from{transform: scale(.98); opacity:0}to{transform: scale(1); opacity:1}}
-.label{display:block;font-size:.875rem;font-weight:800; margin-bottom:.4rem;color:#334155}
-.input{width:100%;border:1px solid #e2e8f0;border-radius:.75rem;padding:.75rem .9rem; outline:none; background:#fff}
+label{display:block;font-size:.875rem; font-weight:800; margin-bottom:.4rem;color:#334155}
+.input{width:100%;border:1px solid #e2e8f0;border-radius:.75rem; padding:.75rem .9rem; outline:none; background:#fff}
 .input:focus {border-color:#fb923c; box-shadow:0 0 0 3px rgba(251,146,60,.16)}
 </style>
 </head>
@@ -124,7 +124,7 @@ body{font-family:Inter,ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFo
 <div class="mt-7 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-soft"><div class="p-5 border-b border-slate-100 font-black">Meus produtos</div><div id="myProducts" class="p-5 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div></div>
 </section>
 
-<!-- MODAL DE STATUS DE PAGAMENTO & ENTREGA DIGITAL -->
+<!-- MODAL STATUS -->
 <div id="statusModal" class="hidden fixed inset-0 z-[95] bg-slate-950/70 p-4 overflow-y-auto">
 <div class="min-h-full grid place-items-center py-8">
 <div class="modal bg-white rounded-3xl w-full max-w-md shadow-2xl p-6 text-center">
@@ -163,7 +163,7 @@ body{font-family:Inter,ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFo
 </div></div>
 </div>
 
-<!-- PRODUCT -->
+<!-- PRODUCT MODAL -->
 <div id="productModal" class="hidden fixed inset-0 z-[80] bg-slate-950/60 p-4 overflow-y-auto">
 <div class="min-h-full grid place-items-center py-8"><div class="modal bg-white rounded-3xl w-full max-w-3xl shadow-2xl overflow-hidden">
 <div class="p-5 border-b flex justify-between"><h2 class="text-xl font-black">Produto</h2><button onclick="fechar('productModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100"><i class="fa-solid fa-xmark"></i></button></div>
@@ -182,7 +182,7 @@ body{font-family:Inter,ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFo
 </div></div>
 </div>
 
-<!-- PAYOUT -->
+<!-- PAYOUT MODAL -->
 <div id="payoutModal" class="hidden fixed inset-0 z-[80] bg-slate-950/60 p-4 overflow-y-auto">
 <div class="min-h-full grid place-items-center py-8"><div class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl">
 <div class="p-6 border-b flex justify-between"><div><h2 class="text-2xl font-black">Cash out</h2><p class="text-slate-500 text-sm">Solicite o levantamento do saldo disponível.</p></div><button onclick="fechar('payoutModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100"><i class="fa-solid fa-xmark"></i></button></div>
@@ -230,7 +230,7 @@ body{font-family:Inter,ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFo
 </div>
 
 <script>
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwvaUwu5ZfZGT62R7JL-gCFYo-uGrDGDZFhnsWhz9YBo6FKbSn0m4p3aEloZSr-YBWp_w/exec";
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwvaUwu5ZfZGT62R7JL-gCFYo-uGrDGDZFhnsWhz9YB06FKbSn0m4p3aEloZSr-YBWp_w/exec";
 const STORAGE_KEY = "vendedor_moz1";
 let vendedorAtivo = null;
 let produtos = [];
@@ -239,557 +239,557 @@ let authMode = "login";
 let ultimoResumo = null;
 let pollingTimer = null;
 
-try { vendedorAtivo = JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; } catch (_) { vendedorAtivo = null; }
+try { vendedorAtivo = JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; } catch (e) { vendedorAtivo = null; }
 
 function esc(v) {
-    return String(v??"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  return String(v??"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 }
 
 function dinheiro(v) {
-    const n = Number(v || 0);
-    return n.toLocaleString("pt-MZ", {minimumFractionDigits:2, maximumFractionDigits:2}) + " MT";
+  const n = Number(v || 0);
+  return n.toLocaleString("pt-MZ", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " MT";
 }
 
 function imagem(url) {
-    if (!url) return "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80";
-    if (/drive\.google\.com/i.test(url)) {
-        const m = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/);
-        if (m) return "https://drive.google.com/thumbnail?id=" + m[1] + "&sz=w1000";
-    }
+  if (!url) return "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80";
+  if (/drive\.google\.com/i.test(url)) {
+    const m = url.match(/(?:d\/|id=)([a-zA-Z0-9_-]+)/);
+    if (m) return "https://drive.google.com/thumbnail?id=" + m[1] + "&sz=w1000";
     return url;
+  }
+  return url;
 }
 
 function normalizarProdutos(lista) {
-    if (!Array.isArray(lista)) return [];
-    return lista.map(p => ({
-        ...p,
-        productId: p.productId || p.productid || p.produtoId || p.produtoID,
-        vendedorId: p.vendedorId || p.vendedorld || p.vendedorID || p.sellerId || p.vendedor?.id,
-        empresa: p.empresa || p.empresaMarca || p.loja || p.sellerName || p.vendedor?.empresa || "",
-        logo: p.logo || p.logoUrl || p.vendedor?.logo || "",
-        imagemUrl: p.imagemUrl || p.imagem || p.imageUrl || p.foto || "",
-        preco: Number(p.preco || 0)
-    })).filter(p => p.productId && p.nome);
+  if (!Array.isArray(lista)) return [];
+  return lista.map(p => ({
+    ...p,
+    productId: p.productId || p.productid || p.produtoId || p.produtoID,
+    vendedorId: p.vendedorId || p.vendedorld || p.vendedorID || p.sellerId || p.vendedor?.id,
+    empresa: p.empresa || p.empresaMarca || p.loja || p.sellerName || p.vendedor?.empresa || "",
+    logo: p.logo || p.logoUrl || p.vendedor?.logo || "",
+    imagemUrl: p.imagemUrl || p.imagem || p.imageUrl || p.foto || "",
+    preco: Number(p.preco || 0)
+  })).filter(p => p.productId && p.nome);
 }
 
 async function apiGet(action, params = {}) {
-    const q = new URLSearchParams({action, _ts: String(Date.now()), ...params});
-    const r = await fetch(GAS_API_URL + "?" + q.toString(), {cache:"no-store"});
-    if (!r.ok) throw new Error("Erro HTTP " + r.status);
-    const text = await r.text();
-    try { return JSON.parse(text); }
-    catch (_) {
-        const start = text.indexOf("{");
-        const end = text.lastIndexOf("}");
-        if (start >= 0 && end > start) return JSON.parse(text.slice(start, end + 1));
-        throw new Error("Resposta inválida do servidor.");
-    }
+  const q = new URLSearchParams({action, _ts: String(Date.now()), ...params});
+  const r = await fetch(GAS_API_URL + "?" + q.toString(), {cache:"no-store"});
+  if (!r.ok) throw new Error("Erro HTTP " + r.status);
+  const text = await r.text();
+  try { return JSON.parse(text); }
+  catch (_) {
+    const start = text.indexOf("{");
+    const end = text.lastIndexOf("}");
+    if (start >= 0 && end > start) return JSON.parse(text.slice(start, end + 1));
+    throw new Error("Resposta inválida do servidor.");
+  }
 }
 
 async function apiPost(payload) {
-    const r = await fetch(GAS_API_URL, {
-        method: "POST",
-        headers:{"Content-Type":"text/plain;charset=utf-8"},
-        body:JSON.stringify(payload),
-        redirect: "follow",
-        cache:"no-store"
-    });
-    if (!r.ok) throw new Error("Erro HTTP " + r.status);
-    const text = await r.text();
-    try { return JSON.parse(text); }
-    catch (_) {
-        const start = text.indexOf("{");
-        const end = text.lastIndexOf("}");
-        if (start >= 0 && end > start) return JSON.parse(text.slice(start, end + 1));
-        throw new Error("Resposta inválida do servidor.");
-    }
+  const r = await fetch(GAS_API_URL, {
+    method: "POST",
+    headers: {"Content-Type":"text/plain;charset=utf-8"},
+    body: JSON.stringify(payload),
+    redirect: "follow",
+    cache: "no-store"
+  });
+  if (!r.ok) throw new Error("Erro HTTP " + r.status);
+  const text = await r.text();
+  try { return JSON.parse(text); }
+  catch (_) {
+    const start = text.indexOf("{");
+    const end = text.lastIndexOf("}");
+    if (start >= 0 && end > start) return JSON.parse(text.slice(start, end + 1));
+    throw new Error("Resposta inválida do servidor.");
+  }
 }
 
 function toast(msg, type="info") {
-    const root = document.getElementById("toastRoot");
-    const el = document.createElement("div");
-    const cls = type === "error"? "bg-red-600": type === "success"? "bg-emerald-600": "bg-slate-900";
-    el.className = "toast " + cls + " text-white px-4 py-3 rounded-xl shadow-xl text-sm font-bold max-w-sm";
-    el.textContent = msg;
-    root.appendChild(el);
-    setTimeout(() => el.remove(), 4200);
+  const root = document.getElementById("toastRoot");
+  const el = document.createElement("div");
+  const cls = type === "error" ? "bg-red-600" : type === "success" ? "bg-emerald-600" : "bg-slate-900";
+  el.className = "toast " + cls + " text-white px-4 py-3 rounded-xl shadow-xl text-sm font-bold max-w-sm";
+  el.textContent = msg;
+  root.appendChild(el);
+  setTimeout(() => el.remove(), 4200);
 }
 
 function fechar(id){ document.getElementById(id).classList.add("hidden"); }
 function abrir(id){ document.getElementById(id).classList.remove("hidden"); }
 
 function irPara(id) {
-    document.getElementById("dashboard").classList.add("hidden");
-    document.getElementById("inicio").classList.remove("hidden");
-    document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("inicio").classList.remove("hidden");
+  document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
 }
 
 function atualizarAuthUI() {
-    const logged = !!vendedorAtivo;
-    document.getElementById("btnAuth").classList.toggle("hidden", logged);
-    document.getElementById("btnLogout").classList.toggle("hidden", !logged);
-    document.getElementById("btnDashboard").classList.toggle("hidden", !logged);
+  const logged = !!vendedorAtivo;
+  document.getElementById("btnAuth").classList.toggle("hidden", logged);
+  document.getElementById("btnLogout").classList.toggle("hidden", !logged);
+  document.getElementById("btnDashboard").classList.toggle("hidden", !logged);
 }
 
 function setAuthMode(mode) {
-    authMode = mode;
-    const login = mode === "login";
-    document.getElementById("loginForm").classList.toggle("hidden", !login);
-    document.getElementById("registerForm").classList.toggle("hidden", login);
-    document.getElementById("authTitle").textContent = login? "Entrar": "Criar loja";
-    document.getElementById("authSubtitle").textContent = login? "Aceda à sua conta de vendedor.": "Registe a sua loja no Moz1Vendas.";
-    document.getElementById("tabLogin").className = login? "py-2.5 rounded-lg bg-white shadow-sm font-bold": "py-2.5 rounded-lg font-bold text-slate-500";
-    document.getElementById("tabRegister").className = !login? "py-2.5 rounded-lg bg-white shadow-sm font-bold": "py-2.5 rounded-lg font-bold text-slate-500";
+  authMode = mode;
+  const login = mode === "login";
+  document.getElementById("loginForm").classList.toggle("hidden", !login);
+  document.getElementById("registerForm").classList.toggle("hidden", login);
+  document.getElementById("authTitle").textContent = login ? "Entrar" : "Criar loja";
+  document.getElementById("authSubtitle").textContent = login ? "Aceda à sua conta de vendedor." : "Registe a sua loja no Moz1Vendas.";
+  document.getElementById("tabLogin").className = login ? "py-2.5 rounded-lg bg-white shadow-sm font-bold" : "py-2.5 rounded-lg font-bold text-slate-500";
+  document.getElementById("tabRegister").className = !login ? "py-2.5 rounded-lg bg-white shadow-sm font-bold" : "py-2.5 rounded-lg font-bold text-slate-500";
 }
 
 function abrirAuth(mode="login") { abrir("authModal"); setAuthMode(mode); }
 
 async function executarLogin(e) {
-    e.preventDefault();
-    try {
-        const res = await apiPost({
-            action: "LOGIN",
-            telefone: document.getElementById("loginPhone").value.trim(),
-            pin: document.getElementById("loginPin").value
-        });
-        if (res.status !== "SUCCESS") throw new Error(res.mensagem || res.message || res.erro || "Telefone ou PIN inválido.");
-        if (!res.vendedor) throw new Error("O servidor não devolveu os dados do vendedor.");
-        vendedorAtivo = {
-            ...res.vendedor,
-            id: res.vendedor.id || res.vendedor.vendedorId || res.vendedor.vendedorld
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(vendedorAtivo));
-        atualizarAuthUI(); fechar("authModal"); toast("Login efetuado com sucesso.", "success");
-        mostrarDashboard();
-    } catch(err){ toast(err.message || "Não foi possível entrar.", "error"); }
+  e.preventDefault();
+  try {
+    const res = await apiPost({
+      action: "LOGIN",
+      telefone: document.getElementById("loginPhone").value.trim(),
+      pin: document.getElementById("loginPin").value
+    });
+    if (res.status !== "SUCCESS") throw new Error(res.mensagem || res.message || res.erro || "Telefone ou PIN inválido.");
+    if (!res.vendedor) throw new Error("O servidor não devolveu os dados do vendedor.");
+    vendedorAtivo = {
+      ...res.vendedor,
+      id: res.vendedor.id || res.vendedor.vendedorId || res.vendedor.vendedorld
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(vendedorAtivo));
+    atualizarAuthUI(); fechar("authModal"); toast("Login efetuado com sucesso.", "success");
+    mostrarDashboard();
+  } catch(err){ toast(err.message || "Não foi possível entrar.", "error"); }
 }
 
 async function executarRegisto(e) {
-    e.preventDefault();
-    const pin = document.getElementById("regPin").value;
-    if (pin !== document.getElementById("regPin2").value) { toast("Os PINs não coincidem.", "error"); return; }
-    try {
-        const res = await apiPost({
-            action:"CRIAR_LOJA",
-            nome: document.getElementById("regName").value.trim(),
-            telefone: document.getElementById("regPhone").value.trim(),
-            bi: document.getElementById("regBi").value.trim(),
-            empresa: document.getElementById("regCompany").value.trim(),
-            pin,
-            email: document.getElementById("regEmail").value.trim(),
-            logo: document.getElementById("regLogo").value.trim()
-        });
-        if (res.status !== "SUCCESS") throw new Error(res.mensagem || res.message || res.erro || "Falha ao criar loja.");
-        const id = res.vendedorId || res.vendedorld;
-        if (!id) throw new Error("A loja foi criada, mas o servidor não devolveu o ID do vendedor.");
-        vendedorAtivo = {
-            id,
-            vendedorId: id,
-            nome: document.getElementById("regName").value.trim(),
-            empresa: res.empresa || document.getElementById("regCompany").value.trim(),
-            logo: res.logo || "",
-            telefone: document.getElementById("regPhone").value.trim()
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(vendedorAtivo));
-        atualizarAuthUI(); fechar("authModal"); toast("Loja criada. Agora publique o primeiro produto.", "success"); mostrarDashboard();
-    } catch(err){ toast(err.message || "Não foi possível criar a loja.", "error"); }
+  e.preventDefault();
+  const pin = document.getElementById("regPin").value;
+  if (pin !== document.getElementById("regPin2").value) { toast("Os PINs não coincidem.", "error"); return; }
+  try {
+    const res = await apiPost({
+      action: "CRIAR_LOJA",
+      nome: document.getElementById("regName").value.trim(),
+      telefone: document.getElementById("regPhone").value.trim(),
+      bi: document.getElementById("regBi").value.trim(),
+      empresa: document.getElementById("regCompany").value.trim(),
+      pin: pin,
+      email: document.getElementById("regEmail").value.trim(),
+      logo: document.getElementById("regLogo").value.trim()
+    });
+    if (res.status !== "SUCCESS") throw new Error(res.mensagem || res.message || res.erro || "Falha ao criar loja.");
+    const id = res.vendedorId || res.vendedorld;
+    if (!id) throw new Error("A loja foi criada, mas o servidor não devolveu o ID do vendedor.");
+    vendedorAtivo = {
+      id: id,
+      vendedorId: id,
+      nome: document.getElementById("regName").value.trim(),
+      empresa: res.empresa || document.getElementById("regCompany").value.trim(),
+      logo: res.logo || "",
+      telefone: document.getElementById("regPhone").value.trim()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(vendedorAtivo));
+    atualizarAuthUI(); fechar("authModal"); toast("Loja criada. Agora publique o primeiro produto.", "success"); mostrarDashboard();
+  } catch(err){ toast(err.message || "Não foi possível criar a loja.", "error"); }
 }
 
 function logout() {
-    vendedorAtivo = null; ultimoResumo = null; localStorage.removeItem(STORAGE_KEY);
-    atualizarAuthUI();
-    document.getElementById("dashboard").classList.add("hidden");
-    document.getElementById("inicio").classList.remove("hidden");
-    toast("Sessão terminada.");
+  vendedorAtivo = null; ultimoResumo = null; localStorage.removeItem(STORAGE_KEY);
+  atualizarAuthUI();
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("inicio").classList.remove("hidden");
+  toast("Sessão terminada.");
 }
 
 function abrirProduto() {
-    if (!vendedorAtivo) { abrirAuth("login"); return; }
-    ["prodName","prodPrice","prodDesc","prodImage","prodWhatsapp","prodDownload"].forEach(id => document.getElementById(id).value = "");
-    document.getElementById("prodCategory").value = "GERAL";
-    document.getElementById("prodType").value = "FISICO"; 
-    abrir("productModal");
+  if (!vendedorAtivo) { abrirAuth("login"); return; }
+  ["prodName","prodPrice","prodDesc","prodImage","prodWhatsapp","prodDownload"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("prodCategory").value = "GERAL";
+  document.getElementById("prodType").value = "FISICO";
+  abrir("productModal");
 }
 
 async function executarCadastroProduto(e) {
-    e.preventDefault();
-    if (!vendedorAtivo?.id) { toast("Faça login novamente.", "error"); return; }
-    try {
-        const res = await apiPost({
-            action: "CRIAR_PRODUTO", 
-            vendedorId: vendedorAtivo.id,
-            nome: document.getElementById("prodName").value.trim(),
-            descricao: document.getElementById("prodDesc").value.trim(),
-            imagem: document.getElementById("prodImage").value.trim(),
-            preco: Number(document.getElementById("prodPrice").value),
-            tipo: document.getElementById("prodType").value,
-            whatsapp: document.getElementById("prodWhatsapp").value.trim(),
-            linkDigital: document.getElementById("prodDownload").value.trim(),
-            categoria: document.getElementById("prodCategory").value
-        });
-        if (res.status !== "SUCCESS") throw new Error(res.mensagem || res.message || res.erro || "Falha ao criar produto.");
-        fechar("productModal"); toast("Produto publicado com sucesso.", "success");
-        await carregarDadosPublicos();
-        if (!document.getElementById("dashboard").classList.contains("hidden")) await carregarDashboard();
-    } catch(err){ toast(err.message || "Não foi possível publicar o produto.", "error"); }
+  e.preventDefault();
+  if (!vendedorAtivo?.id) { toast("Faça login novamente.", "error"); return; }
+  try {
+    const res = await apiPost({
+      action: "CRIAR_PRODUTO",
+      vendedorId: vendedorAtivo.id,
+      nome: document.getElementById("prodName").value.trim(),
+      descricao: document.getElementById("prodDesc").value.trim(),
+      imagem: document.getElementById("prodImage").value.trim(),
+      preco: Number(document.getElementById("prodPrice").value),
+      tipo: document.getElementById("prodType").value,
+      whatsapp: document.getElementById("prodWhatsapp").value.trim(),
+      linkDigital: document.getElementById("prodDownload").value.trim(),
+      categoria: document.getElementById("prodCategory").value
+    });
+    if (res.status !== "SUCCESS") throw new Error(res.mensagem || res.message || res.erro || "Falha ao criar produto.");
+    fechar("productModal"); toast("Produto publicado com sucesso.", "success");
+    await carregarDadosPublicos();
+    if (!document.getElementById("dashboard").classList.contains("hidden")) await carregarDashboard();
+  } catch(err){ toast(err.message || "Não foi possível publicar o produto.", "error"); }
 }
 
 function extrairArrayGAS(value, keys = []) {
-    if (Array.isArray(value)) return value;
-    if (!value || typeof value !== "object") return [];
-    for (const key of keys) { if (Array.isArray(value[key])) return value[key]; }
-    for (const key of ["data", "resultado", "result", "produtos", "blocos", "items", "rows"]) {
-        if (Array.isArray(value[key])) return value[key];
-    }
-    return [];
+  if (Array.isArray(value)) return value;
+  if (!value || typeof value !== "object") return [];
+  for (const key of keys) { if (Array.isArray(value[key])) return value[key]; }
+  for (const key of ["data", "resultado", "result", "produtos", "blocos", "items", "rows"]) {
+    if (Array.isArray(value[key])) return value[key];
+  }
+  return [];
 }
 
 function produtosDosBlocos(lista) {
-    const out = [];
-    (Array.isArray(lista)? lista: []).forEach(b => {
-        if (b && b.produtoDestaque) out.push(b.produtoDestaque);
-        if (b && Array.isArray(b.slideshowProdutos)) out.push(...b.slideshowProdutos);
-        if (b && Array.isArray(b.produtos)) out.push(...b.produtos);
-    });
-    return out;
+  const out = [];
+  (Array.isArray(lista) ? lista : []).forEach(b => {
+    if (b && b.produtoDestaque) out.push(b.produtoDestaque);
+    if (b && Array.isArray(b.slideshowProdutos)) out.push(...b.slideshowProdutos);
+    if (b && Array.isArray(b.produtos)) out.push(...b.produtos);
+  });
+  return out;
 }
 
 async function carregarDadosPublicos() {
-    try {
-        const [b, d] = await Promise.allSettled([apiGet("homeBlocos"), apiGet("produtosDestaque")]);
-        const bRaw = b.status === "fulfilled"? b.value : null;
-        const dRaw = d.status === "fulfilled"? d.value: null;
-        blocos = extrairArrayGAS(bRaw, ["blocos", "homeBlocos"]);
-        const direct = extrairArrayGAS(dRaw, ["produtos", "produtosDestaque", "destaques"]);
-        const fromBlocks = produtosDosBlocos(blocos);
-        produtos = normalizarProdutos([...direct, ...fromBlocks]);
-        const seen = new Set();
-        produtos = produtos.filter(p => {
-            const id = String(p.productId);
-            if (seen.has(id)) return false;
-            seen.add(id);
-            return true;
-        });
-        renderProdutos(); renderLojas(); renderHero(); preencherCategorias();
-        document.getElementById("statProducts").textContent = produtos.length;
-        document.getElementById("statStores").textContent = new Set(produtos.map(p => p.vendedorId).filter(Boolean)).size;
-    } catch(err) {
-        console.error(err);
-        toast("Não foi possível carregar a vitrine.", "error");
-    }
+  try {
+    const [b, d] = await Promise.allSettled([apiGet("homeBlocos"), apiGet("produtosDestaque")]);
+    const bRaw = b.status === "fulfilled" ? b.value : null;
+    const dRaw = d.status === "fulfilled" ? d.value : null;
+    blocos = extrairArrayGAS(bRaw, ["blocos", "homeBlocos"]);
+    const direct = extrairArrayGAS(dRaw, ["produtos", "produtosDestaque", "destaques"]);
+    const fromBlocks = produtosDosBlocos(blocos);
+    produtos = normalizarProdutos([...direct, ...fromBlocks]);
+    const seen = new Set();
+    produtos = produtos.filter(p => {
+      const id = String(p.productId);
+      if (seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
+    renderProdutos(); renderLojas(); renderHero(); preencherCategorias();
+    document.getElementById("statProducts").textContent = produtos.length;
+    document.getElementById("statStores").textContent = new Set(produtos.map(p => p.vendedorId).filter(Boolean)).size;
+  } catch(err) {
+    console.error(err);
+    toast("Não foi possível carregar a vitrine.", "error");
+  }
 }
 
 function preencherCategorias() {
-    const sel = document.getElementById("categoryFilter"), current = sel.value;
-    const cats = [...new Set(produtos.map(p => p.categoria).filter(Boolean))].sort();
-    sel.innerHTML = '<option value="">Todas as categorias</option>' + cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
-    sel.value = current;
+  const sel = document.getElementById("categoryFilter"), current = sel.value;
+  const cats = [...new Set(produtos.map(p => p.categoria).filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">Todas as categorias</option>' + cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+  sel.value = current;
 }
 
 function cardProduto(p, compact=false) {
-    const wa = p.whatsapp? `<button onclick='event.stopPropagation(); abrirWhatsApp(${JSON.stringify(p)})' class="flex-1 px-3 py-2 rounded-lg border border-emerald-200 text-emerald-700 bg-emerald-50 font-bold text-xs"><i class="fa-brands fa-whatsapp mr-1"></i>WhatsApp</button>`: "";
-    return `<article onclick='abrirDetalhe(${JSON.stringify(p).replace(/</g,"\\u003c")})' class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-soft hover:-translate-y-0.5 transition cursor-pointer">
-    <div class="${compact? "h-32": "h-48"} bg-slate-100 overflow-hidden"><img src="${esc(imagem(p.imagemUrl))}" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80'" class="w-full h-full object-cover" alt=""></div>
-    <div class="p-4"><div class="flex items-center justify-between gap-2"><span class="text-[11px] font-extrabold text-orange-600 uppercase">${esc(p.categoria || "GERAL")}</span><span class="text-xs text-slate-400">${esc(p.tipo || "")}</span></div>
-    <h3 class="font-black mt-1 line-clamp-2">${esc(p.nome)}</h3><p class="text-orange-600 font-black mt-2">${dinheiro(p.preco)}</p>
-    ${compact?"": `<div class="mt-3 flex gap-2"><button onclick='event.stopPropagation(); comprarProduto(${JSON.stringify(p)})' class="flex-1 px-3 py-2 rounded-lg bg-slate-900 text-white font-bold text-xs">Comprar</button>${wa}</div>` }</div></article>`;
+  const wa = p.whatsapp ? `<button onclick='event.stopPropagation(); abrirWhatsApp(${JSON.stringify(p)})' class="flex-1 px-3 py-2 rounded-lg border border-emerald-200 text-emerald-700 bg-emerald-50 font-bold text-xs"><i class="fa-brands fa-whatsapp mr-1"></i>WhatsApp</button>` : "";
+  return `<article onclick='abrirDetalhe(${JSON.stringify(p).replace(/</g,"\\u003c")})' class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-soft hover:-translate-y-0.5 transition cursor-pointer">
+<div class="${compact ? "h-32" : "h-48"} bg-slate-100 overflow-hidden"><img src="${esc(imagem(p.imagemUrl))}" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80'" class="w-full h-full object-cover" alt=""></div>
+<div class="p-4"><div class="flex items-center justify-between gap-2"><span class="text-[11px] font-extrabold text-orange-600 uppercase">${esc(p.categoria || "GERAL")}</span><span class="text-xs text-slate-400">${esc(p.tipo || "")}</span></div>
+<h3 class="font-black mt-1 line-clamp-2">${esc(p.nome)}</h3><p class="text-orange-600 font-black mt-2">${dinheiro(p.preco)}</p>
+${compact ? "" : `<div class="mt-3 flex gap-2"><button onclick='event.stopPropagation(); comprarProduto(${JSON.stringify(p)})' class="flex-1 px-3 py-2 rounded-lg bg-slate-900 text-white font-bold text-xs">Comprar</button>${wa}</div>`}</div></article>`;
 }
 
 function renderProdutos() {
-    const term = document.getElementById("searchInput").value.trim().toLowerCase();
-    const cat = document.getElementById("categoryFilter").value;
-    const arr = produtos.filter(p => (!term || [p.nome,p.descricao,p.categoria].join(" ").toLowerCase().includes(term)) && (!cat || p.categoria === cat));
-    document.getElementById("productGrid").innerHTML = arr.map(p => cardProduto(p)).join("");
-    document.getElementById("emptyProducts").classList.toggle("hidden", arr.length > 0);
+  const term = document.getElementById("searchInput").value.trim().toLowerCase();
+  const cat = document.getElementById("categoryFilter").value;
+  const arr = produtos.filter(p => (!term || [p.nome,p.descricao,p.categoria].join(" ").toLowerCase().includes(term)) && (!cat || p.categoria === cat));
+  document.getElementById("productGrid").innerHTML = arr.map(p => cardProduto(p)).join("");
+  document.getElementById("emptyProducts").classList.toggle("hidden", arr.length > 0);
 }
 
-function renderHero() { document.getElementById("heroProducts").innerHTML = produtos.slice(0,4).map(p => cardProduto(p, true)).join(""); }
+function renderHero() {
+  document.getElementById("heroProducts").innerHTML = produtos.slice(0,4).map(p => cardProduto(p, true)).join("");
+}
 
 function lojasDerivadas() {
-    const map = new Map();
-    produtos.forEach(p => {
-        const id = p.vendedorId || "sem-id";
-        if (!map.has(id)) map.set(id, {id, empresa:p.empresa || "Loja", logo:p.logo || "", products:[]});
-        map.get(id).products.push(p);
-    });
-    return [...map.values()];
+  const map = new Map();
+  produtos.forEach(p => {
+    const id = p.vendedorId || "sem-id";
+    if (!map.has(id)) map.set(id, {id, empresa: p.empresa || "Loja", logo: p.logo || "", products: []});
+    map.get(id).products.push(p);
+  });
+  return [...map.values()];
 }
 
 function renderLojas() {
-    const lojas = lojasDerivadas();
-    document.getElementById("storeGrid").innerHTML = lojas.map(s => `<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-soft">
-    <div class="flex items-center gap-4"><img src="${esc(imagem(s.logo))}" onerror="this.style.display='none'" class="w-14 h-14 rounded-2xl object-cover bg-slate-100"><div><h3 class="font-black text-lg">${esc(s.empresa)}</h3><p class="text-slate-500 text-sm">${s.products.length} produto(s) ativo(s)</p></div></div>
-    <div class="mt-4 grid grid-cols-3 gap-2">${s.products.slice(0,3).map(p=>`<img src="${esc(imagem(p.imagemUrl))}" class="h-20 w-full rounded-xl object-cover bg-slate-100">`).join("")}</div>
-    <button onclick='filtrarLoja(${JSON.stringify(s.id)})' class="mt-4 w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-sm">Ver produtos da loja</button>
-    </div>`).join("");
-    document.getElementById("emptyStores").classList.toggle("hidden", lojas.length > 0);
+  const lojas = lojasDerivadas();
+  document.getElementById("storeGrid").innerHTML = lojas.map(s => `<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-soft">
+<div class="flex items-center gap-4"><img src="${esc(imagem(s.logo))}" onerror="this.style.display='none'" class="w-14 h-14 rounded-2xl object-cover bg-slate-100"><div><h3 class="font-black text-lg">${esc(s.empresa)}</h3><p class="text-slate-500 text-sm">${s.products.length} produto(s) ativo(s)</p></div></div>
+<div class="mt-4 grid grid-cols-3 gap-2">${s.products.slice(0,3).map(p=>`<img src="${esc(imagem(p.imagemUrl))}" class="h-20 w-full rounded-xl object-cover bg-slate-100">`).join("")}</div>
+<button onclick='filtrarLoja(${JSON.stringify(s.id)})' class="mt-4 w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-sm">Ver produtos da loja</button>
+</div>`).join("");
+  document.getElementById("emptyStores").classList.toggle("hidden", lojas.length > 0);
 }
 
 function filtrarLoja(id) {
-    document.getElementById("searchInput").value = "";
-    const arr = produtos.filter(p => String(p.vendedorId) === String(id));
-    document.getElementById("productGrid").innerHTML = arr.map(p => cardProduto(p)).join("");
-    document.getElementById("emptyProducts").classList.toggle("hidden", arr.length > 0);
-    document.getElementById("produtos").scrollIntoView({behavior:"smooth"});
+  document.getElementById("searchInput").value = "";
+  const arr = produtos.filter(p => String(p.vendedorId) === String(id));
+  document.getElementById("productGrid").innerHTML = arr.map(p => cardProduto(p)).join("");
+  document.getElementById("emptyProducts").classList.toggle("hidden", arr.length > 0);
+  document.getElementById("produtos").scrollIntoView({behavior:"smooth"});
 }
 
 async function abrirDetalhe(p) {
-    let data = p;
-    try {
-        const r = await apiGet("produto", {produtoId: p.productId});
-        if (r && r.produto) data = {...p, ...r.produto};
-    } catch (_) {}
-    const wa = data.whatsapp? `<button onclick='abrirWhatsApp(${JSON.stringify(data)})' class="px-4 py-3 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 font-black"><i class="fa-brands fa-whatsapp mr-2"></i>Falar no WhatsApp</button>` : "";
-    document.getElementById("detailContent").innerHTML = `<div class="grid md:grid-cols-2">
-    <div class="min-h-72 bg-slate-100"><img src="${esc(imagem(data.imagemUrl))}" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80'" class="w-full h-full object-cover" alt=""></div>
-    <div class="p-7"><div class="flex justify-between"><span class="text-xs font-black uppercase text-orange-600">${esc(data.categoria || "GERAL")}</span><button onclick="fechar('detailModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100"><i class="fa-solid fa-xmark"></i></button></div>
-    <h2 class="text-3xl font-black mt-2">${esc(data.nome)}</h2><div class="text-2xl font-black text-orange-600 mt-3">${dinheiro(data.preco)}</div>
-    <p class="text-slate-600 mt-5 whitespace-pre-line">${esc(data.descricao || "Sem descrição.")}</p>
-    <div class="mt-6 flex flex-wrap gap-2"><button onclick='comprarProduto(${JSON.stringify(data)})' class="px-4 py-3 rounded-xl bg-slate-900 text-white font-black">Comprar agora</button>${wa}</div>
-    <div class="mt-5 pt-5 border-t flex gap-2"><button onclick='avaliarProduto("${esc(data.productId)}", "GOSTO")' class="px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 font-bold"><i class="fa-regular fa-thumbs-up mr-1"></i>Gosto</button><button onclick='avaliarProduto("${esc(data.productId)}", "NAO_GOSTO")' class="px-3 py-2 rounded-lg bg-red-50 text-red-700 font-bold"><i class="fa-regular fa-thumbs-down mr-1"></i>Não gosto</button></div>
-    </div></div>`;
-    abrir("detailModal");
+  let data = p;
+  try {
+    const r = await apiGet("produto", {produtoId: p.productId});
+    if (r && r.produto) data = {...p, ...r.produto};
+  } catch (_) {}
+  const wa = data.whatsapp ? `<button onclick='abrirWhatsApp(${JSON.stringify(data)})' class="px-4 py-3 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 font-black"><i class="fa-brands fa-whatsapp mr-2"></i>Falar no WhatsApp</button>` : "";
+  document.getElementById("detailContent").innerHTML = `<div class="grid md:grid-cols-2">
+<div class="min-h-72 bg-slate-100"><img src="${esc(imagem(data.imagemUrl))}" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80'" class="w-full h-full object-cover" alt=""></div>
+<div class="p-7"><div class="flex justify-between"><span class="text-xs font-black uppercase text-orange-600">${esc(data.categoria || "GERAL")}</span><button onclick="fechar('detailModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100"><i class="fa-solid fa-xmark"></i></button></div>
+<h2 class="text-3xl font-black mt-2">${esc(data.nome)}</h2><div class="text-2xl font-black text-orange-600 mt-3">${dinheiro(data.preco)}</div>
+<p class="text-slate-600 mt-5 whitespace-pre-line">${esc(data.descricao || "Sem descrição.")}</p>
+<div class="mt-6 flex flex-wrap gap-2"><button onclick='comprarProduto(${JSON.stringify(data)})' class="px-4 py-3 rounded-xl bg-slate-900 text-white font-black">Comprar agora</button>${wa}</div>
+<div class="mt-5 pt-5 border-t flex gap-2"><button onclick='avaliarProduto("${esc(data.productId)}", "GOSTO")' class="px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 font-bold"><i class="fa-regular fa-thumbs-up mr-1"></i>Gosto</button><button onclick='avaliarProduto("${esc(data.productId)}", "NAO_GOSTO")' class="px-3 py-2 rounded-lg bg-red-50 text-red-700 font-bold"><i class="fa-regular fa-thumbs-down mr-1"></i>Não gosto</button></div>
+</div></div>`;
+  abrir("detailModal");
 }
 
 function abrirWhatsApp(p) {
-    const raw = String(p.whatsapp || "").replace(/[^\d]/g,"");
-    if (!raw) return;
-    const msg = `Olá! Vi o produto "${p.nome}" no Moz1Vendas. Gostaria de saber mais.`;
-    window.open("https://wa.me/" + raw + "?text=" + encodeURIComponent(msg), "_blank", "noopener, noreferrer");
+  const raw = String(p.whatsapp || "").replace(/[^\d]/g,"");
+  if (!raw) return;
+  const msg = `Olá! Vi o produto "${p.nome}" no Moz1Vendas. Gostaria de saber mais.`;
+  window.open("https://wa.me/" + raw + "?text=" + encodeURIComponent(msg), "_blank", "noopener, noreferrer");
 }
 
 async function comprarProduto(p) {
-    const telefone = prompt("Digite o seu telefone (M-Pesa / e-Mola) para iniciar a compra:");
-    if (!telefone) return;
-    try {
-        const res = await apiPost({
-            action: "COMPRAR_PRODUTO",
-            produtoId: p.productId,
-            telefone: telefone.trim(),
-            metodo: "mpesa"
-        });
-        if (!res || (res.ok !== true && res.status !== "SUCCESS")) {
-            throw new Error(res.mensagem || res.message || res.erro || "Não foi possível iniciar a compra.");
-        }
-        const vendaId = res.vendaId || res.referencia || res.transactionId || "";
-        abrirStatusModal();
-        if (res.checkoutUrl) { window.open(res.checkoutUrl, "_blank", "noopener, noreferrer"); }
-        iniciarPollingPagamento(vendaId, p);
-    } catch(err){
-        toast(err.message || "Erro ao iniciar compra.", "error");
+  const telefone = prompt("Digite o seu telefone (M-Pesa / e-Mola) para iniciar a compra:");
+  if (!telefone) return;
+  try {
+    const res = await apiPost({
+      action: "COMPRAR_PRODUTO",
+      produtoId: p.productId,
+      telefone: telefone.trim(),
+      metodo: "mpesa"
+    });
+    if (!res || (res.ok !== true && res.status !== "SUCCESS")) {
+      throw new Error(res.mensagem || res.message || res.erro || "Não foi possível iniciar a compra.");
     }
+    const vendaId = res.vendaId || res.referencia || res.transactionId || "";
+    abrirStatusModal();
+    if (res.checkoutUrl) { window.open(res.checkoutUrl, "_blank", "noopener, noreferrer"); }
+    iniciarPollingPagamento(vendaId, p);
+  } catch(err){
+    toast(err.message || "Erro ao iniciar compra.", "error");
+  }
 }
 
 function abrirStatusModal() {
-    document.getElementById("statusSpinner").classList.remove("hidden");
-    document.getElementById("statusTitle").textContent = "Aguardando Pagamento";
-    document.getElementById("statusDesc").textContent = "Por favor, aceite o pedido de pagamento no seu telemóvel...";
-    document.getElementById("statusDelivery").innerHTML = "";
-    document.getElementById("btnFecharStatus").classList.add("hidden");
-    abrir("statusModal");
+  document.getElementById("statusSpinner").classList.remove("hidden");
+  document.getElementById("statusTitle").textContent = "Aguardando Pagamento";
+  document.getElementById("statusDesc").textContent = "Por favor, aceite o pedido de pagamento no seu telemóvel...";
+  document.getElementById("statusDelivery").innerHTML = "";
+  document.getElementById("btnFecharStatus").classList.add("hidden");
+  abrir("statusModal");
 }
 
 function fecharStatusModal() {
-    if (pollingTimer) clearInterval(pollingTimer);
-    fechar("statusModal");
+  if (pollingTimer) clearInterval(pollingTimer);
+  fechar("statusModal");
 }
 
 function iniciarPollingPagamento(vendaId, produto) {
-    if (pollingTimer) clearInterval(pollingTimer);
-    let tentativas = 0;
-    const maxTentativas = 30;
-    pollingTimer = setInterval(async () => {
-        tentativas++;
-        try {
-            const res = await apiGet("consultarVenda", { vendaId: vendaId });
-            const status = (res.status || res.venda?.status || "").toUpperCase();
-            if (status === "PAGO" || status === "CONCLUIDO" || res.pago === true) {
-                clearInterval(pollingTimer);
-                exibirSucessoEntrega(res, produto);
-                if (vendedorAtivo) carregarDashboard();
-            } else if (status === "CANCELADO" || status === "RECUSADO" || status === "FALHOU") {
-                clearInterval(pollingTimer);
-                document.getElementById("statusSpinner").classList.add("hidden");
-                document.getElementById("statusTitle").textContent = "Pagamento Não Concluído";
-                document.getElementById("statusDesc").textContent = "O pagamento foi cancelado ou falhou. Tente novamente.";
-                document.getElementById("btnFecharStatus").classList.remove("hidden");
-            }
-        } catch (e) {
-            console.warn("Aguardando confirmação...", e);
-            if (tentativas >= maxTentativas) {
-                clearInterval(pollingTimer);
-                document.getElementById("statusSpinner").classList.add("hidden");
-                document.getElementById("statusTitle").textContent = "Tempo Excedido";
-                document.getElementById("statusDesc").textContent = "Se já efetuou o pagamento, seu produto estará disponível em breve.";
-                document.getElementById("btnFecharStatus").classList.remove("hidden");
-            }
-        }
-    }, 4000);
+  if (pollingTimer) clearInterval(pollingTimer);
+  let tentativas = 0;
+  const maxTentativas = 30;
+  pollingTimer = setInterval(async () => {
+    tentativas++;
+    try {
+      const res = await apiGet("consultarVenda", { vendaId: vendaId });
+      const status = (res.status || res.venda?.status || "").toUpperCase();
+      if (status === "PAGO" || status === "CONCLUIDO" || res.pago === true) {
+        clearInterval(pollingTimer);
+        exibirSucessoEntrega(res, produto);
+        if (vendedorAtivo) carregarDashboard();
+      } else if (status === "CANCELADO" || status === "RECUSADO" || status === "FALHOU") {
+        clearInterval(pollingTimer);
+        document.getElementById("statusSpinner").classList.add("hidden");
+        document.getElementById("statusTitle").textContent = "Pagamento Não Concluído";
+        document.getElementById("statusDesc").textContent = "O pagamento foi cancelado ou falhou. Tente novamente.";
+        document.getElementById("btnFecharStatus").classList.remove("hidden");
+      }
+    } catch (e) {
+      console.warn("Aguardando confirmação...", e);
+      if (tentativas >= maxTentativas) {
+        clearInterval(pollingTimer);
+        document.getElementById("statusSpinner").classList.add("hidden");
+        document.getElementById("statusTitle").textContent = "Tempo Excedido";
+        document.getElementById("statusDesc").textContent = "Se já efetuou o pagamento, seu produto estará disponível em breve.";
+        document.getElementById("btnFecharStatus").classList.remove("hidden");
+      }
+    }
+  }, 4000);
 }
 
 function exibirSucessoEntrega(res, produto) {
-    document.getElementById("statusSpinner").classList.add("hidden");
-    document.getElementById("statusTitle").textContent = "Pagamento Confirmado!";
-    document.getElementById("statusDesc").textContent = "Obrigado pela compra. Seu pedido foi processado com sucesso.";
-    const downloadLink = res.linkDigital || res.entrega?.downloadUrl || produto.linkDigital || produto.downloadUrl;
-    if (produto.tipo === "DIGITAL" || downloadLink) {
-        if (downloadLink) {
-            document.getElementById("statusDelivery").innerHTML = `
-            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-left">
-            <p class="text-xs font-bold uppercase text-emerald-800">Seu Produto Digital:</p>
-            <p class="font-black text-slate-800 mt-1">${esc(produto.nome)}</p>
-            <a href="${esc(downloadLink)}" target="_blank" rel="noopener" class="mt-3 block w-full text-center py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-xl shadow-lg">
-            <i class="fa-solid fa-download mr-2"></i> Baixar Conteúdo Agora
-            </a>
-            </div>`;
-        } else {
-            document.getElementById("statusDelivery").innerHTML = `
-            <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-sm">
-            Seu pagamento foi recebido. O vendedor enviará o acesso digital em breve.
-            </div>`;
-        }
+  document.getElementById("statusSpinner").classList.add("hidden");
+  document.getElementById("statusTitle").textContent = "Pagamento Confirmado!";
+  document.getElementById("statusDesc").textContent = "Obrigado pela compra. Seu pedido foi processado com sucesso.";
+  const downloadLink = res.linkDigital || res.entrega?.downloadUrl || produto.linkDigital || produto.downloadUrl;
+  if (produto.tipo === "DIGITAL" || downloadLink) {
+    if (downloadLink) {
+      document.getElementById("statusDelivery").innerHTML = `
+      <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-left">
+        <p class="text-xs font-bold uppercase text-emerald-800">Seu Produto Digital:</p>
+        <p class="font-black text-slate-800 mt-1">${esc(produto.nome)}</p>
+        <a href="${esc(downloadLink)}" target="_blank" rel="noopener" class="mt-3 block w-full text-center py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-xl shadow-lg">
+          <i class="fa-solid fa-download mr-2"></i> Baixar Conteúdo Agora
+        </a>
+      </div>`;
     } else {
-        document.getElementById("statusDelivery").innerHTML = `
-        <div class="p-4 bg-blue-50 border border-blue-200 rounded-2xl text-blue-900 text-sm">
-        Produto físico registrado. O vendedor entrará em contacto para coordenar a entrega.
-        </div>`;
+      document.getElementById("statusDelivery").innerHTML = `
+      <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-sm">
+        Seu pagamento foi recebido. O vendedor enviará o acesso digital em breve.
+      </div>`;
     }
-    document.getElementById("btnFecharStatus").classList.remove("hidden");
+  } else {
+    document.getElementById("statusDelivery").innerHTML = `
+    <div class="p-4 bg-blue-50 border border-blue-200 rounded-2xl text-blue-900 text-sm">
+      Produto físico registrado. O vendedor entrará em contacto para coordenar a entrega.
+    </div>`;
+  }
+  document.getElementById("btnFecharStatus").classList.remove("hidden");
 }
 
 async function avaliarProduto(produtoId, avaliacao) {
-    try {
-        const res = await apiPost({action:"AVALIAR_PRODUTO", produtoId, tipo:avaliacao});
-        if (res.status && res.status !== "SUCCESS") throw new Error(res.mensagem || "Não foi possível avaliar.");
-        toast("Avaliação registada.", "success");
-    } catch(err){ toast(err.message || "Não foi possível avaliar.", "error"); }
+  try {
+    const res = await apiPost({action:"AVALIAR_PRODUTO", produtoId, tipo:avaliacao});
+    if (res.status && res.status !== "SUCCESS") throw new Error(res.mensagem || "Não foi possível avaliar.");
+    toast("Avaliação registada.", "success");
+  } catch(err){ toast(err.message || "Não foi possível avaliar.", "error"); }
 }
 
 function mostrarDashboard() {
-    if (!vendedorAtivo) { abrirAuth("login"); return; }
-    document.getElementById("inicio").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-    window.scrollTo({top:0, behavior:"smooth"});
-    carregarDashboard();
+  if (!vendedorAtivo) { abrirAuth("login"); return; }
+  document.getElementById("inicio").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  window.scrollTo({top:0, behavior:"smooth"});
+  carregarDashboard();
 }
 
 async function carregarDashboard() {
-    if (!vendedorAtivo?.id) return;
-    document.getElementById("dashCompany").textContent = vendedorAtivo.empresa || "Minha loja";
-    document.getElementById("dashSellerName").textContent = vendedorAtivo.nome || "";
-    try {
-        const r = await apiGet("resumoVendedor", {vendedorId: vendedorAtivo.id});
-        ultimoResumo = r;
-        const f = r.financeiro || {};
-        document.getElementById("kpiSaldo").textContent = dinheiro(f.saldoDisponivel);
-        document.getElementById("kpiVendas").textContent = f.vendasPagas ?? 0;
-        document.getElementById("kpiBrutas").textContent = dinheiro(f.vendasBrutas);
-        document.getElementById("kpiPendentes").textContent = dinheiro(f.payoutsPendentes);
-        renderTabela("salesTable", r.vendas || [], ["vendaId","valorLiquido","status","metodo"]);
-        renderTabela("payoutTable", r.payouts || [], ["payoutId", "valorLiquido","status", "metodo"]);
-        const mine = produtos.filter(p => String(p.vendedorId) === String(vendedorAtivo.id));
-        document.getElementById("myProducts").innerHTML = mine.length ?
-        mine.map(p=>cardProduto(p)).join(""): `<div class="sm:col-span-2 lg:col-span-3 py-8 text-center text-slate-500">Ainda não publicou produtos. <button onclick="abrirProduto()" class="text-orange-600 font-bold">Publicar agora</button></div>`;
-    } catch(err){ toast(err.message || "Não foi possível carregar o dashboard.", "error"); }
+  if (!vendedorAtivo?.id) return;
+  document.getElementById("dashCompany").textContent = vendedorAtivo.empresa || "Minha loja";
+  document.getElementById("dashSellerName").textContent = vendedorAtivo.nome || "";
+  try {
+    const r = await apiGet("resumoVendedor", {vendedorId: vendedorAtivo.id});
+    ultimoResumo = r;
+    const f = r.financeiro || {};
+    document.getElementById("kpiSaldo").textContent = dinheiro(f.saldoDisponivel);
+    document.getElementById("kpiVendas").textContent = f.vendasPagas ?? 0;
+    document.getElementById("kpiBrutas").textContent = dinheiro(f.vendasBrutas);
+    document.getElementById("kpiPendentes").textContent = dinheiro(f.payoutsPendentes);
+    renderTabela("salesTable", r.vendas || [], ["vendaId","valorLiquido","status","metodo"]);
+    renderTabela("payoutTable", r.payouts || [], ["payoutId", "valorLiquido","status", "metodo"]);
+    const mine = produtos.filter(p => String(p.vendedorId) === String(vendedorAtivo.id));
+    document.getElementById("myProducts").innerHTML = mine.length ?
+      mine.map(p=>cardProduto(p)).join("") :
+      `<div class="sm:col-span-2 lg:col-span-3 py-8 text-center text-slate-500">Ainda não publicou produtos. <button onclick="abrirProduto()" class="text-orange-600 font-bold">Publicar agora</button></div>`;
+  } catch(err){ toast(err.message || "Não foi possível carregar o dashboard.", "error"); }
 }
 
 function renderTabela(id, rows, cols) {
-    const el = document.getElementById(id);
-    if (!rows.length) { el.innerHTML = '<div class="p-6 text-center text-slate-500">Sem registos.</div>'; return; }
-    const heads = {vendaId:"ID", valorLiquido:"Valor", status:"Estado", metodo:"Método", payoutId:"ID"};
-    el.innerHTML = `<table class="w-full text-sm"><thead class="bg-slate-50"><tr>${cols.map(c=>`<th class="text-left px-4 py-3 font-black">${heads[c]||esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.slice(0,50).map(row=>`<tr class="border-t border-slate-100">${cols.map(c=>`<td class="px-4 py-3 whitespace-nowrap">${c==="valorLiquido"?dinheiro(row[c]):esc(row[c] ?? "-")}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  const el = document.getElementById(id);
+  if (!rows || !rows.length) { el.innerHTML = '<div class="p-6 text-center text-slate-500">Sem registos.</div>'; return; }
+  const heads = {vendaId:"ID", valorLiquido: "Valor", status:"Estado", metodo: "Método", payoutId:"ID"};
+  el.innerHTML = `<table class="w-full text-sm"><thead class="bg-slate-50"><tr>${cols.map(c=>`<th class="text-left px-4 py-3 font-black">${heads[c]||esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.slice(0,50).map(row=>`<tr class="border-t border-slate-100">${cols.map(c=>`<td class="px-4 py-3 whitespace-nowrap">${c==="valorLiquido"?dinheiro(row[c]):esc(row[c] ?? "-")}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
 }
 
 function abrirPayout() {
-    if (!ultimoResumo) { carregarDashboard().then(()=>abrirPayout()); return; }
-    const saldo = Number(ultimoResumo.financeiro?.saldoDisponivel || 0);
-    document.getElementById("payoutBalance").textContent = dinheiro(saldo);
-    document.getElementById("payoutAmount").value = "";
-    const payoutPhone = document.getElementById("payoutPhone");
-    if (payoutPhone) payoutPhone.value = vendedorAtivo.telefone || "";
-    calcularPayout(); abrir("payoutModal");
+  if (!ultimoResumo) { carregarDashboard().then(()=>abrirPayout()); return; }
+  const saldo = Number(ultimoResumo.financeiro?.saldoDisponivel || 0);
+  document.getElementById("payoutBalance").textContent = dinheiro(saldo);
+  document.getElementById("payoutAmount").value = "";
+  const payoutPhone = document.getElementById("payoutPhone");
+  if (payoutPhone) payoutPhone.value = vendedorAtivo.telefone || "";
+  calcularPayout(); abrir("payoutModal");
 }
 
 function calcularPayout() {
-    const v = Number(document.getElementById("payoutAmount").value || 0);
-    document.getElementById("feeNet").textContent = dinheiro(v * 0.02);
-    document.getElementById("feeMoz").textContent = dinheiro(v * 0.01);
-    document.getElementById("feeTotal").textContent = dinheiro(v * 0.03);
-    document.getElementById("payoutNet").textContent = dinheiro(v * 0.97);
+  const v = Number(document.getElementById("payoutAmount").value || 0);
+  document.getElementById("feeNet").textContent = dinheiro(v * 0.02);
+  document.getElementById("feeMoz").textContent = dinheiro(v * 0.01);
+  document.getElementById("feeTotal").textContent = dinheiro(v * 0.03);
+  document.getElementById("payoutNet").textContent = dinheiro(v * 0.97);
 }
 
-/* ========================================================
-   FUNÇÃO DE PAYOUT CORRIGIDA PARA COMUNICAÇÃO COM O NETSHOP
-   ======================================================== */
 async function executarPayout(e) {
-    e.preventDefault();
-    if (!vendedorAtivo?.id) {
-        toast("Sessão expirada. Faça login novamente.", "error");
-        return;
+  e.preventDefault();
+  if (!vendedorAtivo?.id) {
+    toast("Sessão expirada. Faça login novamente.", "error");
+    return;
+  }
+  const valor = Number(document.getElementById("payoutAmount").value);
+  const saldo = Number(ultimoResumo?.financeiro?.saldoDisponivel || 0);
+  const telefone = document.getElementById("payoutPhone")?.value?.trim() || "";
+  const metodo = document.getElementById("payoutMethod")?.value || "mpesa";
+
+  if (!valor || valor <= 0) {
+    toast("Informe um valor válido para o saque.", "error");
+    return;
+  }
+  if (valor > saldo) {
+    toast("O valor solicitado excede o saldo disponível.", "error");
+    return;
+  }
+  if (!telefone) {
+    toast("Informe o telefone M-Pesa/e-Mola para receber o payout.", "error");
+    return;
+  }
+
+  const btn = document.getElementById("btnSubmitPayout");
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Processando...';
+  }
+
+  try {
+    const res = await apiPost({
+      action: "SOLICITAR_PAYOUT",
+      vendedorId: vendedorAtivo.id,
+      valor: valor,
+      telefone: telefone,
+      msisdn: telefone,
+      metodo: metodo
+    });
+
+    if (!res || (res.ok !== true && res.status !== "SUCCESS")) {
+      throw new Error(res.erro || res.mensagem || res.message || "Payout não autorizado.");
     }
 
-    const valor = Number(document.getElementById("payoutAmount").value);
-    const saldo = Number(ultimoResumo?.financeiro?.saldoDisponivel || 0);
-    const telefone = document.getElementById("payoutPhone")?.value?.trim() || "";
-    const metodo = document.getElementById("payoutMethod")?.value || "mpesa";
-
-    if (!valor || valor <= 0) { 
-        toast("Informe um valor válido para o saque.", "error"); 
-        return; 
-    }
-    if (valor > saldo) { 
-        toast("O valor solicitado excede o saldo disponível.", "error"); 
-        return; 
-    }
-    if (!telefone) { 
-        toast("Informe o telefone M-Pesa/e-Mola para receber o payout.", "error"); 
-        return; 
-    }
-
-    const btn = document.getElementById("btnSubmitPayout");
+    fechar("payoutModal");
+    toast("Payout solicitado! Valor a receber: " + dinheiro(res.valorLiquido || valor * 0.97), "success");
+    await carregarDashboard();
+  } catch(err) {
+    toast(err.message || "Não foi possível solicitar o payout.", "error");
+  } finally {
     if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Processando...';
+      btn.disabled = false;
+      btn.innerHTML = "Solicitar payout";
     }
-
-    try {
-        const res = await apiPost({
-            action: "SOLICITAR_PAYOUT",
-            vendedorId: vendedorAtivo.id,
-            valor: valor,
-            telefone: telefone,
-            msisdn: telefone,
-            metodo: metodo
-        });
-
-        if (!res || res.ok !== true) {
-            throw new Error(res.erro || res.mensagem || res.message || "Payout não autorizado.");
-        }
-
-        fechar("payoutModal");
-        toast("Payout solicitado! Valor a receber: " + dinheiro(res.valorLiquido || valor * 0.97), "success");
-        await carregarDashboard();
-    } catch(err) {
-        toast(err.message || "Não foi possível solicitar o payout.", "error");
-    } finally {
-        if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = "Solicitar payout";
-        }
-    }
+  }
 }
 
 function abrirTermos(){ abrir("termsModal"); }
 
 async function init() {
-    atualizarAuthUI();
-    await carregarDadosPublicos();
-    if (vendedorAtivo) {
-        try { await carregarDashboard(); } catch (_) {}
-    }
-    document.addEventListener("keydown", e => {
-        if (e.key === "Escape") ["authModal", "productModal", "payoutModal", "detailModal", "termsModal","statusModal"].forEach(fechar);
-    });
+  atualizarAuthUI();
+  await carregarDadosPublicos();
+  if (vendedorAtivo) {
+    try { await carregarDashboard(); } catch (_) {}
+  }
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") ["authModal", "productModal", "payoutModal", "detailModal", "termsModal","statusModal"].forEach(fechar);
+  });
 }
 
 init();
