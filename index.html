@@ -280,7 +280,7 @@ label { display: block; font-size: 0.875rem; font-weight: 800; margin-bottom: .4
 </div>
 
 <script>
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzIib4-yqS98hkJYszfUWXvF4j9WTEuAnLA9tshkZMDamngFgnseXxC8jUc6BRSoRWq9A/exec";
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxAICqy9mgq3dDy5Cv634pzVSOphlhhnDtXyjiUUkVEDV7As96wTqQ5BgGHXyifkgNn9w/exec";
 const STORAGE_KEY = "vendedor_moz1";
 let vendedorAtivo = null;
 let produtos = [];
@@ -620,7 +620,7 @@ async function comprarProduto(p) {
       metodo: "mpesa"
     });
     if (!res || (res.ok !== true && res.status !== "SUCCESS")) {
-      throw new Error(res.mensagem || res.message || res.erro || "Não foi possível iniciar a compra.");
+      throw new Error(res.mensagem || res.message || res.erro || res.detalhe || "Não foi possível iniciar a compra.");
     }
     const vendaId = res.vendaId || res.referencia || res.transactionId || "";
     abrirStatusModal();
