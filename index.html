@@ -192,7 +192,7 @@ label { display: block; font-size: 0.875rem; font-weight: 800; margin-bottom: .4
       <form onsubmit="executarCadastroProduto(event)" class="p-6 space-y-4">
         <div class="grid sm:grid-cols-2 gap-4">
           <div><label class="label">Nome</label><input id="prodName" required class="input"></div>
-          <div><label class="label">Preço (MT)</label><input id="prodPrice" type="number" min="0" step="0.01" required class="input"></div>
+          <div><label class="label">Preço (MT)</label><input id="prodPrice" type="number" min="20" max="40000" step="1" required class="input"></div>
         </div>
         <div><label class="label">Descrição</label><textarea id="prodDesc" required rows="4" class="input"></textarea></div>
         <div class="grid sm:grid-cols-2 gap-4">
@@ -212,7 +212,7 @@ label { display: block; font-size: 0.875rem; font-weight: 800; margin-bottom: .4
         </div>
         <div><label class="label">Link de download (digital, opcional)</label><input id="prodDownload" type="url" class="input"></div>
         <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-900">
-          <b>Taxa de venda:</b> 10% NetShop + 1% Moz1Vendas = <b>11%</b>. O vendedor recebe 89% do valor da venda.
+          <b>Taxas da venda:</b> Pagar.com <b>0%</b> + Moz1Vendas <b>1%</b>. O vendedor recebe <b>99%</b> do valor da venda. A Moz1Vendas cobra 1% na venda e mais 1% quando o vendedor solicita payout.
         </div>
         <button class="w-full py-3 rounded-xl bg-slate-900 text-white font-black">Publicar produto</button>
       </form>
@@ -237,12 +237,12 @@ label { display: block; font-size: 0.875rem; font-weight: 800; margin-bottom: .4
             <p class="text-xs text-slate-500 mt-1">Use o número M-Pesa/e-Mola que receberá o saque.</p>
           </div>
           <label class="label">Valor bruto do payout (MT)</label>
-          <input id="payoutAmount" oninput="calcularPayout()" type="number" min="1" step="0.01" required class="input">
+          <input id="payoutAmount" oninput="calcularPayout()" type="number" min="20" max="40000" step="1" required class="input">
         </div>
         <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-2 text-sm">
-          <div class="flex justify-between"><span>NetShop - 2%</span><b id="feeNet">0 MT</b></div>
+          <div class="flex justify-between"><span>Pagar.com - 8%</span><b id="feeNet">0 MT</b></div>
           <div class="flex justify-between"><span>Moz1Vendas - 1%</span><b id="feeMoz">0 MT</b></div>
-          <div class="flex justify-between border-t pt-2"><span class="font-bold">Total taxas 3%</span><b id="feeTotal">0 MT</b></div>
+          <div class="flex justify-between border-t pt-2"><span class="font-bold">Total taxas 9%</span><b id="feeTotal">0 MT</b></div>
           <div class="flex justify-between text-base border-t pt-2"><span class="font-black">Receberá</span><b id="payoutNet" class="text-orange-600">0 MT</b></div>
         </div>
         <div><label class="label">Método</label><select id="payoutMethod" class="input"><option value="mpesa">M-Pesa</option><option value="emola">e-Mola</option></select></div>
@@ -764,10 +764,17 @@ function abrirPayout() {
 
 function calcularPayout() {
   const v = Number(document.getElementById("payoutAmount").value || 0);
-  document.getElementById("feeNet").textContent = dinheiro(v * 0.02);
-  document.getElementById("feeMoz").textContent = dinheiro(v * 0.01);
-  document.getElementById("feeTotal").textContent = dinheiro(v * 0.03);
-  document.getElementById("payoutNet").textContent = dinheiro(v * 0.97);
+  const f = ultimoResumo?.financeiro || {};
+  const taxaPagar = Number(f.taxaPayoutPagar ?? 0.08);
+  const taxaMoz1 = Number(f.taxaPayoutMoz1 ?? 0.01);
+  const valorTaxaPagar = Math.ceil(v * taxaPagar);
+  const valorTaxaMoz1 = Math.round(v * taxaMoz1 * 100) / 100;
+  const total = valorTaxaPagar + valorTaxaMoz1;
+  const liquido = Math.max(0, v - total);
+  document.getElementById("feeNet").textContent = dinheiro(valorTaxaPagar);
+  document.getElementById("feeMoz").textContent = dinheiro(valorTaxaMoz1);
+  document.getElementById("feeTotal").textContent = dinheiro(total);
+  document.getElementById("payoutNet").textContent = dinheiro(liquido);
 }
 
 async function executarPayout(e) {
@@ -782,8 +789,8 @@ async function executarPayout(e) {
   const telefone = document.getElementById("payoutPhone")?.value?.trim() || "";
   const metodo = document.getElementById("payoutMethod")?.value || "mpesa";
 
-  if (!valor || valor <= 0) {
-    toast("Informe um valor válido para o saque.", "error");
+  if (!Number.isInteger(valor) || valor < 20 || valor > 40000) {
+    toast("O valor do payout deve ser um número inteiro entre 20 e 40.000 MZN.", "error");
     return;
   }
   if (valor > saldo) {
@@ -816,7 +823,10 @@ async function executarPayout(e) {
     }
 
     fechar("payoutModal");
-    toast("Payout solicitado! Valor a receber: " + dinheiro(res.valorLiquido || valor * 0.97), "success");
+    const recebido = Number.isFinite(Number(res.valorLiquido)) ? Number(res.valorLiquido) : 0;
+    const taxaPagar = Number(res.taxaPagar || 0);
+    const taxaMoz1 = Number(res.taxaMoz1 || 0);
+    toast("Payout solicitado. Pagar.com: " + dinheiro(taxaPagar) + " | Moz1Vendas: " + dinheiro(taxaMoz1) + " | Receberá: " + dinheiro(recebido), "success");
     await carregarDashboard();
   } catch(err) {
     toast(err.message || "Não foi possível solicitar o payout.", "error");
