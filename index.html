@@ -304,7 +304,7 @@ Fechar </button>
 
 <div>
 <label class="label">Telefone</label>
-<input id="regPhone" required class="input">
+<input id="regPhone" required class="input" inputmode="tel" placeholder="+258 84 123 4567">
 </div>
 </div>
 
@@ -316,12 +316,12 @@ Fechar </button>
 <div class="grid sm:grid-cols-2 gap-4">
 <div>
 <label class="label">PIN</label>
-<input id="regPin" type="password" inputmode="numeric" required minlength="4" class="input">
+<input id="regPin" type="password" inputmode="numeric" required minlength="6" maxlength="12" class="input" placeholder="Mínimo 6 dígitos">
 </div>
 
 <div>
 <label class="label">Confirmar PIN</label>
-<input id="regPin2" type="password" inputmode="numeric" required minlength="4" class="input">
+<input id="regPin2" type="password" inputmode="numeric" required minlength="6" maxlength="12" class="input" placeholder="Repita o PIN">
 </div>
 </div>
 
@@ -332,8 +332,8 @@ Fechar </button>
 </div>
 
 <div>
-<label class="label">Email (opcional)</label>
-<input id="regEmail" type="email" class="input">
+<label class="label">Email</label>
+<input id="regEmail" type="email" required class="input" placeholder="exemplo@email.com">
 </div>
 </div>
 
@@ -659,6 +659,10 @@ async function apiGet(action, params = {}) {
   }
 }
 
+async function apiPing() {
+  return apiGet("ping");
+}
+
 async function apiPost(payload) {
 
   const r = await fetch(GAS_API_URL, {
@@ -866,8 +870,21 @@ async function executarLogin(e) {
       id:
         res.vendedor.id ||
         res.vendedor.vendedorId ||
-        res.vendedor.vendedorld
+        res.vendedor.vendedorld,
+      vendedorId:
+        res.vendedor.vendedorId ||
+        res.vendedor.id ||
+        res.vendedor.vendedorld,
+      sessionToken: res.sessionToken || ""
     };
+
+    if (!vendedorAtivo.sessionToken) {
+      throw new Error("O servidor não devolveu uma sessão válida. Atualize a implantação do GAS e tente novamente.");
+    }
+
+    if (String(res.vendedor.status || "").toUpperCase() !== "ATIVO") {
+      throw new Error("A sua conta ainda está pendente de aprovação do administrador.");
+    }
 
     localStorage.setItem(
       STORAGE_KEY,
@@ -912,11 +929,32 @@ async function executarRegisto(e) {
     return;
   }
 
-  const pin = document.getElementById("regPin").value;
+  const pin = document.getElementById("regPin").value.trim();
+  const telefone = document.getElementById("regPhone").value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+
+  if (!/^\\+?258?\\s*[89]\\d[\\s-]?\\d{3}[\\s-]?\\d{4}$/.test(telefone) &&
+      !/^8\\d{8}$/.test(telefone.replace(/\\D/g, ""))) {
+    toast("Use um contacto moçambicano válido, por exemplo +258 84 123 4567.", "error");
+    finalizarProcessamentoBotao(btn);
+    return;
+  }
+
+  if (!/^\\d{6,12}$/.test(pin)) {
+    toast("O PIN deve ter entre 6 e 12 dígitos.", "error");
+    finalizarProcessamentoBotao(btn);
+    return;
+  }
+
+  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+    toast("Informe um email válido.", "error");
+    finalizarProcessamentoBotao(btn);
+    return;
+  }
 
   if (
     pin !==
-    document.getElementById("regPin2").value
+    document.getElementById("regPin2").value.trim()
   ) {
     toast(
       "Os PINs não coincidem.",
@@ -931,15 +969,15 @@ async function executarRegisto(e) {
     const res = await apiPost({
       action: "CRIAR_LOJA",
       nome: document.getElementById("regName").value.trim(),
-      telefone: document.getElementById("regPhone").value.trim(),
+      telefone: telefone,
       bi: document.getElementById("regBi").value.trim(),
       empresa: document.getElementById("regCompany").value.trim(),
       pin: pin,
-      email: document.getElementById("regEmail").value.trim(),
+      email: email,
       logo: document.getElementById("regLogo").value.trim()
     });
 
-    if (res.status !== "SUCCESS") {
+    if (res.status !== "PENDENTE" && res.status !== "SUCCESS") {
       throw new Error(
         res.mensagem ||
         res.message ||
@@ -954,37 +992,19 @@ async function executarRegisto(e) {
 
     if (!id) {
       throw new Error(
-        "A loja foi criada, mas o servidor não devolveu o ID do vendedor."
+        "O servidor não devolveu o ID da loja criada."
       );
     }
 
-    vendedorAtivo = {
-      id: id,
-      vendedorId: id,
-      nome: document.getElementById("regName").value.trim(),
-      empresa:
-        res.empresa ||
-        document.getElementById("regCompany").value.trim(),
-      logo: res.logo || "",
-      telefone:
-        document.getElementById("regPhone").value.trim()
-    };
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(vendedorAtivo)
-    );
-
-    atualizarAuthUI();
-
+    // A conta nova fica PENDENTE no GAS fortificado.
+    // Não criar sessão local nem abrir o dashboard antes da aprovação.
     fechar("authModal");
 
     toast(
-      "Loja criada. Agora publique o primeiro produto.",
+      res.message ||
+      "Loja registada. Aguarde a aprovação do administrador antes de entrar.",
       "success"
     );
-
-    mostrarDashboard();
 
   } catch(err) {
 
@@ -1067,7 +1087,7 @@ async function executarCadastroProduto(e) {
 
       action: "CRIAR_PRODUTO",
 
-      vendedorId: vendedorAtivo.id,
+      sessionToken: vendedorAtivo.sessionToken || "",
 
       nome:
         document.getElementById("prodName").value.trim(),
@@ -2789,8 +2809,8 @@ async function executarPayout(e) {
         action:
           "SOLICITAR_PAYOUT",
 
-        vendedorId:
-          vendedorAtivo.id,
+        sessionToken:
+          vendedorAtivo.sessionToken || "",
 
         valor:
           valor,
