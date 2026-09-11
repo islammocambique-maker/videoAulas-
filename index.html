@@ -112,7 +112,7 @@ Uma vitrine simples para descobrir produtos e uma área completa para vendedores
 </div>
 <div id="storeGrid" class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
 <div id="emptyStores" class="hidden py-10 text-center text-slate-500">
-Ainda não há lojas com produtos ativos.
+Ainda não há lojas ativas com produtos publicados.
 </div>
 </div>
 </section>
@@ -609,7 +609,6 @@ async function executarRegisto(e) {
       throw new Error(res.mensagem || res.message || res.erro || "Falha ao criar loja.");
     }
     
-    // Avisa o vendedor que a conta aguarda aprovação do Administrador
     fechar("authModal");
     toast(res.mensagem || "Conta criada! Aguarde a aprovação do administrador para ter acesso.", "info");
   } catch (err) {
@@ -768,7 +767,30 @@ function renderHero() {
   document.getElementById("heroProducts").innerHTML = produtos.slice(0, 4).map(p => cardProduto(p, true)).join("");
 }
 
-function lojasDerivadas() {
+// CORREÇÃO CRÍTICA DAS VITRINES
+function renderLojas() {
+  const storeGrid = document.getElementById("storeGrid");
+  const emptyStores = document.getElementById("emptyStores");
+
+  // Primeiro renderiza a partir dos blocos da API do Backend
+  if (Array.isArray(blocos) && blocos.length > 0) {
+    storeGrid.innerHTML = blocos.map(b => `<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-soft">
+<div class="flex items-center gap-4">
+<img src="${esc(imagem(b.logo))}" onerror="this.style.display='none'" class="w-14 h-14 rounded-2xl object-cover bg-slate-100">
+<div>
+<h3 class="font-black text-lg">${esc(b.empresa)}</h3>
+<p class="text-slate-500 text-sm">Loja verificada</p>
+</div>
+</div>
+<div class="mt-4 grid grid-cols-3 gap-2">
+${(b.slideshowProdutos || []).slice(0, 3).map(p => `<img src="${esc(imagem(p.imagemUrl || p.imagem))}" class="h-20 w-full rounded-xl object-cover bg-slate-100">`).join("")}
+</div>
+</div>`).join("");
+    emptyStores.classList.add("hidden");
+    return;
+  }
+
+  // Fallback: agrupa produtos carregados
   const map = new Map();
   produtos.forEach(p => {
     const id = p.vendedorId || "sem-id";
@@ -777,12 +799,16 @@ function lojasDerivadas() {
     }
     map.get(id).products.push(p);
   });
-  return [...map.values()];
-}
+  const lojas = [...map.values()];
 
-function renderLojas() {
-  const lojas = lojasDerivadas();
-  document.getElementById("storeGrid").innerHTML = lojas.map(s => `<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-soft">
+  if (lojas.length === 0) {
+    emptyStores.classList.remove("hidden");
+    storeGrid.innerHTML = "";
+    return;
+  }
+
+  emptyStores.classList.add("hidden");
+  storeGrid.innerHTML = lojas.map(s => `<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-soft">
 <div class="flex items-center gap-4">
 <img src="${esc(imagem(s.logo))}" onerror="this.style.display='none'" class="w-14 h-14 rounded-2xl object-cover bg-slate-100">
 <div>
@@ -795,7 +821,6 @@ ${s.products.slice(0, 3).map(p => `<img src="${esc(imagem(p.imagemUrl))}" class=
 </div>
 <button onclick='filtrarLoja(${JSON.stringify(s.id)})' class="mt-4 w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-sm">Ver produtos da loja</button>
 </div>`).join("");
-  document.getElementById("emptyStores").classList.toggle("hidden", lojas.length > 0);
 }
 
 function filtrarLoja(id) {
