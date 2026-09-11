@@ -553,6 +553,7 @@ A Moz1Vendas é uma plataforma de intermediação/vitrine digital que permite a 
 
 <script>
 
+// IMPORTANTE: este deve ser o URL da implantação "Web app" da versão actual do GAS fortificado.
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzfrOd-cjWKfVku2ayrC36Op0V_8VVevsaPjSwp-wjfD_ln5Wsm2sPtWNC_tdU1NrZgew/exec";
 
 const STORAGE_KEY = "vendedor_moz1";
@@ -639,7 +640,13 @@ async function apiGet(action, params = {}) {
   );
 
   if (!r.ok) {
-    throw new Error("Erro HTTP " + r.status);
+    let detalhe = "";
+    try { detalhe = (await r.text()).slice(0, 240); } catch (_) {}
+    throw new Error(
+      "Erro HTTP " + r.status +
+      " na API do GAS. Verifique se o Web App está publicado e se o URL da implantação é o atual." +
+      (detalhe ? " Resposta: " + detalhe : "")
+    );
   }
 
   const text = await r.text();
@@ -676,7 +683,13 @@ async function apiPost(payload) {
   });
 
   if (!r.ok) {
-    throw new Error("Erro HTTP " + r.status);
+    let detalhe = "";
+    try { detalhe = (await r.text()).slice(0, 240); } catch (_) {}
+    throw new Error(
+      "Erro HTTP " + r.status +
+      " na API do GAS. O mesmo endpoint é usado por login, registo e pagamento." +
+      (detalhe ? " Resposta: " + detalhe : "")
+    );
   }
 
   const text = await r.text();
@@ -933,20 +946,20 @@ async function executarRegisto(e) {
   const telefone = document.getElementById("regPhone").value.trim();
   const email = document.getElementById("regEmail").value.trim();
 
-  if (!/^\\+?258?\\s*[89]\\d[\\s-]?\\d{3}[\\s-]?\\d{4}$/.test(telefone) &&
-      !/^8\\d{8}$/.test(telefone.replace(/\\D/g, ""))) {
+  if (!/^\+?258?\s*[89]\d[\s-]?\d{3}[\s-]?\d{4}$/.test(telefone) &&
+      !/^8\d{8}$/.test(telefone.replace(/\D/g, ""))) {
     toast("Use um contacto moçambicano válido, por exemplo +258 84 123 4567.", "error");
     finalizarProcessamentoBotao(btn);
     return;
   }
 
-  if (!/^\\d{6,12}$/.test(pin)) {
+  if (!/^\d{6,12}$/.test(pin)) {
     toast("O PIN deve ter entre 6 e 12 dígitos.", "error");
     finalizarProcessamentoBotao(btn);
     return;
   }
 
-  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     toast("Informe um email válido.", "error");
     finalizarProcessamentoBotao(btn);
     return;
