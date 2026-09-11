@@ -1,2955 +1,477 @@
 <!doctype html>
-
 <html lang="pt-MZ">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0f172a">
-<title>Moz1Vendas - Marketplace</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<style>
-html{scroll-behavior:smooth}
-body{font-family:Inter,ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",sans-serif}
-.glass{background:rgba(255,255,255,.82); backdrop-filter:blur(14px)}
-.darkglass{background:rgba(15,23,42,.9); backdrop-filter:blur(14px)}
-.shadow-soft{box-shadow:0 18px 50px rgba(15,23,42,.10)}
-.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical; overflow:hidden}
-.toast{animation:toastin .22s ease-out}
-.btn-processing{
-  opacity:.75;
-  cursor:not-allowed !important;
-  pointer-events:none;
-}
-.btn-processing i{
-  margin-right:.5rem;
-}
-
-@keyframes toastin{from{transform:translateY(12px); opacity:0}to{transform: translateY(0); opacity:1}}
-.modal{animation:modalin .18s ease-out}
-@keyframes modalin{from{transform: scale(.98); opacity:0}to{transform: scale(1); opacity:1}}
-label{display:block;font-size:.875rem; font-weight:800; margin-bottom:.4rem;color:#334155}
-.input{width:100%;border:1px solid #e2e8f0;border-radius:.75rem; padding:.75rem .9rem; outline:none; background:#fff}
-.input:focus {border-color:#fb923c; box-shadow:0 0 0 3px rgba(251,146,60,.16)}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
+  <title>Moz1Vendas — Marketplace</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    html{scroll-behavior:smooth}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .glass{background:rgba(255,255,255,.88);backdrop-filter:blur(14px)}
+    .shadow-soft{box-shadow:0 18px 55px rgba(15,23,42,.10)}
+    .modal{animation:modalin .16s ease-out}
+    .toast{animation:toastin .2s ease-out}
+    @keyframes modalin{from{transform:scale(.98);opacity:0}to{transform:scale(1);opacity:1}}
+    @keyframes toastin{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .input{width:100%;border:1px solid #e2e8f0;border-radius:14px;padding:.78rem .9rem;background:#fff;outline:none}
+    .input:focus{border-color:#fb923c;box-shadow:0 0 0 3px rgba(251,146,60,.14)}
+    label{display:block;font-size:.86rem;font-weight:800;margin-bottom:.4rem;color:#334155}
+  </style>
 </head>
-
 <body class="bg-slate-50 text-slate-900">
 
-<div id="toastRoot" class="fixed right-4 bottom-4 z-[100] space-y-2"></div>
+<div id="toastRoot" class="fixed right-4 bottom-4 z-[200] space-y-2"></div>
 
-<header class="sticky top-0 z-50 border-b border-slate-200/70 glass">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-
-<button onclick="irPara('inicio')" class="flex items-center gap-2 shrink-0">
-<span class="w-10 h-10 rounded-xl bg-slate-900 text-white grid place-items-center font-black">M1</span>
-<span class="font-extrabold tracking-tight text-lg">Moz<span class="text-orange-500">1</span>Vendas</span>
-</button>
-
-<nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-<button onclick="irPara('inicio')" class="hover:text-slate-900">Início</button>
-<button onclick="irPara('produtos')" class="hover:text-slate-900">Produtos</button>
-<button onclick="irPara('lojas')" class="hover:text-slate-900">Lojas</button>
-<button onclick="abrirTermos()" class="hover:text-slate-900">Termos</button>
-</nav>
-
-<div class="flex items-center gap-2">
-<button id="btnDashboard" onclick="mostrarDashboard()" class="hidden sm:inline-flex px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm font-bold">Dashboard</button>
-<button id="btnAuth" onclick="abrirAuth('login')" class="px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-sm font-bold">Entrar</button>
-<button id="btnLogout" onclick="logout()" class="hidden px-4 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-sm font-bold">Sair</button>
-</div>
-
-</div>
+<header class="sticky top-0 z-50 border-b border-slate-200 glass">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <button onclick="go('home')" class="flex items-center gap-2">
+      <span class="w-10 h-10 rounded-xl bg-slate-900 text-white grid place-items-center font-black">M1</span>
+      <span class="font-extrabold text-lg">Moz<span class="text-orange-500">1</span>Vendas</span>
+    </button>
+    <nav class="hidden md:flex gap-6 text-sm font-semibold text-slate-600">
+      <button onclick="go('home')" class="hover:text-slate-950">Início</button>
+      <button onclick="go('products')" class="hover:text-slate-950">Produtos</button>
+      <button onclick="go('stores')" class="hover:text-slate-950">Lojas</button>
+      <button onclick="go('ads')" class="hover:text-slate-950">Publicidade</button>
+      <button onclick="openTerms()" class="hover:text-slate-950">Termos</button>
+    </nav>
+    <div class="flex gap-2">
+      <button id="dashboardBtn" onclick="showDashboard()" class="hidden px-4 py-2 rounded-xl bg-slate-100 font-bold">Dashboard</button>
+      <button id="authBtn" onclick="openAuth('login')" class="px-4 py-2 rounded-xl bg-slate-900 text-white font-bold">Entrar</button>
+      <button id="logoutBtn" onclick="logout()" class="hidden px-4 py-2 rounded-xl border font-bold">Sair</button>
+    </div>
+  </div>
 </header>
 
-<main id="inicio">
+<main id="home">
+  <section class="bg-slate-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <span class="inline-flex px-3 py-1.5 rounded-full bg-white/10 text-orange-300 text-xs font-bold">Marketplace moçambicano</span>
+        <h1 class="mt-5 text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">Compre. Venda. Cresça.</h1>
+        <p class="mt-5 text-slate-300 text-lg max-w-xl">Descubra produtos, crie a sua loja, acompanhe vendas e solicite levantamentos — com a lógica de segurança no servidor.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <button onclick="go('products')" class="px-5 py-3 rounded-xl bg-orange-500 text-white font-extrabold">Explorar produtos</button>
+          <button onclick="openAuth('register')" class="px-5 py-3 rounded-xl bg-white/10 border border-white/15 font-extrabold">Abrir minha loja</button>
+        </div>
+        <div class="mt-8 grid grid-cols-3 gap-4 max-w-md text-sm">
+          <div><b id="statProducts" class="text-2xl">0</b><div class="text-slate-400">Produtos</div></div>
+          <div><b id="statStores" class="text-2xl">0</b><div class="text-slate-400">Lojas</div></div>
+          <div><b id="apiState" class="text-sm">A verificar…</b><div class="text-slate-400">API</div></div>
+        </div>
+      </div>
+      <div class="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl">
+        <div class="flex justify-between mb-4"><span class="font-bold">Em destaque</span><i class="fa-solid fa-arrow-trend-up text-orange-400"></i></div>
+        <div id="heroProducts" class="grid grid-cols-2 gap-3"></div>
+      </div>
+    </div>
+  </section>
 
-<section class="bg-slate-900 text-white overflow-hidden">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
+  <section id="products" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
+      <div><p class="text-orange-600 font-extrabold text-sm uppercase">Marketplace</p><h2 class="text-3xl font-black">Produtos</h2></div>
+      <div class="flex flex-col sm:flex-row gap-2">
+        <input id="search" oninput="renderProducts()" class="input sm:w-72" placeholder="Pesquisar produto…">
+        <select id="category" onchange="loadCategory()" class="input sm:w-52"><option value="">Todas as categorias</option></select>
+      </div>
+    </div>
+    <div id="productGrid" class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+    <div id="emptyProducts" class="hidden py-16 text-center text-slate-500">Nenhum produto encontrado.</div>
+  </section>
 
-<div>
-<span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 text-orange-300 text-xs font-bold">
-<i class="fa-solid fa-store"></i> Marketplace moçambicano
-</span>
+  <section id="stores" class="bg-white border-y">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <p class="text-orange-600 font-extrabold text-sm uppercase">Vitrines</p>
+      <h2 class="text-3xl font-black mt-1">Lojas em destaque</h2>
+      <div id="storeGrid" class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <div id="emptyStores" class="hidden py-10 text-center text-slate-500">Ainda não há lojas com produtos ativos.</div>
+    </div>
+  </section>
 
-<h1 class="mt-5 text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">Compre. Venda. Cresça.</h1>
-
-<p class="mt-5 text-slate-300 text-lg max-w-xl">
-Uma vitrine simples para descobrir produtos e uma área completa para vendedores acompanharem vendas, saldo e levantamentos.
-</p>
-
-<div class="mt-8 flex flex-wrap gap-3">
-<button onclick="irPara('produtos')" class="px-5 py-3 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-extrabold">Explorar produtos</button>
-<button onclick="abrirAuth('register')" class="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 font-extrabold">Abrir minha loja</button>
-</div>
-
-<div class="mt-8 grid grid-cols-3 gap-4 max-w-md text-sm">
-<div><div class="font-black text-2xl" id="statProducts">0</div><div class="text-slate-400">Produtos</div></div>
-<div><div class="font-black text-2xl" id="statStores">0</div><div class="text-slate-400">Lojas</div></div>
-<div><div class="font-black text-2xl">24/7</div><div class="text-slate-400">Vitrine</div></div>
-</div>
-</div>
-
-<div class="relative">
-<div class="absolute -inset-10 bg-orange-500/10 blur-3xl rounded-full"></div>
-<div class="relative rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl">
-<div class="flex items-center justify-between mb-4">
-<span class="font-bold">Produtos em destaque</span>
-<i class="fa-solid fa-arrow-trend-up text-orange-400"></i>
-</div>
-<div id="heroProducts" class="grid grid-cols-2 gap-3"></div>
-</div>
-</div>
-
-</div>
-</section>
-
-<section id="produtos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-
-<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
-<div>
-<p class="text-orange-600 font-extrabold text-sm uppercase tracking-wider">Marketplace</p>
-<h2 class="text-3xl font-black mt-1">Encontre o que procura</h2>
-</div>
-
-<div class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-<div class="relative">
-<i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-slate-400"></i>
-<input id="searchInput" oninput="renderProdutos()" class="w-full sm:w-72 pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-orange-400" placeholder="Pesquisar produto...">
-</div>
-
-<select id="categoryFilter" onchange="renderProdutos()" class="px-4 py-3 rounded-xl border border-slate-200 bg-white font-semibold">
-<option value="">Todas as categorias</option>
-</select>
-</div>
-</div>
-
-<div id="productGrid" class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
-
-<div id="emptyProducts" class="hidden py-16 text-center text-slate-500">
-<i class="fa-solid fa-box-open text-4xl mb-3"></i>
-<p class="font-bold">Nenhum produto encontrado.</p>
-</div>
-
-</section>
-
-<section id="lojas" class="bg-white border-y border-slate-200">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-
-<div class="flex items-end justify-between">
-<div>
-<p class="text-orange-600 font-extrabold text-sm uppercase tracking-wider">Vitrines</p>
-<h2 class="text-3xl font-black mt-1">Lojas em destaque</h2>
-</div>
-</div>
-
-<div id="storeGrid" class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-
-<div id="emptyStores" class="hidden py-10 text-center text-slate-500">
-Ainda não há lojas com produtos ativos.
-</div>
-
-</div>
-</section>
-
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-<div class="rounded-3xl bg-gradient-to-br from-orange-500 to-amber-400 p-8 sm:p-10 text-white flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-<div>
-<h2 class="text-3xl font-black">Tem produtos para vender?</h2>
-<p class="mt-2 text-white/90">Crie a sua loja e comece a publicar os seus produtos.</p>
-</div>
-<button onclick="abrirAuth('register')" class="px-5 py-3 rounded-xl bg-white text-slate-900 font-black hover:bg-slate-100">Registar vendedor</button>
-</div>
-</section>
-
+  <section id="ads" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex items-end justify-between gap-4">
+      <div><p class="text-orange-600 font-extrabold text-sm uppercase">Publicidade</p><h2 class="text-3xl font-black">Anúncios ativos</h2></div>
+      <button onclick="openAdInfo()" class="px-4 py-3 rounded-xl bg-slate-900 text-white font-bold">Promover negócio</button>
+    </div>
+    <div id="adsGrid" class="mt-7 grid md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    <div id="emptyAds" class="hidden py-10 text-center text-slate-500">Não há anúncios ativos neste momento.</div>
+  </section>
 </main>
 
 <section id="dashboard" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-<div>
-<p class="text-orange-600 font-extrabold text-sm uppercase tracking-wider">Área do vendedor</p>
-<h1 id="dashCompany" class="text-3xl font-black">Dashboard</h1>
-<p id="dashSellerName" class="text-slate-500 mt-1"></p>
-</div>
-
-<div class="flex gap-2">
-<button onclick="abrirProduto()" class="px-4 py-3 rounded-xl bg-slate-900 text-white font-bold">
-<i class="fa-solid fa-plus mr-2"></i>Novo produto
-</button>
-<button onclick="abrirPayout()" class="px-4 py-3 rounded-xl bg-orange-500 text-white font-bold">Cash out</button>
-</div>
-</div>
-
-<div class="mt-7 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-soft">
-<p class="text-slate-500 text-sm">Saldo disponível</p>
-<p id="kpiSaldo" class="mt-2 text-3xl font-black">0 MT</p>
-</div>
-
-<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-soft">
-<p class="text-slate-500 text-sm">Vendas pagas</p>
-<p id="kpiVendas" class="mt-2 text-3xl font-black">0</p>
-</div>
-
-<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-soft">
-<p class="text-slate-500 text-sm">Vendas brutas</p>
-<p id="kpiBrutas" class="mt-2 text-3xl font-black">0 MT</p>
-</div>
-
-<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-soft">
-<p class="text-slate-500 text-sm">Payouts pendentes</p>
-<p id="kpiPendentes" class="mt-2 text-3xl font-black">0 MT</p>
-</div>
-</div>
-
-<div class="mt-7 grid lg:grid-cols-2 gap-5">
-
-<div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-soft">
-<div class="p-5 border-b border-slate-100 font-black">Minhas vendas</div>
-<div id="salesTable" class="overflow-x-auto"></div>
-</div>
-
-<div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-soft">
-<div class="p-5 border-b border-slate-100 font-black">Payouts</div>
-<div id="payoutTable" class="overflow-x-auto"></div>
-</div>
-
-</div>
-
-<div class="mt-7 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-soft">
-<div class="p-5 border-b border-slate-100 font-black">Meus produtos</div>
-<div id="myProducts" class="p-5 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-</div>
-
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div><p class="text-orange-600 font-extrabold text-sm uppercase">Área do vendedor</p><h1 id="dashCompany" class="text-3xl font-black">Dashboard</h1><p id="dashSeller" class="text-slate-500"></p></div>
+    <div class="flex gap-2">
+      <button onclick="openProduct()" class="px-4 py-3 rounded-xl bg-slate-900 text-white font-bold">+ Novo produto</button>
+      <button onclick="openPayout()" class="px-4 py-3 rounded-xl bg-orange-500 text-white font-bold">Cash out</button>
+    </div>
+  </div>
+  <div class="mt-7 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white border rounded-2xl p-5 shadow-soft"><span class="text-slate-500 text-sm">Saldo disponível</span><b id="kpiSaldo" class="block mt-2 text-3xl">0 MT</b></div>
+    <div class="bg-white border rounded-2xl p-5 shadow-soft"><span class="text-slate-500 text-sm">Vendas pagas</span><b id="kpiVendas" class="block mt-2 text-3xl">0</b></div>
+    <div class="bg-white border rounded-2xl p-5 shadow-soft"><span class="text-slate-500 text-sm">Vendas brutas</span><b id="kpiBrutas" class="block mt-2 text-3xl">0 MT</b></div>
+    <div class="bg-white border rounded-2xl p-5 shadow-soft"><span class="text-slate-500 text-sm">Payouts pendentes</span><b id="kpiPendentes" class="block mt-2 text-3xl">0 MT</b></div>
+  </div>
+  <div id="sellerStatus" class="mt-5"></div>
+  <div class="mt-7 grid lg:grid-cols-2 gap-5">
+    <div class="bg-white border rounded-2xl overflow-hidden shadow-soft"><div class="p-5 border-b font-black">Minhas vendas</div><div id="salesTable" class="overflow-x-auto"></div></div>
+    <div class="bg-white border rounded-2xl overflow-hidden shadow-soft"><div class="p-5 border-b font-black">Payouts</div><div id="payoutTable" class="overflow-x-auto"></div></div>
+  </div>
+  <div class="mt-7 bg-white border rounded-2xl shadow-soft"><div class="p-5 border-b font-black">Meus produtos</div><div id="myProducts" class="p-5 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div></div>
 </section>
 
-<!-- MODAL STATUS -->
-
-<div id="statusModal" class="hidden fixed inset-0 z-[95] bg-slate-950/70 p-4 overflow-y-auto">
-<div class="min-h-full grid place-items-center py-8">
-
-<div class="modal bg-white rounded-3xl w-full max-w-md shadow-2xl p-6 text-center">
-
-<div id="statusContent">
-
-<div id="statusSpinner" class="my-4">
-<i class="fa-solid fa-spinner fa-spin text-5xl text-orange-500"></i>
-</div>
-
-<h3 id="statusTitle" class="text-2xl font-black mt-2">Processando pagamento</h3>
-
-<p id="statusDesc" class="text-slate-500 mt-2 text-sm">
-Estamos a iniciar o seu pagamento...
-</p>
-
-<div id="statusDelivery" class="mt-6"></div>
-
-<button id="btnFecharStatus"
-onclick="fecharStatusModal()"
-class="mt-6 w-full py-3 rounded-xl bg-slate-900 text-white font-bold hidden">
-Fechar </button>
-
-</div>
-</div>
-</div>
-</div>
-
 <!-- AUTH -->
-
-<div id="authModal" class="hidden fixed inset-0 z-[80] bg-slate-950/60 p-4 overflow-y-auto">
-<div class="min-h-full grid place-items-center py-8">
-<div class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden">
-
-<div class="p-6 border-b flex items-center justify-between">
-<div>
-<h2 id="authTitle" class="text-2xl font-black">Entrar</h2>
-<p id="authSubtitle" class="text-slate-500 text-sm mt-1">Aceda à sua conta de vendedor.</p>
-</div>
-<button onclick="fechar('authModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100">
-<i class="fa-solid fa-xmark"></i>
-</button>
-</div>
-
-<div class="p-6">
-
-<div class="grid grid-cols-2 p-1 bg-slate-100 rounded-xl mb-6">
-<button id="tabLogin" onclick="setAuthMode('login')" class="py-2.5 rounded-lg bg-white shadow-sm font-bold">Entrar</button>
-<button id="tabRegister" onclick="setAuthMode('register')" class="py-2.5 rounded-lg font-bold text-slate-500">Registar</button>
-</div>
-
-<form id="loginForm" onsubmit="executarLogin(event)" class="space-y-4">
-
-<div>
-<label class="label">Telefone</label>
-<input id="loginPhone" required class="input" placeholder="Ex.: 84xxxxxxx">
+<div id="authModal" class="hidden fixed inset-0 z-[100] bg-slate-950/60 p-4 overflow-y-auto">
+ <div class="min-h-full grid place-items-center py-8"><div class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden">
+  <div class="p-6 border-b flex justify-between"><div><h2 id="authTitle" class="text-2xl font-black">Entrar</h2><p id="authSub" class="text-slate-500 text-sm">Aceda à sua conta.</p></div><button onclick="closeModal('authModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100">×</button></div>
+  <div class="p-6">
+   <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-xl mb-6"><button id="tabLogin" onclick="setAuthMode('login')" class="py-2.5 rounded-lg bg-white shadow-sm font-bold">Entrar</button><button id="tabRegister" onclick="setAuthMode('register')" class="py-2.5 rounded-lg font-bold text-slate-500">Registar</button></div>
+   <form id="loginForm" onsubmit="login(event)" class="space-y-4">
+    <div><label>Telefone</label><input id="loginPhone" required class="input" placeholder="84xxxxxxx"></div>
+    <div><label>PIN</label><input id="loginPin" type="password" inputmode="numeric" minlength="6" required class="input"></div>
+    <button class="w-full py-3 rounded-xl bg-slate-900 text-white font-black">Entrar</button>
+   </form>
+   <form id="registerForm" onsubmit="register(event)" class="hidden space-y-4">
+    <div class="grid sm:grid-cols-2 gap-4"><div><label>Nome completo</label><input id="regName" required class="input"></div><div><label>Telefone</label><input id="regPhone" required class="input" placeholder="84xxxxxxx"></div></div>
+    <div><label>Empresa / marca</label><input id="regCompany" required class="input"></div>
+    <div class="grid sm:grid-cols-2 gap-4"><div><label>PIN — mínimo 6 dígitos</label><input id="regPin" type="password" inputmode="numeric" minlength="6" required class="input"></div><div><label>Confirmar PIN</label><input id="regPin2" type="password" inputmode="numeric" minlength="6" required class="input"></div></div>
+    <div class="grid sm:grid-cols-2 gap-4"><div><label>BI (opcional)</label><input id="regBi" class="input"></div><div><label>Email</label><input id="regEmail" type="email" required class="input"></div></div>
+    <div><label>URL do logótipo (opcional)</label><input id="regLogo" type="url" class="input" placeholder="https://…"></div>
+    <label class="flex gap-3 items-start text-sm"><input id="terms" type="checkbox" required class="mt-1"><span>Aceito os <button type="button" onclick="openTerms()" class="text-orange-600 font-bold underline">Termos e Condições</button>.</span></label>
+    <button class="w-full py-3 rounded-xl bg-orange-500 text-white font-black">Criar loja</button>
+   </form>
+  </div>
+ </div></div>
 </div>
 
-<div>
-<label class="label">PIN</label>
-<input id="loginPin" type="password" inputmode="numeric" required class="input" placeholder="PIN">
+<!-- PRODUCT -->
+<div id="productModal" class="hidden fixed inset-0 z-[100] bg-slate-950/60 p-4 overflow-y-auto">
+ <div class="min-h-full grid place-items-center py-8"><div class="modal bg-white rounded-3xl w-full max-w-2xl shadow-2xl">
+  <div class="p-5 border-b flex justify-between"><h2 class="text-xl font-black">Novo produto</h2><button onclick="closeModal('productModal')" class="w-10 h-10">×</button></div>
+  <form onsubmit="createProduct(event)" class="p-6 space-y-4">
+   <div class="grid sm:grid-cols-2 gap-4"><div><label>Nome</label><input id="prodName" required class="input"></div><div><label>Preço (MT)</label><input id="prodPrice" type="number" min="0.01" step="0.01" required class="input"></div></div>
+   <div><label>Descrição</label><textarea id="prodDesc" required rows="4" class="input"></textarea></div>
+   <div class="grid sm:grid-cols-2 gap-4"><div><label>Categoria</label><select id="prodCategory" class="input"><option>GERAL</option><option>MODA</option><option>ELETRÓNICA</option><option>CASA</option><option>BELEZA</option><option>ALIMENTAÇÃO</option><option>EDUCAÇÃO</option><option>SERVIÇOS</option><option>DIGITAL</option><option>OUTROS</option></select></div><div><label>Tipo</label><select id="prodType" class="input"><option value="FISICO">Físico</option><option value="DIGITAL">Digital</option></select></div></div>
+   <div class="grid sm:grid-cols-2 gap-4"><div><label>Imagem (URL)</label><input id="prodImage" type="url" class="input"></div><div><label>WhatsApp</label><input id="prodWhatsapp" class="input" placeholder="25884…"></div></div>
+   <div><label>Link de download (produto digital)</label><input id="prodDownload" type="url" class="input"></div>
+   <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-sm"><b>Estado inicial:</b> PENDENTE. O produto só aparece publicamente depois de aprovação.</div>
+   <button class="w-full py-3 rounded-xl bg-slate-900 text-white font-black">Enviar para aprovação</button>
+  </form>
+ </div></div>
 </div>
 
-<button id="btnLogin" type="submit" class="w-full py-3 rounded-xl bg-slate-900 text-white font-black">Entrar</button>
-
-</form>
-
-<form id="registerForm" onsubmit="executarRegisto(event)" class="hidden space-y-4">
-
-<div class="grid sm:grid-cols-2 gap-4">
-<div>
-<label class="label">Nome completo</label>
-<input id="regName" required class="input">
+<!-- PAYOUT -->
+<div id="payoutModal" class="hidden fixed inset-0 z-[100] bg-slate-950/60 p-4 overflow-y-auto">
+ <div class="min-h-full grid place-items-center py-8"><div class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl">
+  <div class="p-6 border-b flex justify-between"><div><h2 class="text-2xl font-black">Cash out</h2><p class="text-slate-500 text-sm">Levantamento do saldo confirmado.</p></div><button onclick="closeModal('payoutModal')" class="w-10 h-10">×</button></div>
+  <form onsubmit="requestPayout(event)" class="p-6 space-y-4">
+   <div class="rounded-2xl bg-slate-900 text-white p-5"><div class="text-slate-300 text-sm">Saldo disponível</div><b id="payoutBalance" class="text-3xl">0 MT</b></div>
+   <div><label>Valor bruto (MT)</label><input id="payoutAmount" oninput="calcPayout()" type="number" min="0.01" step="0.01" required class="input"></div>
+   <div><label>Telefone de recebimento</label><input id="payoutPhone" required class="input"></div>
+   <div><label>Método</label><select id="payoutMethod" class="input"><option value="mpesa">M-Pesa</option><option value="emola">e-Mola</option><option value="mkesh">mKesh</option></select></div>
+   <div class="rounded-2xl bg-slate-50 border p-4 space-y-2 text-sm"><div class="flex justify-between"><span>NetShop — 2%</span><b id="feeNet">0 MT</b></div><div class="flex justify-between"><span>Moz1Vendas — 1%</span><b id="feeMoz">0 MT</b></div><div class="flex justify-between border-t pt-2 font-bold"><span>Total</span><b id="feeTotal">0 MT</b></div><div class="flex justify-between border-t pt-2 text-base"><span class="font-black">Receberá</span><b id="payoutNet" class="text-orange-600">0 MT</b></div></div>
+   <button class="w-full py-3 rounded-xl bg-orange-500 text-white font-black">Solicitar payout</button>
+  </form>
+ </div></div>
 </div>
 
-<div>
-<label class="label">Telefone</label>
-<input id="regPhone" required class="input" inputmode="tel" placeholder="+258 84 123 4567">
-</div>
-</div>
-
-<div>
-<label class="label">Empresa / marca</label>
-<input id="regCompany" required class="input">
-</div>
-
-<div class="grid sm:grid-cols-2 gap-4">
-<div>
-<label class="label">PIN</label>
-<input id="regPin" type="password" inputmode="numeric" required minlength="6" maxlength="12" class="input" placeholder="Mínimo 6 dígitos">
-</div>
-
-<div>
-<label class="label">Confirmar PIN</label>
-<input id="regPin2" type="password" inputmode="numeric" required minlength="6" maxlength="12" class="input" placeholder="Repita o PIN">
-</div>
-</div>
-
-<div class="grid sm:grid-cols-2 gap-4">
-<div>
-<label class="label">BI (opcional)</label>
-<input id="regBi" class="input">
-</div>
-
-<div>
-<label class="label">Email</label>
-<input id="regEmail" type="email" required class="input" placeholder="exemplo@email.com">
-</div>
-</div>
-
-<div>
-<label class="label">URL do logótipo (opcional)</label>
-<input id="regLogo" type="url" class="input" placeholder="https://...">
-</div>
-
-<label class="flex gap-3 items-start text-sm text-slate-600">
-<input id="termsCheck" type="checkbox" required class="mt-1">
-<span>Li e aceito os <button type="button" onclick="abrirTermos()" class="text-orange-600 font-bold underline">Termos e Condições</button>.</span>
-</label>
-
-<button id="btnRegister" type="submit" class="w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-black">Criar loja</button>
-
-</form>
-
-</div>
-</div>
-</div>
-</div>
-
-<!-- PRODUCT MODAL -->
-
-<div id="productModal" class="hidden fixed inset-0 z-[80] bg-slate-950/60 p-4 overflow-y-auto">
-<div class="min-h-full grid place-items-center py-8">
-<div class="modal bg-white rounded-3xl w-full max-w-3xl shadow-2xl overflow-hidden">
-
-<div class="p-5 border-b flex justify-between">
-<h2 class="text-xl font-black">Produto</h2>
-<button onclick="fechar('productModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100">
-<i class="fa-solid fa-xmark"></i>
-</button>
-</div>
-
-<form onsubmit="executarCadastroProduto(event)" class="p-6 space-y-4">
-
-<div class="grid sm:grid-cols-2 gap-4">
-<div>
-<label class="label">Nome</label>
-<input id="prodName" required class="input">
-</div>
-
-<div>
-<label class="label">Preço (MT)</label>
-<input id="prodPrice" type="number" min="0" step="0.01" required class="input">
-</div>
-</div>
-
-<div>
-<label class="label">Descrição</label>
-<textarea id="prodDesc" required rows="4" class="input"></textarea>
-</div>
-
-<div class="grid sm:grid-cols-2 gap-4">
-
-<div>
-<label class="label">Categoria</label>
-<select id="prodCategory" class="input">
-<option>GERAL</option>
-<option>MODA</option>
-<option>ELETRÓNICA</option>
-<option>CASA</option>
-<option>BELEZA</option>
-<option>ALIMENTAÇÃO</option>
-<option>EDUCAÇÃO</option>
-<option>SERVIÇOS</option>
-<option>DIGITAL</option>
-<option>OUTROS</option>
-</select>
-</div>
-
-<div>
-<label class="label">Tipo</label>
-<select id="prodType" class="input">
-<option value="FISICO">Físico</option>
-<option value="DIGITAL">Digital</option>
-</select>
-</div>
-
-</div>
-
-<div class="grid sm:grid-cols-2 gap-4">
-
-<div>
-<label class="label">Imagem (URL)</label>
-<input id="prodImage" type="url" class="input" placeholder="https://...">
-</div>
-
-<div>
-<label class="label">WhatsApp</label>
-<input id="prodWhatsapp" class="input" placeholder="25884...">
-</div>
-
-</div>
-
-<div>
-<label class="label">Link de download (digital, opcional)</label>
-<input id="prodDownload" type="url" class="input">
-</div>
-
-<div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-900">
-<b>Taxa de venda:</b> 10% NetShop + 1% Moz1Vendas = <b>11%</b>.
-O vendedor recebe 89% do valor da venda.
-</div>
-
-<button id="btnAddProduct" type="submit" class="w-full py-3 rounded-xl bg-slate-900 text-white font-black">Adicionar produto</button>
-
-</form>
-</div>
-</div>
-</div>
-
-<!-- PAYOUT MODAL -->
-
-<div id="payoutModal" class="hidden fixed inset-0 z-[80] bg-slate-950/60 p-4 overflow-y-auto">
-<div class="min-h-full grid place-items-center py-8">
-<div class="modal bg-white rounded-3xl w-full max-w-lg shadow-2xl">
-
-<div class="p-6 border-b flex justify-between">
-<div>
-<h2 class="text-2xl font-black">Cash out</h2>
-<p class="text-slate-500 text-sm">Solicite o levantamento do saldo disponível.</p>
-</div>
-<button onclick="fechar('payoutModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100">
-<i class="fa-solid fa-xmark"></i>
-</button>
-</div>
-
-<form onsubmit="executarPayout(event)" class="p-6 space-y-4">
-
-<div class="rounded-2xl bg-slate-900 text-white p-5">
-<div class="text-slate-300 text-sm">Saldo disponível</div>
-<div id="payoutBalance" class="text-3xl font-black mt-1">0 MT</div>
-</div>
-
-<div>
-
-<div class="mb-4">
-<label class="block text-sm font-bold mb-1">Telefone para receber</label>
-<input id="payoutPhone" type="tel" required placeholder="84/85/86/87xxxxxxx" class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-orange-200">
-<p class="text-xs text-slate-500 mt-1">Use o número M-Pesa/e-Mola que receberá o saque.</p>
-</div>
-
-<label class="label">Valor bruto do payout (MT)</label> <input id="payoutAmount" oninput="calcularPayout()" type="number" min="1" step="0.01" required class="input">
-
-</div>
-
-<div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-2 text-sm">
-<div class="flex justify-between"><span>NetShop - 2%</span><b id="feeNet">0 MT</b></div>
-<div class="flex justify-between"><span>Moz1Vendas - 1%</span><b id="feeMoz">0 MT</b></div>
-<div class="flex justify-between border-t pt-2"><span class="font-bold">Total taxas 3%</span><b id="feeTotal">0 MT</b></div>
-<div class="flex justify-between text-base border-t pt-2"><span class="font-black">Receberá</span><b id="payoutNet" class="text-orange-600">0 MT</b></div>
-</div>
-
-<div>
-<label class="label">Método</label>
-<select id="payoutMethod" class="input">
-<option value="mpesa">M-Pesa</option>
-<option value="emola">e-Mola</option>
-</select>
-</div>
-
-<button id="btnSubmitPayout" type="submit" class="w-full py-3 rounded-xl bg-orange-500 text-white font-black hover:bg-orange-600">
-Solicitar payout
-</button>
-
-</form>
-</div>
-</div>
+<!-- PAYMENT -->
+<div id="paymentModal" class="hidden fixed inset-0 z-[110] bg-slate-950/70 p-4">
+ <div class="min-h-full grid place-items-center"><div class="modal bg-white rounded-3xl w-full max-w-md shadow-2xl p-6">
+  <div id="paySpinner" class="text-center py-3"><i class="fa-solid fa-spinner fa-spin text-4xl text-orange-500"></i></div>
+  <h2 id="payTitle" class="text-2xl font-black text-center">Pagamento</h2><p id="payDesc" class="text-slate-500 text-sm text-center mt-2"></p>
+  <div id="payBody" class="mt-5"></div>
+  <button id="closePay" onclick="closePayment()" class="hidden mt-5 w-full py-3 rounded-xl bg-slate-900 text-white font-bold">Fechar</button>
+ </div></div>
 </div>
 
 <!-- PRODUCT DETAIL -->
-
-<div id="detailModal" class="hidden fixed inset-0 z-[80] bg-slate-950/60 p-4 overflow-y-auto">
-<div class="min-h-full grid place-items-center py-8">
-<div class="modal bg-white rounded-3xl w-full max-w-4xl shadow-2xl overflow-hidden">
-<div id="detailContent"></div>
-</div>
-</div>
+<div id="detailModal" class="hidden fixed inset-0 z-[90] bg-slate-950/60 p-4 overflow-y-auto">
+ <div class="min-h-full grid place-items-center py-8"><div class="modal bg-white rounded-3xl w-full max-w-3xl shadow-2xl overflow-hidden"><div id="detailBody"></div></div></div>
 </div>
 
-<!-- TERMS -->
-
-<div id="termsModal" class="hidden fixed inset-0 z-[90] bg-slate-950/60 p-4 overflow-y-auto">
-<div class="min-h-full grid place-items-center py-8">
-<div class="modal bg-white rounded-3xl w-full max-w-3xl shadow-2xl overflow-hidden">
-
-<div class="p-6 border-b flex justify-between">
-<div>
-<h2 class="text-2xl font-black">Termos e Condições</h2>
-<p class="text-slate-500 text-sm">Moz1Vendas - versão para utilização da plataforma.</p>
-</div>
-<button onclick="fechar('termsModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100">
-<i class="fa-solid fa-xmark"></i>
-</button>
-</div>
-
-<div class="p-6 max-h-[70vh] overflow-y-auto prose prose-slate max-w-none">
-<p><b>Nota importante:</b> estes termos foram estruturados para refletir a lógica atual do marketplace e os requisitos gerais aplicáveis ao comércio eletrónico em Moçambique.</p>
-
-<h3>1. Identificação e função da plataforma</h3>
-
-<p>
-A Moz1Vendas é uma plataforma de intermediação/vitrine digital que permite a vendedores publicar produtos e aos compradores iniciar compras através dos meios disponibilizados.
-</p>
-
-</div>
-
-<div class="p-5 border-t flex justify-end">
-<button onclick="fechar('termsModal')" class="px-5 py-3 rounded-xl bg-slate-900 text-white font-bold">Fechar</button>
-</div>
-
-</div>
-</div>
-</div>
+<!-- TERMS / AD INFO -->
+<div id="termsModal" class="hidden fixed inset-0 z-[120] bg-slate-950/60 p-4 overflow-y-auto"><div class="min-h-full grid place-items-center py-8"><div class="modal bg-white rounded-3xl w-full max-w-3xl p-6"><h2 class="text-2xl font-black">Termos e Condições</h2><div class="mt-5 prose prose-slate max-w-none"><p>A Moz1Vendas funciona como plataforma de intermediação/vitrine digital para vendedores e compradores.</p><p>Produtos passam por aprovação antes de ficarem públicos. Pagamentos e payouts são confirmados pelo servidor e pela integração NetShop.</p><p>Não introduza chaves de API, tokens administrativos ou segredos neste frontend.</p></div><button onclick="closeModal('termsModal')" class="mt-6 w-full py-3 rounded-xl bg-slate-900 text-white font-bold">Fechar</button></div></div></div>
+<div id="adInfoModal" class="hidden fixed inset-0 z-[120] bg-slate-950/60 p-4"><div class="min-h-full grid place-items-center"><div class="modal bg-white rounded-3xl w-full max-w-lg p-6"><h2 class="text-2xl font-black">Publicidade</h2><p class="mt-3 text-slate-600">O GAS possui uma operação de criação de anúncios. Nesta versão pública, a interface não envia qualquer token administrativo nem credenciais. Antes de disponibilizar a criação de anúncios ao público, confirme no GAS que essa operação exige sessão/autorização do vendedor.</p><button onclick="closeModal('adInfoModal')" class="mt-6 w-full py-3 rounded-xl bg-slate-900 text-white font-bold">Fechar</button></div></div></div>
 
 <script>
+/*
+  CONFIGURAÇÃO SEGURA
+  -------------------
+  Este frontend NÃO contém:
+  - NETSHOP_API_KEY
+  - NETSHOP_WEBHOOK_SECRET
+  - SESSION_SECRET
+  - ADMIN_API_TOKEN
+  - SPREADSHEET_ID
+  - WALLET_ID
+  Apenas o URL público do Web App é necessário no browser.
 
-// IMPORTANTE: este deve ser o URL da implantação "Web app" da versão actual do GAS fortificado.
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzfrOd-cjWKfVku2ayrC36Op0V_8VVevsaPjSwp-wjfD_ln5Wsm2sPtWNC_tdU1NrZgew/exec";
+  Pode definir window.MOZ1VENDAS_API antes deste script ou editar o valor abaixo.
+*/
+const GAS_API_URL = window.MOZ1VENDAS_API || "https://script.google.com/macros/s/AKfycbwCTq6NGmkQVTmPYcNXYhUtDWF-9ZNeQGh2Ht5JPPXNuVjkfoQxBHxjEw-fGcJcYkkKEQ/exec";
 
-const STORAGE_KEY = "vendedor_moz1";
+const SESSION_KEY = "moz1vendas_session_v1";
+let sessionToken = sessionStorage.getItem(SESSION_KEY) || "";
+let seller = null;
+let products = [];
+let publicStores = [];
+let currentProduct = null;
+let pollTimer = null;
+let busy = false;
 
-let vendedorAtivo = null;
-let produtos = [];
-let blocos = [];
-let authMode = "login";
-let ultimoResumo = null;
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const money = v => Number(v||0).toLocaleString("pt-MZ",{minimumFractionDigits:2,maximumFractionDigits:2})+" MT";
 
-/* CONTROLO DO PAGAMENTO */
-let pollingTimer = null;
-let pagamentoEmProcessamento = false;
-let pagamentoFinalizado = false;
-let pollingRequestAtiva = false;
-
-try {
-  vendedorAtivo = JSON.parse(localStorage.getItem(STORAGE_KEY)) || null;
-} catch (e) {
-  vendedorAtivo = null;
+function toast(msg,type="info"){
+  const e=document.createElement("div");
+  e.className="toast "+(type==="error"?"bg-red-600":type==="success"?"bg-emerald-600":"bg-slate-900")+" text-white px-4 py-3 rounded-xl shadow-xl text-sm font-bold max-w-sm";
+  e.textContent=msg;$("toastRoot").appendChild(e);setTimeout(()=>e.remove(),4200);
 }
-
-function esc(v) {
-  return String(v??"").replace(/[&<>"']/g, c => ({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;',
-    "'":'&#039;'
-  }[c]));
+function openModal(id){$(id)?.classList.remove("hidden")}
+function closeModal(id){$(id)?.classList.add("hidden")}
+function openTerms(){openModal("termsModal")}
+function openAdInfo(){openModal("adInfoModal")}
+function go(id){
+  if(id==="home"){$("home").classList.remove("hidden");$("dashboard").classList.add("hidden");window.scrollTo({top:0,behavior:"smooth"});return}
+  $("home").classList.remove("hidden");$("dashboard").classList.add("hidden");$(id)?.scrollIntoView({behavior:"smooth"});
 }
-
-function dinheiro(v) {
-  const n = Number(v || 0);
-  return n.toLocaleString("pt-MZ", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }) + " MT";
+function setBusy(button,on,text){
+  if(!button)return;
+  button.disabled=on;
+  if(on){button.dataset.old=button.innerHTML;button.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-2"></i>'+text}
+  else if(button.dataset.old){button.innerHTML=button.dataset.old}
 }
-
-function imagem(url) {
-  if (!url) {
-    return "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80";
+async function parseResponse(r){
+  const text=await r.text();
+  let data;
+  try{data=JSON.parse(text)}catch(_){
+    const a=text.indexOf("{"),b=text.lastIndexOf("}");
+    if(a>=0&&b>a)data=JSON.parse(text.slice(a,b+1));else throw new Error("Resposta inválida do servidor.");
   }
-
-  if (/drive\.google\.com/i.test(url)) {
-    const m = url.match(/(?:d\/|id=)([a-zA-Z0-9_-]+)/);
-
-    if (m) {
-      return "https://drive.google.com/thumbnail?id=" + m[1] + "&sz=w1000";
-    }
-
-    return url;
-  }
-
+  if(!r.ok)throw new Error(data?.erro||data?.message||("Erro HTTP "+r.status));
+  return data;
+}
+async function apiGet(action,params={}){
+  if(!GAS_API_URL || GAS_API_URL.includes("COLOQUE_AQUI"))throw new Error("Configure o URL público do GAS no frontend.");
+  const q=new URLSearchParams({action,_ts:Date.now(),...params});
+  return parseResponse(await fetch(GAS_API_URL+"?"+q.toString(),{cache:"no-store",redirect:"follow"}));
+}
+async function apiPost(data){
+  if(!GAS_API_URL || GAS_API_URL.includes("COLOQUE_AQUI"))throw new Error("Configure o URL público do GAS no frontend.");
+  return parseResponse(await fetch(GAS_API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data),redirect:"follow",cache:"no-store"}));
+}
+function normalizedProducts(list){
+  if(!Array.isArray(list))return [];
+  return list.map(p=>({...p,
+    productId:p.productId||p.produtoId||p.produtoID,
+    vendedorId:p.vendedorId||p.sellerId,
+    empresa:p.empresa||p.empresaMarca||p.loja||"",
+    imagemUrl:p.imagemUrl||p.imagem||p.imageUrl||"",
+    preco:Number(p.preco||0)
+  })).filter(p=>p.productId&&p.nome);
+}
+function img(url){
+  if(!url)return "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80";
+  if(/drive\.google\.com/i.test(url)){const m=url.match(/(?:d\/|id=)([a-zA-Z0-9_-]+)/);if(m)return "https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1000"}
   return url;
 }
-
-function normalizarProdutos(lista) {
-  if (!Array.isArray(lista)) return [];
-
-  return lista.map(p => ({
-    ...p,
-    productId: p.productId || p.productid || p.produtoId || p.produtoID,
-    vendedorId: p.vendedorId || p.vendedorld || p.vendedorID || p.sellerId || p.vendedor?.id,
-    empresa: p.empresa || p.empresaMarca || p.loja || p.sellerName || p.vendedor?.empresa || "",
-    logo: p.logo || p.logoUrl || p.vendedor?.logo || "",
-    imagemUrl: p.imagemUrl || p.imagem || p.imageUrl || p.foto || "",
-    preco: Number(p.preco || 0)
-  })).filter(p => p.productId && p.nome);
+async function ping(){
+  try{const r=await apiGet("ping");$("apiState").textContent=r.ok?"Online":"Indisponível"}catch(e){$("apiState").textContent="Offline"}
 }
-
-async function apiGet(action, params = {}) {
-
-  const q = new URLSearchParams({
-    action,
-    _ts: String(Date.now()),
-    ...params
-  });
-
-  const r = await fetch(
-    GAS_API_URL + "?" + q.toString(),
-    {cache:"no-store"}
-  );
-
-  if (!r.ok) {
-    let detalhe = "";
-    try { detalhe = (await r.text()).slice(0, 240); } catch (_) {}
-    throw new Error(
-      "Erro HTTP " + r.status +
-      " na API do GAS. Verifique se o Web App está publicado e se o URL da implantação é o atual." +
-      (detalhe ? " Resposta: " + detalhe : "")
-    );
-  }
-
-  const text = await r.text();
-
-  try {
-    return JSON.parse(text);
-  } catch (_) {
-
-    const start = text.indexOf("{");
-    const end = text.lastIndexOf("}");
-
-    if (start >= 0 && end > start) {
-      return JSON.parse(text.slice(start, end + 1));
+async function loadPublic(){
+  try{
+    const [d,stores,ads]=await Promise.allSettled([
+      apiGet("produtosDestaque"),
+      apiGet("lojasAutenticadas"),
+      apiGet("listarAnuncios")
+    ]);
+    if(d.status==="fulfilled"){
+      products=normalizedProducts(d.value.destaques||[]);
+      $("statProducts").textContent=products.length;
+      renderHero();renderProducts();fillCategories();
     }
-
-    throw new Error("Resposta inválida do servidor.");
-  }
-}
-
-async function apiPing() {
-  return apiGet("ping");
-}
-
-async function apiPost(payload) {
-
-  const r = await fetch(GAS_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type":"text/plain;charset=utf-8"
-    },
-    body: JSON.stringify(payload),
-    redirect: "follow",
-    cache: "no-store"
-  });
-
-  if (!r.ok) {
-    let detalhe = "";
-    try { detalhe = (await r.text()).slice(0, 240); } catch (_) {}
-    throw new Error(
-      "Erro HTTP " + r.status +
-      " na API do GAS. O mesmo endpoint é usado por login, registo e pagamento." +
-      (detalhe ? " Resposta: " + detalhe : "")
-    );
-  }
-
-  const text = await r.text();
-
-  try {
-    return JSON.parse(text);
-  } catch (_) {
-
-    const start = text.indexOf("{");
-    const end = text.lastIndexOf("}");
-
-    if (start >= 0 && end > start) {
-      return JSON.parse(text.slice(start, end + 1));
+    if(stores.status==="fulfilled"){
+      publicStores=stores.value.lojas||[];
+      $("statStores").textContent=publicStores.length;
+      renderStores();
     }
-
-    throw new Error("Resposta inválida do servidor.");
-  }
+    if(ads.status==="fulfilled")renderAds(ads.value.anuncios||[]);
+  }catch(e){toast(e.message,"error")}
 }
-
-function toast(msg, type="info") {
-
-  const root = document.getElementById("toastRoot");
-
-  const el = document.createElement("div");
-
-  const cls =
-    type === "error"
-      ? "bg-red-600"
-      : type === "success"
-        ? "bg-emerald-600"
-        : "bg-slate-900";
-
-  el.className =
-    "toast " +
-    cls +
-    " text-white px-4 py-3 rounded-xl shadow-xl text-sm font-bold max-w-sm";
-
-  el.textContent = msg;
-
-  root.appendChild(el);
-
-  setTimeout(() => el.remove(), 4200);
+function renderHero(){
+  $("heroProducts").innerHTML=products.slice(0,4).map(p=>`<button onclick="openProductDetail('${esc(p.productId)}')" class="text-left rounded-2xl overflow-hidden bg-white/10 border border-white/10"><img src="${esc(img(p.imagemUrl))}" class="w-full h-28 object-cover" onerror="this.src='${esc(img(""))}'"><div class="p-3"><div class="font-bold truncate">${esc(p.nome)}</div><div class="text-orange-300 font-black">${money(p.preco)}</div></div></button>`).join("")||'<div class="col-span-2 py-10 text-slate-400 text-center">Sem destaques</div>';
 }
-
-function fechar(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.add("hidden");
+function renderProducts(){
+  const q=($("search").value||"").toLowerCase().trim(),cat=$("category").value;
+  const list=products.filter(p=>(!q||(`${p.nome} ${p.descricao||""} ${p.empresa||""}`).toLowerCase().includes(q))&&(!cat||String(p.categoria||"").toUpperCase()===cat));
+  $("productGrid").innerHTML=list.map(card).join("");$("emptyProducts").classList.toggle("hidden",!!list.length);
 }
-
-function abrir(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.remove("hidden");
+function card(p){
+  const seal=p.seloAutenticado?'<span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-700"><i class="fa-solid fa-circle-check"></i> Autenticada</span>':"";
+  return `<article class="bg-white border rounded-2xl overflow-hidden shadow-soft"><img src="${esc(img(p.imagemUrl))}" class="w-full h-48 object-cover" onerror="this.src='${esc(img(""))}'"><div class="p-4"><div class="text-xs text-slate-500">${esc(p.empresa||"Loja")}</div><h3 class="font-black text-lg mt-1">${esc(p.nome)}</h3><div class="mt-2 flex items-center justify-between"><b class="text-orange-600">${money(p.preco)}</b>${seal}</div><div class="mt-4 flex gap-2"><button onclick="openProductDetail('${esc(p.productId)}')" class="flex-1 py-2.5 rounded-xl bg-slate-900 text-white font-bold">Ver</button><button onclick="buy('${esc(p.productId)}')" class="flex-1 py-2.5 rounded-xl bg-orange-500 text-white font-bold">Comprar</button></div></div></article>`;
 }
-
-function irPara(id) {
-
-  document.getElementById("dashboard").classList.add("hidden");
-
-  document.getElementById("inicio").classList.remove("hidden");
-
-  document.getElementById(id)?.scrollIntoView({
-    behavior:"smooth"
-  });
+function fillCategories(){
+  const cats=[...new Set(products.map(p=>p.categoria).filter(Boolean))].sort();
+  $("category").innerHTML='<option value="">Todas as categorias</option>'+cats.map(c=>`<option value="${esc(String(c).toUpperCase())}">${esc(c)}</option>`).join("");
 }
-
-function atualizarAuthUI() {
-
-  const logged = !!vendedorAtivo;
-
-  document.getElementById("btnAuth").classList.toggle("hidden", logged);
-  document.getElementById("btnLogout").classList.toggle("hidden", !logged);
-  document.getElementById("btnDashboard").classList.toggle("hidden", !logged);
+async function loadCategory(){
+  const cat=$("category").value;
+  if(!cat){renderProducts();return}
+  try{const r=await apiGet("produtosPorCategoria",{categoria:cat});products=normalizedProducts(r.produtos||[]);renderProducts()}catch(e){toast(e.message,"error")}
 }
-
-function setAuthMode(mode) {
-
-  authMode = mode;
-
-  const login = mode === "login";
-
-  document.getElementById("loginForm").classList.toggle("hidden", !login);
-  document.getElementById("registerForm").classList.toggle("hidden", login);
-
-  document.getElementById("authTitle").textContent =
-    login ? "Entrar" : "Criar loja";
-
-  document.getElementById("authSubtitle").textContent =
-    login
-      ? "Aceda à sua conta de vendedor."
-      : "Registe a sua loja no Moz1Vendas.";
-
-  document.getElementById("tabLogin").className =
-    login
-      ? "py-2.5 rounded-lg bg-white shadow-sm font-bold"
-      : "py-2.5 rounded-lg font-bold text-slate-500";
-
-  document.getElementById("tabRegister").className =
-    !login
-      ? "py-2.5 rounded-lg bg-white shadow-sm font-bold"
-      : "py-2.5 rounded-lg font-bold text-slate-500";
+function renderStores(){
+  const list=Array.isArray(publicStores)?publicStores:[];
+  $("storeGrid").innerHTML=list.map(s=>`<article class="bg-white border rounded-2xl p-5 shadow-soft"><div class="flex items-center gap-4"><img src="${esc(img(s.logo))}" class="w-14 h-14 rounded-2xl object-cover" onerror="this.style.display='none'"><div><h3 class="font-black">${esc(s.empresa||s.nome||"Loja")}</h3>${s.seloAutenticado?'<span class="text-xs text-emerald-700 font-bold"><i class="fa-solid fa-circle-check"></i> Loja autenticada</span>':""}</div></div><button onclick="filterStore('${esc(s.vendedorId||s.id||"")}')" class="mt-5 w-full py-2.5 rounded-xl bg-slate-900 text-white font-bold">Ver produtos</button></article>`).join("");
+  $("emptyStores").classList.toggle("hidden",!!list.length);
 }
-
-function abrirAuth(mode="login") {
-  abrir("authModal");
-  setAuthMode(mode);
+function filterStore(id){$("search").value="";products=products.filter(p=>String(p.vendedorId)===String(id));renderProducts();go("products")}
+function renderAds(ads){
+  $("adsGrid").innerHTML=(ads||[]).map(a=>`<article class="bg-white border rounded-2xl p-5 shadow-soft"><div class="text-xs font-black uppercase text-orange-600">${esc(a.tipoConteudo||"Anúncio")}</div><div class="mt-2 font-bold">${esc(a.conteudo||"Publicidade")}</div><div class="mt-4 text-xs text-slate-500">Anúncio ativo</div></article>`).join("");
+  $("emptyAds").classList.toggle("hidden",!(ads&&ads.length));
 }
-
-
-/* =========================================================
-   ESTADO DOS BOTÕES — EVITA CLIQUES DUPLOS E MOSTRA
-   CLARAMENTE QUANDO UMA OPERAÇÃO ESTÁ A SER PROCESSADA.
-   ========================================================= */
-function iniciarProcessamentoBotao(btn, texto = "Processando...") {
-  if (!btn) return false;
-
-  if (btn.dataset.processing === "1") {
-    return false;
-  }
-
-  btn.dataset.processing = "1";
-  btn.dataset.originalHtml = btn.innerHTML;
-  btn.disabled = true;
-  btn.setAttribute("aria-busy", "true");
-  btn.classList.add("btn-processing");
-  btn.innerHTML =
-    '<i class="fa-solid fa-spinner fa-spin"></i>' +
-    esc(texto);
-
-  return true;
+function setAuthMode(mode){
+  $("loginForm").classList.toggle("hidden",mode!=="login");$("registerForm").classList.toggle("hidden",mode==="login");
+  $("authTitle").textContent=mode==="login"?"Entrar":"Criar loja";$("authSub").textContent=mode==="login"?"Aceda à sua conta de vendedor.":"Registe a sua loja.";
+  $("tabLogin").className=mode==="login"?"py-2.5 rounded-lg bg-white shadow-sm font-bold":"py-2.5 rounded-lg font-bold text-slate-500";
+  $("tabRegister").className=mode!=="login"?"py-2.5 rounded-lg bg-white shadow-sm font-bold":"py-2.5 rounded-lg font-bold text-slate-500";
 }
-
-function finalizarProcessamentoBotao(btn) {
-  if (!btn) return;
-
-  btn.disabled = false;
-  btn.removeAttribute("aria-busy");
-  btn.classList.remove("btn-processing");
-  btn.dataset.processing = "0";
-
-  if (btn.dataset.originalHtml != null) {
-    btn.innerHTML = btn.dataset.originalHtml;
-    delete btn.dataset.originalHtml;
-  }
+function openAuth(mode="login"){openModal("authModal");setAuthMode(mode)}
+function updateAuth(){
+  const on=!!sessionToken;
+  $("authBtn").classList.toggle("hidden",on);$("logoutBtn").classList.toggle("hidden",!on);$("dashboardBtn").classList.toggle("hidden",!on);
 }
-
-function obterBotaoDoSubmit(event, idFallback = "") {
-  return (
-    (event && event.submitter) ||
-    (idFallback ? document.getElementById(idFallback) : null)
-  );
+async function login(e){
+  e.preventDefault();const btn=e.submitter;setBusy(btn,true,"A entrar…");
+  try{
+    const r=await apiPost({action:"LOGIN",telefone:$("loginPhone").value.trim(),pin:$("loginPin").value});
+    if(r.status!=="SUCCESS")throw new Error(r.message||r.mensagem||r.erro||"Contacto ou PIN incorretos.");
+    if(!r.sessionToken)throw new Error("O servidor não devolveu uma sessão válida.");
+    sessionToken=r.sessionToken;sessionStorage.setItem(SESSION_KEY,sessionToken);seller=r.vendedor||null;
+    closeModal("authModal");updateAuth();toast("Login efetuado.","success");showDashboard();
+  }catch(err){toast(err.message,"error")}finally{setBusy(btn,false)}
 }
-
-async function executarLogin(e) {
-
-  e.preventDefault();
-
-  const btn = obterBotaoDoSubmit(
-    e,
-    "btnLogin"
-  );
-
-  if (!iniciarProcessamentoBotao(btn, "A entrar...")) {
-    return;
-  }
-
-  try {
-
-    const res = await apiPost({
-      action: "LOGIN",
-      telefone: document.getElementById("loginPhone").value.trim(),
-      pin: document.getElementById("loginPin").value
-    });
-
-    if (res.status !== "SUCCESS") {
-      throw new Error(
-        res.mensagem ||
-        res.message ||
-        res.erro ||
-        "Telefone ou PIN inválido."
-      );
-    }
-
-    if (!res.vendedor) {
-      throw new Error(
-        "O servidor não devolveu os dados do vendedor."
-      );
-    }
-
-    vendedorAtivo = {
-      ...res.vendedor,
-      id:
-        res.vendedor.id ||
-        res.vendedor.vendedorId ||
-        res.vendedor.vendedorld,
-      vendedorId:
-        res.vendedor.vendedorId ||
-        res.vendedor.id ||
-        res.vendedor.vendedorld,
-      sessionToken: res.sessionToken || ""
-    };
-
-    if (!vendedorAtivo.sessionToken) {
-      throw new Error("O servidor não devolveu uma sessão válida. Atualize a implantação do GAS e tente novamente.");
-    }
-
-    if (String(res.vendedor.status || "").toUpperCase() !== "ATIVO") {
-      throw new Error("A sua conta ainda está pendente de aprovação do administrador.");
-    }
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(vendedorAtivo)
-    );
-
-    atualizarAuthUI();
-
-    fechar("authModal");
-
-    toast(
-      "Login efetuado com sucesso.",
-      "success"
-    );
-
-    mostrarDashboard();
-
-  } catch(err) {
-
-    toast(
-      err.message ||
-      "Não foi possível entrar.",
-      "error"
-    );
-
-  } finally {
-
-    finalizarProcessamentoBotao(btn);
-  }
+async function register(e){
+  e.preventDefault();const btn=e.submitter;
+  const pin=$("regPin").value;if(pin!==$("regPin2").value)return toast("Os PINs não coincidem.","error");
+  setBusy(btn,true,"A criar loja…");
+  try{
+    const r=await apiPost({action:"CRIAR_LOJA",nome:$("regName").value.trim(),telefone:$("regPhone").value.trim(),bi:$("regBi").value.trim(),empresa:$("regCompany").value.trim(),pin,email:$("regEmail").value.trim(),logo:$("regLogo").value.trim()});
+    if(r.status!=="PENDENTE"&&r.status!=="SUCCESS")throw new Error(r.message||r.erro||"Não foi possível criar a loja.");
+    closeModal("authModal");toast("Registo recebido. Aguarde a aprovação do administrador.","success");
+    setAuthMode("login");
+  }catch(err){toast(err.message,"error")}finally{setBusy(btn,false)}
 }
-
-async function executarRegisto(e) {
-
-  e.preventDefault();
-
-  const btn = obterBotaoDoSubmit(
-    e,
-    "btnRegister"
-  );
-
-  if (!iniciarProcessamentoBotao(btn, "A criar loja...")) {
-    return;
-  }
-
-  const pin = document.getElementById("regPin").value.trim();
-  const telefone = document.getElementById("regPhone").value.trim();
-  const email = document.getElementById("regEmail").value.trim();
-
-  if (!/^\+?258?\s*[89]\d[\s-]?\d{3}[\s-]?\d{4}$/.test(telefone) &&
-      !/^8\d{8}$/.test(telefone.replace(/\D/g, ""))) {
-    toast("Use um contacto moçambicano válido, por exemplo +258 84 123 4567.", "error");
-    finalizarProcessamentoBotao(btn);
-    return;
-  }
-
-  if (!/^\d{6,12}$/.test(pin)) {
-    toast("O PIN deve ter entre 6 e 12 dígitos.", "error");
-    finalizarProcessamentoBotao(btn);
-    return;
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    toast("Informe um email válido.", "error");
-    finalizarProcessamentoBotao(btn);
-    return;
-  }
-
-  if (
-    pin !==
-    document.getElementById("regPin2").value.trim()
-  ) {
-    toast(
-      "Os PINs não coincidem.",
-      "error"
-    );
-    finalizarProcessamentoBotao(btn);
-    return;
-  }
-
-  try {
-
-    const res = await apiPost({
-      action: "CRIAR_LOJA",
-      nome: document.getElementById("regName").value.trim(),
-      telefone: telefone,
-      bi: document.getElementById("regBi").value.trim(),
-      empresa: document.getElementById("regCompany").value.trim(),
-      pin: pin,
-      email: email,
-      logo: document.getElementById("regLogo").value.trim()
-    });
-
-    if (res.status !== "PENDENTE" && res.status !== "SUCCESS") {
-      throw new Error(
-        res.mensagem ||
-        res.message ||
-        res.erro ||
-        "Falha ao criar loja."
-      );
-    }
-
-    const id =
-      res.vendedorId ||
-      res.vendedorld;
-
-    if (!id) {
-      throw new Error(
-        "O servidor não devolveu o ID da loja criada."
-      );
-    }
-
-    // A conta nova fica PENDENTE no GAS fortificado.
-    // Não criar sessão local nem abrir o dashboard antes da aprovação.
-    fechar("authModal");
-
-    toast(
-      res.message ||
-      "Loja registada. Aguarde a aprovação do administrador antes de entrar.",
-      "success"
-    );
-
-  } catch(err) {
-
-    toast(
-      err.message ||
-      "Não foi possível criar a loja.",
-      "error"
-    );
-
-  } finally {
-
-    finalizarProcessamentoBotao(btn);
-  }
+function logout(){sessionToken="";seller=null;sessionStorage.removeItem(SESSION_KEY);updateAuth();$("dashboard").classList.add("hidden");$("home").classList.remove("hidden");toast("Sessão terminada.")}
+function showDashboard(){
+  if(!sessionToken)return openAuth("login");
+  $("home").classList.add("hidden");$("dashboard").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});loadDashboard();
 }
-
-function logout() {
-
-  vendedorAtivo = null;
-  ultimoResumo = null;
-
-  localStorage.removeItem(STORAGE_KEY);
-
-  atualizarAuthUI();
-
-  document.getElementById("dashboard").classList.add("hidden");
-  document.getElementById("inicio").classList.remove("hidden");
-
-  toast("Sessão terminada.");
+async function loadDashboard(){
+  try{
+    const r=await apiGet("resumoVendedor",{sessionToken});
+    if(!r.ok)throw new Error(r.erro||"Sessão inválida.");
+    const f=r.financeiro||{};seller=seller||{};
+    $("dashCompany").textContent=seller.empresa||"Minha loja";$("dashSeller").textContent=seller.nome||"";
+    $("kpiSaldo").textContent=money(f.saldoDisponivel);$("kpiVendas").textContent=f.vendasPagas||0;$("kpiBrutas").textContent=money(f.vendasBrutas);$("kpiPendentes").textContent=money(f.payoutsPendentes);
+    $("sellerStatus").innerHTML=`<div class="p-4 rounded-2xl border bg-white text-sm"><b>Conta:</b> ${esc(seller.status||"ATIVO")} ${seller.status==="ATIVO"?"— pode gerir produtos e payouts.":"— aguarde aprovação."}</div>`;
+    table("salesTable",r.vendas||[],["vendaId","valorLiquido","status","metodo"]);
+    table("payoutTable",r.payouts||[],["payoutId","valorLiquido","status","metodo"]);
+    const mine=products.filter(p=>String(p.vendedorId)===String(seller.id||seller.vendedorId));
+    $("myProducts").innerHTML=mine.length?mine.map(p=>card(p)).join(""):'<div class="sm:col-span-2 lg:col-span-3 text-center text-slate-500 py-8">Os seus produtos aprovados aparecerão aqui.</div>';
+  }catch(e){toast(e.message,"error");if(/sessão/i.test(e.message))logout()}
 }
-
-function abrirProduto() {
-
-  if (!vendedorAtivo) {
-    abrirAuth("login");
-    return;
-  }
-
-  [
-    "prodName",
-    "prodPrice",
-    "prodDesc",
-    "prodImage",
-    "prodWhatsapp",
-    "prodDownload"
-  ].forEach(id => {
-    document.getElementById(id).value = "";
-  });
-
-  document.getElementById("prodCategory").value = "GERAL";
-  document.getElementById("prodType").value = "FISICO";
-
-  abrir("productModal");
+function table(id,rows,cols){
+  const heads={vendaId:"ID",payoutId:"ID",valorLiquido:"Valor",status:"Estado",metodo:"Método"};
+  if(!rows.length){$(id).innerHTML='<div class="p-6 text-center text-slate-500">Sem registos.</div>';return}
+  $(id).innerHTML=`<table class="w-full text-sm"><thead class="bg-slate-50"><tr>${cols.map(c=>`<th class="text-left px-4 py-3">${heads[c]}</th>`).join("")}</tr></thead><tbody>${rows.slice(0,50).map(r=>`<tr class="border-t"><td class="px-4 py-3">${esc(r[cols[0]]??"-")}</td><td class="px-4 py-3">${cols[1]==="valorLiquido"?money(r[cols[1]]):esc(r[cols[1]]??"-")}</td><td class="px-4 py-3">${esc(r[cols[2]]??"-")}</td><td class="px-4 py-3">${esc(r[cols[3]]??"-")}</td></tr>`).join("")}</tbody></table>`;
 }
-
-async function executarCadastroProduto(e) {
-
-  e.preventDefault();
-
-  const btn = obterBotaoDoSubmit(
-    e,
-    "btnAddProduct"
-  );
-
-  if (!iniciarProcessamentoBotao(btn, "A adicionar...")) {
-    return;
-  }
-
-  if (!vendedorAtivo?.id) {
-    toast(
-      "Faça login novamente.",
-      "error"
-    );
-    finalizarProcessamentoBotao(btn);
-    return;
-  }
-
-  try {
-
-    const res = await apiPost({
-
-      action: "CRIAR_PRODUTO",
-
-      sessionToken: vendedorAtivo.sessionToken || "",
-
-      nome:
-        document.getElementById("prodName").value.trim(),
-
-      descricao:
-        document.getElementById("prodDesc").value.trim(),
-
-      imagem:
-        document.getElementById("prodImage").value.trim(),
-
-      preco:
-        Number(document.getElementById("prodPrice").value),
-
-      tipo:
-        document.getElementById("prodType").value,
-
-      whatsapp:
-        document.getElementById("prodWhatsapp").value.trim(),
-
-      linkDigital:
-        document.getElementById("prodDownload").value.trim(),
-
-      categoria:
-        document.getElementById("prodCategory").value
-    });
-
-    if (res.status !== "SUCCESS") {
-      throw new Error(
-        res.mensagem ||
-        res.message ||
-        res.erro ||
-        "Falha ao criar produto."
-      );
-    }
-
-    fechar("productModal");
-
-    toast(
-      "Produto publicado com sucesso.",
-      "success"
-    );
-
-    await carregarDadosPublicos();
-
-    if (
-      !document
-        .getElementById("dashboard")
-        .classList.contains("hidden")
-    ) {
-      await carregarDashboard();
-    }
-
-  } catch(err) {
-
-    toast(
-      err.message ||
-      "Não foi possível publicar o produto.",
-      "error"
-    );
-
-  } finally {
-
-    finalizarProcessamentoBotao(btn);
-  }
+function openProduct(){
+  if(!sessionToken)return openAuth("login");
+  ["prodName","prodPrice","prodDesc","prodImage","prodWhatsapp","prodDownload"].forEach(id=>$(id).value="");
+  openModal("productModal");
 }
-
-function extrairArrayGAS(value, keys = []) {
-
-  if (Array.isArray(value)) return value;
-
-  if (!value || typeof value !== "object") {
-    return [];
-  }
-
-  for (const key of keys) {
-    if (Array.isArray(value[key])) {
-      return value[key];
-    }
-  }
-
-  for (const key of [
-    "data",
-    "resultado",
-    "result",
-    "produtos",
-    "blocos",
-    "items",
-    "rows"
-  ]) {
-    if (Array.isArray(value[key])) {
-      return value[key];
-    }
-  }
-
-  return [];
+async function createProduct(e){
+  e.preventDefault();if(!sessionToken)return openAuth("login");const btn=e.submitter;setBusy(btn,true,"A enviar…");
+  try{
+    const r=await apiPost({action:"CRIAR_PRODUTO",sessionToken,nome:$("prodName").value.trim(),descricao:$("prodDesc").value.trim(),imagem:$("prodImage").value.trim(),preco:Number($("prodPrice").value),tipo:$("prodType").value,categoria:$("prodCategory").value,whatsapp:$("prodWhatsapp").value.trim(),linkDigital:$("prodDownload").value.trim()});
+    if(r.status!=="PENDENTE")throw new Error(r.message||r.erro||"Não foi possível criar o produto.");
+    closeModal("productModal");toast("Produto enviado para aprovação.","success");loadPublic();loadDashboard();
+  }catch(err){toast(err.message,"error")}finally{setBusy(btn,false)}
 }
-
-function produtosDosBlocos(lista) {
-
-  const out = [];
-
-  (Array.isArray(lista) ? lista : [])
-    .forEach(b => {
-
-      if (b && b.produtoDestaque) {
-        out.push(b.produtoDestaque);
-      }
-
-      if (
-        b &&
-        Array.isArray(b.slideshowProdutos)
-      ) {
-        out.push(...b.slideshowProdutos);
-      }
-
-      if (
-        b &&
-        Array.isArray(b.produtos)
-      ) {
-        out.push(...b.produtos);
-      }
-    });
-
-  return out;
+async function openProductDetail(id){
+  try{
+    const r=await apiGet("produto",{produtoId:id});if(!r.ok)throw new Error(r.erro||"Produto não encontrado.");
+    const p=r.produto;currentProduct=p;
+    $("detailBody").innerHTML=`<div><img src="${esc(img(p.imagemUrl))}" class="w-full h-64 object-cover" onerror="this.src='${esc(img(""))}'"><div class="p-6"><div class="text-sm text-slate-500">${esc(p.categoria||"Geral")}</div><h2 class="text-3xl font-black mt-1">${esc(p.nome)}</h2><div class="text-2xl font-black text-orange-600 mt-3">${money(p.preco)}</div><p class="mt-4 text-slate-600 whitespace-pre-line">${esc(p.descricao||"")}</p><div class="mt-5 flex flex-wrap gap-2">${p.seloAutenticado?'<span class="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-bold"><i class="fa-solid fa-circle-check"></i> Loja autenticada</span>':""}<span class="px-3 py-1.5 rounded-full bg-slate-100 text-sm font-bold">${esc(p.tipo||"Produto")}</span></div><div class="mt-6 grid sm:grid-cols-2 gap-3"><button onclick="buy('${esc(p.produtoId)}')" class="py-3 rounded-xl bg-orange-500 text-white font-black">Comprar</button><button onclick="rateProduct('${esc(p.produtoId)}','GOSTO')" class="py-3 rounded-xl bg-slate-900 text-white font-bold">👍 Gostei</button><button onclick="rateProduct('${esc(p.produtoId)}','NAO_GOSTO')" class="py-3 rounded-xl border font-bold">👎 Não gostei</button>${p.whatsapp?`<a href="https://wa.me/${esc(String(p.whatsapp).replace(/\\D/g,""))}" target="_blank" rel="noopener noreferrer" class="py-3 rounded-xl border text-center font-bold">WhatsApp</a>`:""}</div></div></div>`;
+    openModal("detailModal");
+  }catch(e){toast(e.message,"error")}
 }
-
-async function carregarDadosPublicos() {
-
-  try {
-
-    const [b, d] =
-      await Promise.allSettled([
-        apiGet("homeBlocos"),
-        apiGet("produtosDestaque")
-      ]);
-
-    const bRaw =
-      b.status === "fulfilled"
-        ? b.value
-        : null;
-
-    const dRaw =
-      d.status === "fulfilled"
-        ? d.value
-        : null;
-
-    blocos =
-      extrairArrayGAS(
-        bRaw,
-        ["blocos", "homeBlocos"]
-      );
-
-    const direct =
-      extrairArrayGAS(
-        dRaw,
-        ["produtos", "produtosDestaque", "destaques"]
-      );
-
-    const fromBlocks =
-      produtosDosBlocos(blocos);
-
-    produtos =
-      normalizarProdutos([
-        ...direct,
-        ...fromBlocks
-      ]);
-
-    const seen = new Set();
-
-    produtos =
-      produtos.filter(p => {
-
-        const id =
-          String(p.productId);
-
-        if (seen.has(id)) {
-          return false;
-        }
-
-        seen.add(id);
-
-        return true;
-      });
-
-    renderProdutos();
-    renderLojas();
-    renderHero();
-    preencherCategorias();
-
-    document.getElementById("statProducts").textContent =
-      produtos.length;
-
-    document.getElementById("statStores").textContent =
-      new Set(
-        produtos
-          .map(p => p.vendedorId)
-          .filter(Boolean)
-      ).size;
-
-  } catch(err) {
-
-    console.error(err);
-
-    toast(
-      "Não foi possível carregar a vitrine.",
-      "error"
-    );
-  }
+async function rateProduct(productId,type){
+  try{const r=await apiPost({action:"AVALIAR_PRODUTO",produtoId:productId,tipo:type});if(r.ok===false)throw new Error(r.erro||"Avaliação recusada.");toast("Avaliação registada.","success");closeModal("detailModal");loadPublic()}catch(e){toast(e.message,"error")}
 }
-
-function preencherCategorias() {
-
-  const sel =
-    document.getElementById("categoryFilter");
-
-  const current =
-    sel.value;
-
-  const cats =
-    [
-      ...new Set(
-        produtos
-          .map(p => p.categoria)
-          .filter(Boolean)
-      )
-    ].sort();
-
-  sel.innerHTML =
-    '<option value="">Todas as categorias</option>' +
-    cats
-      .map(
-        c =>
-          `<option value="${esc(c)}">${esc(c)}</option>`
-      )
-      .join("");
-
-  sel.value = current;
+function buy(id){
+  const p=products.find(x=>String(x.productId)===String(id))||currentProduct;
+  if(!p)return;
+  const phone=prompt("Telefone M-Pesa/e-Mola (ex.: 84xxxxxxx):");
+  if(!phone)return;
+  let method=prompt("Método: mpesa, emola, mkesh ou card","mpesa")||"mpesa";method=method.toLowerCase().trim();
+  const email=prompt("Email do comprador (opcional):")||"";
+  startPayment(p,phone,method,email);
 }
-
-function cardProduto(p, compact=false) {
-
-  const wa =
-    p.whatsapp
-      ? `<button onclick='event.stopPropagation(); abrirWhatsApp(${JSON.stringify(p)})' class="flex-1 px-3 py-2 rounded-lg border border-emerald-200 text-emerald-700 bg-emerald-50 font-bold text-xs">
-<i class="fa-brands fa-whatsapp mr-1"></i>WhatsApp
-</button>`
-      : "";
-
-  return `<article onclick='abrirDetalhe(${JSON.stringify(p).replace(/</g,"\\u003c")})' class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-soft hover:-translate-y-0.5 transition cursor-pointer">
-
-<div class="${compact ? "h-32" : "h-48"} bg-slate-100 overflow-hidden">
-<img src="${esc(imagem(p.imagemUrl))}" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80'" class="w-full h-full object-cover" alt="">
-</div>
-
-<div class="p-4">
-
-<div class="flex items-center justify-between gap-2">
-<span class="text-[11px] font-extrabold text-orange-600 uppercase">
-${esc(p.categoria || "GERAL")}
-</span>
-
-<span class="text-xs text-slate-400">
-${esc(p.tipo || "")}
-</span>
-</div>
-
-<h3 class="font-black mt-1 line-clamp-2">
-${esc(p.nome)}
-</h3>
-
-<p class="text-orange-600 font-black mt-2">
-${dinheiro(p.preco)}
-</p>
-
-${
-compact
-? ""
-: `<div class="mt-3 flex gap-2">
-
-<button data-pay-product="${esc(p.productId)}" onclick='event.stopPropagation(); comprarProduto(${JSON.stringify(p)})' class="flex-1 px-3 py-2 rounded-lg bg-slate-900 text-white font-bold text-xs">
-Comprar
-</button>
-
-${wa}
-
-</div>`
+async function startPayment(p,phone,method,email){
+  if(busy)return;busy=true;openModal("paymentModal");$("paySpinner").classList.remove("hidden");$("closePay").classList.add("hidden");$("payBody").innerHTML="";$("payTitle").textContent="A iniciar pagamento";$("payDesc").textContent="Estamos a criar o pedido de pagamento.";
+  try{
+    const r=await apiPost({action:"COMPRAR_PRODUTO",produtoId:p.productId,telefone:phone,metodo:method,email});
+    if(!r.ok)throw new Error(r.erro||r.message||"Não foi possível iniciar o pagamento.");
+    if(r.checkoutUrl){$("payBody").innerHTML=`<a href="${esc(r.checkoutUrl)}" target="_blank" rel="noopener noreferrer" class="block text-center py-3 rounded-xl bg-orange-500 text-white font-black">Abrir pagamento</a>`}
+    $("payTitle").textContent=r.status==="PAGO"?"Pagamento confirmado!":"Aguardando confirmação";
+    $("payDesc").textContent=r.status==="PAGO"?"O pagamento foi confirmado pelo servidor.":"Confirme o pagamento no seu telemóvel. Não repita a compra se já autorizou.";
+    $("paySpinner").classList.add("hidden");$("closePay").classList.remove("hidden");
+    if(r.status!=="PAGO"&&r.vendaId)pollPayment(r.vendaId,p);
+  }catch(e){$("paySpinner").classList.add("hidden");$("payTitle").textContent="Pagamento não iniciado";$("payDesc").textContent=e.message;$("closePay").classList.remove("hidden");}
+  finally{busy=false}
 }
-
-</div>
-</article>`;
+function pollPayment(vendaId,p){
+  clearTimeout(pollTimer);let n=0,max=30;
+  const check=async()=>{
+    try{
+      n++;const r=await apiGet("consultarVenda",{vendaId});
+      const st=String(r?.venda?.status||"").toUpperCase();
+      if(st==="PAGO"){clearTimeout(pollTimer);$("payTitle").textContent="Pagamento confirmado!";$("payDesc").textContent="A compra foi confirmada pelo servidor.";$("payBody").innerHTML='<div class="p-4 rounded-2xl bg-emerald-50 text-emerald-800 text-sm">Pagamento confirmado. Se o produto for digital, o acesso será disponibilizado pelo servidor.</div>';return}
+      if(["RECUSADO","CANCELADO","ERRO_PAGAMENTO"].includes(st)){clearTimeout(pollTimer);$("payTitle").textContent="Pagamento não concluído";$("payDesc").textContent="O pedido não foi confirmado.";return}
+      if(n>=max){$("payDesc").textContent="Ainda não recebemos confirmação. Se já pagou, não faça uma nova compra.";return}
+      pollTimer=setTimeout(check,4000);
+    }catch(_){if(n<max)pollTimer=setTimeout(check,4000)}
+  };check();
 }
-
-function renderProdutos() {
-
-  const term =
-    document
-      .getElementById("searchInput")
-      .value
-      .trim()
-      .toLowerCase();
-
-  const cat =
-    document
-      .getElementById("categoryFilter")
-      .value;
-
-  const arr =
-    produtos.filter(p =>
-      (
-        !term ||
-        [
-          p.nome,
-          p.descricao,
-          p.categoria
-        ]
-          .join(" ")
-          .toLowerCase()
-          .includes(term)
-      ) &&
-      (
-        !cat ||
-        p.categoria === cat
-      )
-    );
-
-  document.getElementById("productGrid").innerHTML =
-    arr.map(p => cardProduto(p)).join("");
-
-  document
-    .getElementById("emptyProducts")
-    .classList
-    .toggle("hidden", arr.length > 0);
+function closePayment(){clearTimeout(pollTimer);closeModal("paymentModal")}
+function openPayout(){
+  if(!sessionToken)return openAuth("login");
+  const s=Number($("kpiSaldo").textContent.replace(/[^\d,.-]/g,"").replace(/\./g,"").replace(",",".")||0);
+  $("payoutBalance").textContent=$("kpiSaldo").textContent;$("payoutPhone").value="";$("payoutAmount").value="";calcPayout();openModal("payoutModal");
 }
-
-function renderHero() {
-
-  document.getElementById("heroProducts").innerHTML =
-    produtos
-      .slice(0,4)
-      .map(p => cardProduto(p, true))
-      .join("");
+function calcPayout(){
+  const v=Number($("payoutAmount").value||0);$("feeNet").textContent=money(v*.02);$("feeMoz").textContent=money(v*.01);$("feeTotal").textContent=money(v*.03);$("payoutNet").textContent=money(v*.97);
 }
-
-function lojasDerivadas() {
-
-  const map = new Map();
-
-  produtos.forEach(p => {
-
-    const id =
-      p.vendedorId || "sem-id";
-
-    if (!map.has(id)) {
-
-      map.set(id, {
-        id,
-        empresa: p.empresa || "Loja",
-        logo: p.logo || "",
-        products: []
-      });
-    }
-
-    map.get(id).products.push(p);
-  });
-
-  return [...map.values()];
+async function requestPayout(e){
+  e.preventDefault();if(!sessionToken)return openAuth("login");const btn=e.submitter;setBusy(btn,true,"A processar…");
+  try{
+    const r=await apiPost({action:"SOLICITAR_PAYOUT",sessionToken,valor:Number($("payoutAmount").value),telefone:$("payoutPhone").value.trim(),metodo:$("payoutMethod").value});
+    if(r.ok!==true)throw new Error(r.erro||r.message||"Payout recusado.");
+    closeModal("payoutModal");toast(r.mensagem||"Payout enviado. Aguarde confirmação.","success");loadDashboard();
+  }catch(err){toast(err.message,"error")}finally{setBusy(btn,false)}
 }
-
-function renderLojas() {
-
-  const lojas =
-    lojasDerivadas();
-
-  document.getElementById("storeGrid").innerHTML =
-    lojas
-      .map(s =>
-
-`<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-soft">
-
-<div class="flex items-center gap-4">
-
-<img src="${esc(imagem(s.logo))}"
-onerror="this.style.display='none'"
-class="w-14 h-14 rounded-2xl object-cover bg-slate-100">
-
-<div>
-<h3 class="font-black text-lg">${esc(s.empresa)}</h3>
-<p class="text-slate-500 text-sm">${s.products.length} produto(s) ativo(s)</p>
-</div>
-
-</div>
-
-<div class="mt-4 grid grid-cols-3 gap-2">
-${s.products
-  .slice(0,3)
-  .map(
-    p =>
-      `<img src="${esc(imagem(p.imagemUrl))}" class="h-20 w-full rounded-xl object-cover bg-slate-100">`
-  )
-  .join("")}
-</div>
-
-<button onclick='filtrarLoja(${JSON.stringify(s.id)})' class="mt-4 w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-sm">
-Ver produtos da loja
-</button>
-
-</div>`
-      )
-      .join("");
-
-  document
-    .getElementById("emptyStores")
-    .classList
-    .toggle("hidden", lojas.length > 0);
+async function init(){
+  updateAuth();await ping();await loadPublic();
+  if(sessionToken){try{await loadDashboard()}catch(_){logout()}}
 }
-
-function filtrarLoja(id) {
-
-  document.getElementById("searchInput").value = "";
-
-  const arr =
-    produtos.filter(
-      p =>
-        String(p.vendedorId) === String(id)
-    );
-
-  document.getElementById("productGrid").innerHTML =
-    arr.map(p => cardProduto(p)).join("");
-
-  document
-    .getElementById("emptyProducts")
-    .classList
-    .toggle("hidden", arr.length > 0);
-
-  document
-    .getElementById("produtos")
-    .scrollIntoView({
-      behavior:"smooth"
-    });
-}
-
-async function abrirDetalhe(p) {
-
-  let data = p;
-
-  try {
-
-    const r =
-      await apiGet(
-        "produto",
-        {produtoId: p.productId}
-      );
-
-    if (r && r.produto) {
-      data = {
-        ...p,
-        ...r.produto
-      };
-    }
-
-  } catch (_) {}
-
-  const wa =
-    data.whatsapp
-      ? `<button onclick='abrirWhatsApp(${JSON.stringify(data)})' class="px-4 py-3 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 font-black">
-<i class="fa-brands fa-whatsapp mr-2"></i>Falar no WhatsApp
-</button>`
-      : "";
-
-  document.getElementById("detailContent").innerHTML =
-`<div class="grid md:grid-cols-2">
-
-<div class="min-h-72 bg-slate-100">
-<img src="${esc(imagem(data.imagemUrl))}" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80'" class="w-full h-full object-cover" alt="">
-</div>
-
-<div class="p-7">
-
-<div class="flex justify-between">
-
-<span class="text-xs font-black uppercase text-orange-600">
-${esc(data.categoria || "GERAL")}
-</span>
-
-<button onclick="fechar('detailModal')" class="w-10 h-10 rounded-xl hover:bg-slate-100">
-<i class="fa-solid fa-xmark"></i>
-</button>
-
-</div>
-
-<h2 class="text-3xl font-black mt-2">
-${esc(data.nome)}
-</h2>
-
-<div class="text-2xl font-black text-orange-600 mt-3">
-${dinheiro(data.preco)}
-</div>
-
-<p class="text-slate-600 mt-5 whitespace-pre-line">
-${esc(data.descricao || "Sem descrição.")}
-</p>
-
-<div class="mt-6 flex flex-wrap gap-2">
-
-<button data-pay-product="${esc(data.productId)}" onclick='comprarProduto(${JSON.stringify(data)})' class="px-4 py-3 rounded-xl bg-slate-900 text-white font-black">
-Comprar agora
-</button>
-
-${wa}
-
-</div>
-
-<div class="mt-5 pt-5 border-t flex gap-2">
-
-<button onclick='avaliarProduto("${esc(data.productId)}", "GOSTO")' class="px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 font-bold">
-<i class="fa-regular fa-thumbs-up mr-1"></i>Gosto
-</button>
-
-<button onclick='avaliarProduto("${esc(data.productId)}", "NAO_GOSTO")' class="px-3 py-2 rounded-lg bg-red-50 text-red-700 font-bold">
-<i class="fa-regular fa-thumbs-down mr-1"></i>Não gosto
-</button>
-
-</div>
-
-</div>
-</div>`;
-
-  abrir("detailModal");
-}
-
-function abrirWhatsApp(p) {
-
-  const raw =
-    String(p.whatsapp || "")
-      .replace(/[^\d]/g,"");
-
-  if (!raw) return;
-
-  const msg =
-    `Olá! Vi o produto "${p.nome}" no Moz1Vendas. Gostaria de saber mais.`;
-
-  window.open(
-    "https://wa.me/" +
-    raw +
-    "?text=" +
-    encodeURIComponent(msg),
-    "_blank",
-    "noopener,noreferrer"
-  );
-}
-
-/* =========================================================
-   PAGAMENTO — CORRIGIDO
-   ========================================================= */
-
-function normalizarStatusPagamento(value) {
-
-  return String(value ?? "")
-    .trim()
-    .toUpperCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
-
-function obterStatusPagamento(res) {
-
-  const possiveis = [
-    res?.status,
-    res?.venda?.status,
-    res?.pagamento?.status,
-    res?.payment?.status,
-    res?.transaction?.status,
-    res?.data?.status
-  ];
-
-  for (const valor of possiveis) {
-
-    const status =
-      normalizarStatusPagamento(valor);
-
-    if (status) {
-      return status;
-    }
-  }
-
-  return "";
-}
-
-function pagamentoFoiAprovado(res) {
-
-  if (res?.pago === true) {
-    return true;
-  }
-
-  const status =
-    obterStatusPagamento(res);
-
-  return [
-    "PAGO",
-    "PAID",
-    "CONCLUIDO",
-    "COMPLETED",
-    "SUCCESS",
-    "SUCESSO",
-    "APROVADO",
-    "APPROVED"
-  ].includes(status);
-}
-
-function pagamentoFalhou(res) {
-
-  const status =
-    obterStatusPagamento(res);
-
-  return [
-    "CANCELADO",
-    "CANCELED",
-    "CANCELLED",
-    "RECUSADO",
-    "REJEITADO",
-    "REJECTED",
-    "FALHOU",
-    "FAILED",
-    "ERRO",
-    "ERROR",
-    "EXPIRADO",
-    "EXPIRED"
-  ].includes(status);
-}
-
-function obterIdVenda(res) {
-
-  return (
-    res?.vendaId ||
-    res?.venda?.vendaId ||
-    res?.venda?.id ||
-    res?.referencia ||
-    res?.reference ||
-    res?.transactionId ||
-    res?.transaction?.id ||
-    res?.paymentId ||
-    res?.id ||
-    ""
-  );
-}
-
-function urlSegura(url) {
-
-  if (!url) return "";
-
-  try {
-
-    const u =
-      new URL(String(url));
-
-    if (
-      u.protocol !== "http:" &&
-      u.protocol !== "https:"
-    ) {
-      return "";
-    }
-
-    return u.href;
-
-  } catch (_) {
-
-    return "";
-  }
-}
-
-function limparPollingPagamento() {
-
-  if (pollingTimer) {
-
-    clearTimeout(pollingTimer);
-
-    pollingTimer = null;
-  }
-
-  pollingRequestAtiva = false;
-}
-
-function prepararModalProcessamento() {
-
-  document
-    .getElementById("statusSpinner")
-    .classList
-    .remove("hidden");
-
-  document.getElementById("statusTitle").textContent =
-    "Processando pagamento";
-
-  document.getElementById("statusDesc").textContent =
-    "Estamos a iniciar o seu pedido de pagamento. Aguarde...";
-
-  document.getElementById("statusDelivery").innerHTML =
-    "";
-
-  document
-    .getElementById("btnFecharStatus")
-    .classList
-    .add("hidden");
-
-  abrir("statusModal");
-}
-
-function atualizarModalAguardandoPagamento() {
-
-  document
-    .getElementById("statusSpinner")
-    .classList
-    .remove("hidden");
-
-  document.getElementById("statusTitle").textContent =
-    "A confirmar pagamento";
-
-  document.getElementById("statusDesc").textContent =
-    "O pedido de pagamento foi enviado. Confirme o pagamento no seu telemóvel. Não feche esta janela.";
-
-  document
-    .getElementById("btnFecharStatus")
-    .classList
-    .add("hidden");
-}
-
-function finalizarModalPagamento() {
-
-  pagamentoFinalizado = true;
-  pagamentoEmProcessamento = false;
-
-  document
-    .getElementById("btnFecharStatus")
-    .classList
-    .remove("hidden");
-}
-
-async function comprarProduto(p) {
-
-  const botaoCompra =
-    window.event?.currentTarget ||
-    document.querySelector(
-      '#detailContent button[data-pay-product="' +
-      String(p?.productId || "").replace(/[^a-zA-Z0-9_-]/g, "") +
-      '"]'
-    );
-
-  if (botaoCompra && !iniciarProcessamentoBotao(botaoCompra, "A pagar...")) {
-    return;
-  }
-
-  if (pagamentoEmProcessamento) {
-
-    finalizarProcessamentoBotao(botaoCompra);
-
-    toast(
-      "Já existe um pagamento em processamento. Aguarde a confirmação.",
-      "info"
-    );
-
-    return;
-  }
-
-  if (!p || !p.productId) {
-
-    toast(
-      "Produto inválido. Não foi possível iniciar a compra.",
-      "error"
-    );
-
-    return;
-  }
-
-  const telefone =
-    prompt(
-      "Digite o seu telefone (M-Pesa / e-Mola) para iniciar a compra:"
-    );
-
-  if (!telefone) {
-    finalizarProcessamentoBotao(botaoCompra);
-    return;
-  }
-
-  const telefoneLimpo =
-    telefone.trim();
-
-  if (!telefoneLimpo) {
-    finalizarProcessamentoBotao(botaoCompra);
-    return;
-  }
-
-  /*
-   * BLOQUEIA NOVA COMPRA ANTES MESMO
-   * DE ENVIAR O PEDIDO AO GAS.
-   */
-  pagamentoEmProcessamento = true;
-  pagamentoFinalizado = false;
-
-  limparPollingPagamento();
-
-  /*
-   * O MODAL APARECE IMEDIATAMENTE.
-   */
-  prepararModalProcessamento();
-
-  // O modal passa a ser o indicador principal; o botão original pode voltar ao normal.
-  finalizarProcessamentoBotao(botaoCompra);
-
-  try {
-
-    /*
-     * Mantemos exatamente a ação existente
-     * e os campos existentes enviados ao GAS.
-     */
-    const res =
-      await apiPost({
-
-        action: "COMPRAR_PRODUTO",
-
-        produtoId:
-          p.productId,
-
-        telefone:
-          telefoneLimpo,
-
-        metodo:
-          "mpesa"
-      });
-
-    if (
-      !res ||
-      (
-        res.ok !== true &&
-        res.status !== "SUCCESS"
-      )
-    ) {
-
-      throw new Error(
-        res?.mensagem ||
-        res?.message ||
-        res?.erro ||
-        "Não foi possível iniciar a compra."
-      );
-    }
-
-    /*
-     * Se o próprio COMPRAR_PRODUTO
-     * já informou pagamento aprovado,
-     * concluímos imediatamente.
-     */
-    if (pagamentoFoiAprovado(res)) {
-
-      await exibirSucessoEntrega(
-        res,
-        p
-      );
-
-      if (vendedorAtivo) {
-        carregarDashboard();
-      }
-
-      return;
-    }
-
-    const vendaId =
-      obterIdVenda(res);
-
-    /*
-     * Se não existe identificador,
-     * NÃO fazemos polling vazio.
-     */
-    if (!vendaId) {
-
-      throw new Error(
-        "O pagamento foi iniciado, mas o servidor não devolveu a referência da venda para acompanhamento."
-      );
-    }
-
-    atualizarModalAguardandoPagamento();
-
-    /*
-     * Mantém o comportamento anterior:
-     * se o GAS devolver checkoutUrl,
-     * abrimos em nova aba.
-     */
-    const checkoutUrl =
-      urlSegura(res.checkoutUrl);
-
-    if (checkoutUrl) {
-
-      try {
-
-        window.open(
-          checkoutUrl,
-          "_blank",
-          "noopener,noreferrer"
-        );
-
-      } catch (_) {}
-    }
-
-    iniciarPollingPagamento(
-      vendaId,
-      p
-    );
-
-  } catch(err) {
-
-    limparPollingPagamento();
-
-    document
-      .getElementById("statusSpinner")
-      .classList
-      .add("hidden");
-
-    document.getElementById("statusTitle").textContent =
-      "Não foi possível iniciar";
-
-    document.getElementById("statusDesc").textContent =
-      err.message ||
-      "O pagamento não pôde ser iniciado.";
-
-    document.getElementById("statusDelivery").innerHTML =
-      `<div class="p-4 bg-red-50 border border-red-200 rounded-2xl text-red-800 text-sm">
-        Verifique o número informado e tente novamente.
-      </div>`;
-
-    finalizarModalPagamento();
-
-    toast(
-      err.message ||
-      "Erro ao iniciar compra.",
-      "error"
-    );
-  }
-}
-
-function abrirStatusModal() {
-
-  prepararModalProcessamento();
-}
-
-function fecharStatusModal() {
-
-  /*
-   * Enquanto o pagamento ainda está em andamento,
-   * não permitimos fechar para evitar que o comprador
-   * clique novamente e gere outra compra.
-   */
-  if (
-    pagamentoEmProcessamento &&
-    !pagamentoFinalizado
-  ) {
-
-    toast(
-      "O pagamento ainda está a ser processado. Aguarde a confirmação.",
-      "info"
-    );
-
-    return;
-  }
-
-  limparPollingPagamento();
-
-  pagamentoEmProcessamento = false;
-
-  fechar("statusModal");
-}
-
-function iniciarPollingPagamento(
-  vendaId,
-  produto
-) {
-
-  limparPollingPagamento();
-
-  let tentativas = 0;
-
-  /*
-   * 45 x 4 segundos = aproximadamente 3 minutos.
-   */
-  const maxTentativas = 45;
-
-  const verificar = async () => {
-
-    if (!pagamentoEmProcessamento) {
-      return;
-    }
-
-    if (pollingRequestAtiva) {
-      pollingTimer =
-        setTimeout(
-          verificar,
-          1000
-        );
-
-      return;
-    }
-
-    pollingRequestAtiva = true;
-    tentativas++;
-
-    try {
-
-      const res =
-        await apiGet(
-          "consultarVenda",
-          {
-            vendaId:
-              vendaId
-          }
-        );
-
-      /*
-       * PAGAMENTO APROVADO
-       */
-      if (pagamentoFoiAprovado(res)) {
-
-        pollingRequestAtiva = false;
-
-        limparPollingPagamento();
-
-        await exibirSucessoEntrega(
-          res,
-          produto
-        );
-
-        if (vendedorAtivo) {
-
-          try {
-            await carregarDashboard();
-          } catch (_) {}
-        }
-
-        return;
-      }
-
-      /*
-       * PAGAMENTO FALHOU
-       */
-      if (pagamentoFalhou(res)) {
-
-        pollingRequestAtiva = false;
-
-        limparPollingPagamento();
-
-        document
-          .getElementById("statusSpinner")
-          .classList
-          .add("hidden");
-
-        document.getElementById("statusTitle").textContent =
-          "Pagamento não concluído";
-
-        document.getElementById("statusDesc").textContent =
-          "O pagamento foi cancelado, recusado ou falhou. Pode tentar novamente.";
-
-        document.getElementById("statusDelivery").innerHTML =
-          `<div class="p-4 bg-red-50 border border-red-200 rounded-2xl text-red-800 text-sm">
-            Nenhum valor foi confirmado como pago nesta tentativa.
-          </div>`;
-
-        finalizarModalPagamento();
-
-        return;
-      }
-
-      /*
-       * PAGAMENTO AINDA PENDENTE
-       */
-      pollingRequestAtiva = false;
-
-      if (tentativas >= maxTentativas) {
-
-        limparPollingPagamento();
-
-        document
-          .getElementById("statusSpinner")
-          .classList
-          .add("hidden");
-
-        document.getElementById("statusTitle").textContent =
-          "Tempo de confirmação excedido";
-
-        document.getElementById("statusDesc").textContent =
-          "Ainda não recebemos a confirmação. Se o valor já foi descontado, não faça uma nova compra: aguarde a atualização do pedido.";
-
-        document.getElementById("statusDelivery").innerHTML =
-          `<div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-sm">
-            A referência da venda foi mantida. O estado poderá ser atualizado pelo servidor quando o pagamento for confirmado.
-          </div>`;
-
-        finalizarModalPagamento();
-
-        return;
-      }
-
-      /*
-       * Continua verificando.
-       */
-      document.getElementById("statusTitle").textContent =
-        "Aguardando confirmação";
-
-      document.getElementById("statusDesc").textContent =
-        "Estamos a verificar o estado do pagamento. Confirme no seu telemóvel e aguarde...";
-
-      pollingTimer =
-        setTimeout(
-          verificar,
-          4000
-        );
-
-    } catch (e) {
-
-      pollingRequestAtiva = false;
-
-      console.warn(
-        "Aguardando confirmação do pagamento...",
-        e
-      );
-
-      if (tentativas >= maxTentativas) {
-
-        limparPollingPagamento();
-
-        document
-          .getElementById("statusSpinner")
-          .classList
-          .add("hidden");
-
-        document.getElementById("statusTitle").textContent =
-          "Não foi possível confirmar agora";
-
-        document.getElementById("statusDesc").textContent =
-          "Não recebemos a confirmação dentro do tempo previsto. Se já pagou, não repita a compra.";
-
-        document.getElementById("statusDelivery").innerHTML =
-          `<div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-sm">
-            O servidor poderá atualizar o pedido posteriormente quando receber a confirmação do pagamento.
-          </div>`;
-
-        finalizarModalPagamento();
-
-        return;
-      }
-
-      pollingTimer =
-        setTimeout(
-          verificar,
-          4000
-        );
-    }
-  };
-
-  verificar();
-}
-
-async function exibirSucessoEntrega(
-  res,
-  produto
-) {
-
-  limparPollingPagamento();
-
-  document
-    .getElementById("statusSpinner")
-    .classList
-    .add("hidden");
-
-  document.getElementById("statusTitle").textContent =
-    "Pagamento confirmado!";
-
-  document.getElementById("statusDesc").textContent =
-    "Obrigado pela compra. O seu pedido foi processado com sucesso.";
-
-  document.getElementById("statusDelivery").innerHTML =
-    "";
-
-  let produtoFinal =
-    {
-      ...(produto || {})
-    };
-
-  /*
-   * Tenta encontrar o link em vários formatos
-   * possíveis da resposta do GAS.
-   */
-  let downloadLink =
-    res?.linkDigital ||
-    res?.downloadUrl ||
-    res?.urlDownload ||
-    res?.entrega?.downloadUrl ||
-    res?.entrega?.linkDigital ||
-    res?.venda?.linkDigital ||
-    res?.venda?.downloadUrl ||
-    produtoFinal.linkDigital ||
-    produtoFinal.downloadUrl ||
-    produtoFinal.linkDownload ||
-    "";
-
-  downloadLink =
-    urlSegura(downloadLink);
-
-  const tipo =
-    String(
-      produtoFinal.tipo ||
-      res?.tipo ||
-      res?.tipoProduto ||
-      ""
-    )
-      .trim()
-      .toUpperCase();
-
-  /*
-   * Se for produto DIGITAL e ainda não encontramos
-   * o link, tentamos obter os dados atualizados
-   * do produto através da ação já existente "produto".
-   *
-   * NÃO altera o GAS.
-   */
-  if (
-    tipo === "DIGITAL" &&
-    !downloadLink &&
-    produtoFinal.productId
-  ) {
-
-    try {
-
-      const detalhe =
-        await apiGet(
-          "produto",
-          {
-            produtoId:
-              produtoFinal.productId
-          }
-        );
-
-      if (detalhe?.produto) {
-
-        produtoFinal = {
-          ...produtoFinal,
-          ...detalhe.produto
-        };
-
-        downloadLink =
-          detalhe.produto.linkDigital ||
-          detalhe.produto.downloadUrl ||
-          detalhe.produto.linkDownload ||
-          "";
-
-        downloadLink =
-          urlSegura(downloadLink);
-      }
-
-    } catch (_) {}
-  }
-
-  /*
-   * PRODUTO DIGITAL
-   */
-  if (
-    tipo === "DIGITAL" ||
-    downloadLink
-  ) {
-
-    if (downloadLink) {
-
-      document.getElementById("statusDelivery").innerHTML =
-
-`<div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-left">
-
-<p class="text-xs font-bold uppercase text-emerald-800">
-Seu Produto Digital
-</p>
-
-<p class="font-black text-slate-800 mt-1">
-${esc(produtoFinal.nome || "Produto digital")}
-</p>
-
-<a
-href="${esc(downloadLink)}"
-target="_blank"
-rel="noopener noreferrer"
-class="mt-3 block w-full text-center py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-xl shadow-lg">
-
-<i class="fa-solid fa-download mr-2"></i>
-Baixar Conteúdo Agora
-
-</a>
-
-</div>`;
-
-    } else {
-
-      document.getElementById("statusDelivery").innerHTML =
-
-`<div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-sm">
-
-<p class="font-bold mb-1">
-Pagamento recebido.
-</p>
-
-<p>
-O pagamento foi confirmado, mas o link de download ainda não está disponível. O acesso digital deverá ser disponibilizado pelo vendedor.
-</p>
-
-</div>`;
-    }
-
-  } else {
-
-    /*
-     * PRODUTO FÍSICO
-     */
-    document.getElementById("statusDelivery").innerHTML =
-
-`<div class="p-4 bg-blue-50 border border-blue-200 rounded-2xl text-blue-900 text-sm">
-
-<p class="font-bold mb-1">
-Produto físico registrado.
-</p>
-
-<p>
-O vendedor entrará em contacto para coordenar a entrega do produto.
-</p>
-
-</div>`;
-  }
-
-  finalizarModalPagamento();
-}
-
-async function avaliarProduto(
-  produtoId,
-  avaliacao
-) {
-
-  const btn = window.event?.currentTarget;
-
-  if (btn && !iniciarProcessamentoBotao(btn, "A guardar...")) {
-    return;
-  }
-
-  try {
-
-    const res =
-      await apiPost({
-        action:"AVALIAR_PRODUTO",
-        produtoId,
-        tipo:avaliacao
-      });
-
-    if (
-      res.status &&
-      res.status !== "SUCCESS"
-    ) {
-      throw new Error(
-        res.mensagem ||
-        "Não foi possível avaliar."
-      );
-    }
-
-    toast(
-      "Avaliação registada.",
-      "success"
-    );
-
-  } catch(err) {
-
-    toast(
-      err.message ||
-      "Não foi possível avaliar.",
-      "error"
-    );
-
-  } finally {
-
-    finalizarProcessamentoBotao(btn);
-  }
-}
-
-function mostrarDashboard() {
-
-  if (!vendedorAtivo) {
-
-    abrirAuth("login");
-
-    return;
-  }
-
-  document
-    .getElementById("inicio")
-    .classList
-    .add("hidden");
-
-  document
-    .getElementById("dashboard")
-    .classList
-    .remove("hidden");
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-  carregarDashboard();
-}
-
-async function carregarDashboard() {
-
-  if (!vendedorAtivo?.id) {
-    return;
-  }
-
-  document.getElementById("dashCompany").textContent =
-    vendedorAtivo.empresa ||
-    "Minha loja";
-
-  document.getElementById("dashSellerName").textContent =
-    vendedorAtivo.nome ||
-    "";
-
-  try {
-
-    const r =
-      await apiGet(
-        "resumoVendedor",
-        {
-          vendedorId:
-            vendedorAtivo.id
-        }
-      );
-
-    ultimoResumo = r;
-
-    const f =
-      r.financeiro || {};
-
-    document.getElementById("kpiSaldo").textContent =
-      dinheiro(f.saldoDisponivel);
-
-    document.getElementById("kpiVendas").textContent =
-      f.vendasPagas ?? 0;
-
-    document.getElementById("kpiBrutas").textContent =
-      dinheiro(f.vendasBrutas);
-
-    document.getElementById("kpiPendentes").textContent =
-      dinheiro(f.payoutsPendentes);
-
-    renderTabela(
-      "salesTable",
-      r.vendas || [],
-      [
-        "vendaId",
-        "valorLiquido",
-        "status",
-        "metodo"
-      ]
-    );
-
-    renderTabela(
-      "payoutTable",
-      r.payouts || [],
-      [
-        "payoutId",
-        "valorLiquido",
-        "status",
-        "metodo"
-      ]
-    );
-
-    const mine =
-      produtos.filter(
-        p =>
-          String(p.vendedorId) ===
-          String(vendedorAtivo.id)
-      );
-
-    document.getElementById("myProducts").innerHTML =
-      mine.length
-        ? mine.map(p=>cardProduto(p)).join("")
-        : `<div class="sm:col-span-2 lg:col-span-3 py-8 text-center text-slate-500">
-Ainda não publicou produtos.
-<button onclick="abrirProduto()" class="text-orange-600 font-bold">
-Publicar agora
-</button>
-</div>`;
-
-  } catch(err) {
-
-    toast(
-      err.message ||
-      "Não foi possível carregar o dashboard.",
-      "error"
-    );
-  }
-}
-
-function renderTabela(
-  id,
-  rows,
-  cols
-) {
-
-  const el =
-    document.getElementById(id);
-
-  if (!rows || !rows.length) {
-
-    el.innerHTML =
-      '<div class="p-6 text-center text-slate-500">Sem registos.</div>';
-
-    return;
-  }
-
-  const heads = {
-    vendaId:"ID",
-    valorLiquido:"Valor",
-    status:"Estado",
-    metodo:"Método",
-    payoutId:"ID"
-  };
-
-  el.innerHTML =
-
-`<table class="w-full text-sm">
-
-<thead class="bg-slate-50">
-<tr>
-${cols
-  .map(
-    c =>
-      `<th class="text-left px-4 py-3 font-black">${heads[c]||esc(c)}</th>`
-  )
-  .join("")}
-</tr>
-</thead>
-
-<tbody>
-
-${rows
-  .slice(0,50)
-  .map(
-    row =>
-`<tr class="border-t border-slate-100">
-
-${cols
-  .map(
-    c =>
-`<td class="px-4 py-3 whitespace-nowrap">
-${
-  c === "valorLiquido"
-    ? dinheiro(row[c])
-    : esc(row[c] ?? "-")
-}
-</td>`
-  )
-  .join("")}
-
-</tr>`
-  )
-  .join("")}
-
-</tbody>
-
-</table>`;
-}
-
-function abrirPayout() {
-
-  if (!ultimoResumo) {
-
-    carregarDashboard()
-      .then(
-        () =>
-          abrirPayout()
-      );
-
-    return;
-  }
-
-  const saldo =
-    Number(
-      ultimoResumo
-        .financeiro
-        ?.saldoDisponivel || 0
-    );
-
-  document.getElementById("payoutBalance").textContent =
-    dinheiro(saldo);
-
-  document.getElementById("payoutAmount").value =
-    "";
-
-  const payoutPhone =
-    document.getElementById("payoutPhone");
-
-  if (payoutPhone) {
-    payoutPhone.value =
-      vendedorAtivo.telefone || "";
-  }
-
-  calcularPayout();
-
-  abrir("payoutModal");
-}
-
-function calcularPayout() {
-
-  const v =
-    Number(
-      document
-        .getElementById("payoutAmount")
-        .value || 0
-    );
-
-  document.getElementById("feeNet").textContent =
-    dinheiro(v * 0.02);
-
-  document.getElementById("feeMoz").textContent =
-    dinheiro(v * 0.01);
-
-  document.getElementById("feeTotal").textContent =
-    dinheiro(v * 0.03);
-
-  document.getElementById("payoutNet").textContent =
-    dinheiro(v * 0.97);
-}
-
-async function executarPayout(e) {
-
-  e.preventDefault();
-
-  if (!vendedorAtivo?.id) {
-
-    toast(
-      "Sessão expirada. Faça login novamente.",
-      "error"
-    );
-
-    return;
-  }
-
-  const valor =
-    Number(
-      document
-        .getElementById("payoutAmount")
-        .value
-    );
-
-  const saldo =
-    Number(
-      ultimoResumo
-        ?.financeiro
-        ?.saldoDisponivel || 0
-    );
-
-  const telefone =
-    document
-      .getElementById("payoutPhone")
-      ?.value
-      ?.trim() || "";
-
-  const metodo =
-    document
-      .getElementById("payoutMethod")
-      ?.value ||
-    "mpesa";
-
-  if (!valor || valor <= 0) {
-
-    toast(
-      "Informe um valor válido para o saque.",
-      "error"
-    );
-
-    return;
-  }
-
-  if (valor > saldo) {
-
-    toast(
-      "O valor solicitado excede o saldo disponível.",
-      "error"
-    );
-
-    return;
-  }
-
-  if (!telefone) {
-
-    toast(
-      "Informe o telefone M-Pesa/e-Mola para receber o payout.",
-      "error"
-    );
-
-    return;
-  }
-
-  const btn =
-    document.getElementById(
-      "btnSubmitPayout"
-    );
-
-  if (btn) {
-
-    btn.disabled = true;
-
-    if (!iniciarProcessamentoBotao(btn, "A processar...")) {
-      return;
-    }
-  }
-
-  try {
-
-    const res =
-      await apiPost({
-
-        action:
-          "SOLICITAR_PAYOUT",
-
-        sessionToken:
-          vendedorAtivo.sessionToken || "",
-
-        valor:
-          valor,
-
-        telefone:
-          telefone,
-
-        msisdn:
-          telefone,
-
-        metodo:
-          metodo
-      });
-
-    if (
-      !res ||
-      (
-        res.ok !== true &&
-        res.status !== "SUCCESS"
-      )
-    ) {
-
-      throw new Error(
-        res.erro ||
-        res.mensagem ||
-        res.message ||
-        "Payout não autorizado."
-      );
-    }
-
-    fechar("payoutModal");
-
-    toast(
-      "Payout solicitado! Valor a receber: " +
-      dinheiro(
-        res.valorLiquido ||
-        valor * 0.97
-      ),
-      "success"
-    );
-
-    await carregarDashboard();
-
-  } catch(err) {
-
-    toast(
-      err.message ||
-      "Não foi possível solicitar o payout.",
-      "error"
-    );
-
-  } finally {
-
-    if (btn) {
-
-      finalizarProcessamentoBotao(btn);
-    }
-  }
-}
-
-function abrirTermos() {
-  abrir("termsModal");
-}
-
-async function init() {
-
-  atualizarAuthUI();
-
-  await carregarDadosPublicos();
-
-  if (vendedorAtivo) {
-
-    try {
-      await carregarDashboard();
-    } catch (_) {}
-  }
-
-  document.addEventListener(
-    "keydown",
-    e => {
-
-      if (e.key !== "Escape") {
-        return;
-      }
-
-      /*
-       * O modal de pagamento não é fechado
-       * enquanto estiver pendente.
-       */
-      if (
-        document
-          .getElementById("statusModal")
-          .classList
-          .contains("hidden") === false
-      ) {
-
-        if (
-          pagamentoEmProcessamento &&
-          !pagamentoFinalizado
-        ) {
-
-          toast(
-            "O pagamento ainda está a ser processado. Aguarde a confirmação.",
-            "info"
-          );
-
-        } else {
-
-          fecharStatusModal();
-        }
-      }
-
-      [
-        "authModal",
-        "productModal",
-        "payoutModal",
-        "detailModal",
-        "termsModal"
-      ].forEach(fechar);
-    }
-  );
-}
-
+window.addEventListener("keydown",e=>{if(e.key==="Escape")["authModal","productModal","payoutModal","detailModal","termsModal","adInfoModal"].forEach(closeModal)});
 init();
-
 </script>
-
 </body>
 </html>
