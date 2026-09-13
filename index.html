@@ -11,7 +11,7 @@
 <section id="prod" class="view"><div class="panel"><input id="pq" placeholder="Pesquisar produto, loja ou categoria"><br><br><button onclick="products()">Pesquisar</button><div id="product"></div></div></section>
 <section id="sales" class="view"><div class="panel"><input id="vq" placeholder="Pesquisar venda, produto, loja, telefone ou email"><br><br><button onclick="sales()">Pesquisar</button><div id="sale"></div></div></section>
 </main><script>
-const $=id=>document.getElementById(id), esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c])), money=x=>Number(x||0).toLocaleString('pt-MZ',{minimumFractionDigits:2})+' MT';
+const $=id=>document.getElementById(id), esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])), money=x=>Number(x||0).toLocaleString('pt-MZ',{minimumFractionDigits:2})+' MT';
 $('api').value=localStorage.getItem('m1v_admin_api')||'';$('token').value=sessionStorage.getItem('m1v_admin_token')||'';
 function note(t,c=''){ $('notice').textContent=t;$('notice').className='notice '+c }
 function cfg(){return {u:$('api').value.trim(),t:$('token').value.trim()}}
